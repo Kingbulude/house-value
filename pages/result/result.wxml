@@ -1,0 +1,93 @@
+<view class="container" wx:if="{{loaded && result && houseInfo}}">
+  <view class="result-header">
+    <view class="result-community">{{houseInfo.community}}</view>
+    <view class="result-meta">
+      <text class="tag">{{houseInfo.city}}</text>
+      <text class="tag">{{houseInfo.area}}m²</text>
+      <text class="tag">{{houseInfo.roomCount}}室{{houseInfo.hallCount}}厅</text>
+    </view>
+  </view>
+
+  <view class="card highlight">
+    <view class="highlight-label">综合估值建议</view>
+    <view class="highlight-price">{{formatPrice(result.composite.suggest)}}</view>
+    <view class="highlight-range">合理区间 {{formatPrice(result.composite.min)}} ~ {{formatPrice(result.composite.max)}}</view>
+    <view class="highlight-unit">{{formatPricePerSqm(result.composite.suggest, houseInfo.area)}}</view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">估值方法明细</view>
+
+    <view class="method-item">
+      <view class="method-header">
+        <text class="method-name">租金回报率法</text>
+        <text class="method-weight">权重 35%</text>
+      </view>
+      <view class="method-desc">基于月租金{{formatPrice(result.rentMethod.min)}} ~ {{formatPrice(result.rentMethod.max)}}</view>
+      <view class="method-formula">年租金 ÷ 合理回报率(3.5%~5.5%)</view>
+    </view>
+
+    <view class="method-item">
+      <view class="method-header">
+        <text class="method-name">市场比价法</text>
+        <text class="method-weight">权重 45%</text>
+      </view>
+      <view class="method-desc">估算结果 {{formatPrice(result.compareMethod)}}</view>
+      <view class="method-formula">同小区均价 × 面积 × 综合修正系数({{result.coefficientDetail.total.toFixed(2)}})</view>
+    </view>
+
+    <view class="method-item" wx:if="{{result.govMethod}}">
+      <view class="method-header">
+        <text class="method-name">政府指导价法</text>
+        <text class="method-weight">权重 20%</text>
+      </view>
+      <view class="method-desc">估算结果 {{formatPrice(result.govMethod)}}</view>
+      <view class="method-formula">政府指导价 × 面积 × 综合修正系数</view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">修正系数详情</view>
+    <view class="coef-row">
+      <text class="coef-name">楼层修正</text>
+      <text class="coef-value">{{result.coefficientDetail.floor}}</text>
+    </view>
+    <view class="coef-row">
+      <text class="coef-name">朝向修正</text>
+      <text class="coef-value">{{result.coefficientDetail.direction}}</text>
+    </view>
+    <view class="coef-row">
+      <text class="coef-name">装修修正</text>
+      <text class="coef-value">{{result.coefficientDetail.decoration}}</text>
+    </view>
+    <view class="coef-row">
+      <text class="coef-name">房龄修正</text>
+      <text class="coef-value">{{result.coefficientDetail.age}}</text>
+    </view>
+    <view class="coef-row">
+      <text class="coef-name">电梯修正</text>
+      <text class="coef-value">{{result.coefficientDetail.elevator}}</text>
+    </view>
+    <view class="coef-row total">
+      <text class="coef-name">综合系数</text>
+      <text class="coef-value">{{result.coefficientDetail.total.toFixed(3)}}</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">数据来源与说明</view>
+    <view class="disclaimer-content">
+      <view>1. 同小区成交均价、租金数据由您自行查询填写（建议来源：安居客、链家、贝壳找房、政府住建部门公示）。</view>
+      <view>2. 政府指导价为选填项，可从当地住建局或自然资源局官网查询。</view>
+      <view>3. 本工具仅提供数学模型估算，不构成投资建议，实际交易请咨询专业机构。</view>
+      <view>4. 所有计算均在本地完成，不上传任何数据。</view>
+    </view>
+  </view>
+
+  <view class="action-row">
+    <view class="btn-secondary" bindtap="goBack">返回首页</view>
+    <view class="btn-secondary primary" bindtap="reInput">修改信息</view>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>

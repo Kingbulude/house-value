@@ -1,0 +1,14 @@
+{
+  "name": "house-valuator",
+  "version": "1.0.0",
+  "description": "房产估值计算器 - 微信小程序",
+  "scripts": {
+    "build": "echo 'WeChat Mini Program build is handled by WeChat DevTools'",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0"
+  },
+  "keywords": ["wechat", "miniprogram", "real-estate", "calculator"],
+  "license": "MIT"
+}

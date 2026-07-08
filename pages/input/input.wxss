@@ -1,0 +1,17 @@
+.room-row {
+  display: flex;
+  gap: 20rpx;
+}
+
+.room-picker {
+  width: 200rpx;
+  text-align: center;
+}
+
+.floor-input {
+  width: 48%;
+}
+
+.safe-bottom {
+  height: 40rpx;
+}

@@ -1,0 +1,90 @@
+<view class="container">
+  <view class="card">
+    <view class="card-title">房屋基本信息</view>
+
+    <view class="form-item">
+      <text class="form-label">城市</text>
+      <input class="form-input" placeholder="如：北京、上海" value="{{city}}" data-field="city" bindinput="onInput" />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">小区名称</text>
+      <input class="form-input" placeholder="如：万科城市花园" value="{{community}}" data-field="community" bindinput="onInput" />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">建筑面积 (m²)</text>
+      <input class="form-input" type="digit" placeholder="如：89.5" value="{{area}}" data-field="area" bindinput="onNumberInput" />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">户型</text>
+      <view class="room-row">
+        <picker mode="selector" range="{{[1,2,3,4,5,6,7,8,9]}}" value="{{roomCount-1}}" bindchange="onNumberInput" data-field="roomCount">
+          <view class="picker room-picker">{{roomCount}}室</view>
+        </picker>
+        <picker mode="selector" range="{{[0,1,2,3,4,5]}}" value="{{hallCount}}" bindchange="onNumberInput" data-field="hallCount">
+          <view class="picker room-picker">{{hallCount}}厅</view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">所在楼层 / 总楼层</text>
+      <view class="flex-between">
+        <input class="form-input floor-input" type="number" placeholder="所在楼层" value="{{floor}}" data-field="floor" bindinput="onNumberInput" />
+        <input class="form-input floor-input" type="number" placeholder="总楼层" value="{{totalFloor}}" data-field="totalFloor" bindinput="onNumberInput" />
+      </view>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">电梯</text>
+      <picker mode="selector" range="{{elevatorOptions}}" value="{{elevatorIndex}}" bindchange="onElevatorChange">
+        <view class="picker">{{elevatorOptions[elevatorIndex]}}</view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">朝向</text>
+      <picker mode="selector" range="{{directionOptions}}" value="{{directionIndex}}" bindchange="onDirectionChange">
+        <view class="picker">{{direction}}</view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">装修情况</text>
+      <picker mode="selector" range="{{decorationOptions}}" value="{{decorationIndex}}" bindchange="onDecorationChange">
+        <view class="picker">{{decoration}}</view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">建筑年代</text>
+      <picker mode="selector" range="{{[1980,1985,1990,1995,2000,2005,2010,2015,2020,2021,2022,2023,2024,2025,2026]}}" value="{{buildYear-1980}}" bindchange="onNumberInput" data-field="buildYear">
+        <view class="picker">{{buildYear}}年</view>
+      </picker>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">参考数据（请从安居客、链家等渠道查询后填写）</view>
+
+    <view class="form-item">
+      <text class="form-label">同小区近期成交均价 (元/m²)</text>
+      <input class="form-input" type="digit" placeholder="如：65000" value="{{nearbyPrice}}" data-field="nearbyPrice" bindinput="onNumberInput" />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">同户型月租金 (元)</text>
+      <input class="form-input" type="digit" placeholder="如：8500" value="{{monthlyRent}}" data-field="monthlyRent" bindinput="onNumberInput" />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">政府指导价 (元/m²，选填)</text>
+      <input class="form-input" type="digit" placeholder="如：58000" value="{{govPrice}}" data-field="govPrice" bindinput="onNumberInput" />
+    </view>
+  </view>
+
+  <view class="btn-primary" bindtap="submit">开始估算</view>
+  <view class="safe-bottom"></view>
+</view>

@@ -1,0 +1,92 @@
+.hero {
+  text-align: center;
+  padding: 60rpx 20rpx 40rpx;
+}
+
+.hero-title {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 16rpx;
+}
+
+.hero-sub {
+  font-size: 28rpx;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.hero-tip {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 12rpx;
+}
+
+.feature-list {
+  margin: 20rpx 0 40rpx;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.feature-icon {
+  font-size: 48rpx;
+  margin-right: 24rpx;
+}
+
+.feature-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  margin-bottom: 6rpx;
+}
+
+.feature-desc {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+}
+
+.cache-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 30rpx;
+  margin-top: 30rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+  position: relative;
+}
+
+.cache-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 8rpx;
+}
+
+.cache-value {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.cache-action {
+  position: absolute;
+  right: 30rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 26rpx;
+  color: var(--primary);
+}
+
+.disclaimer {
+  text-align: center;
+  font-size: 22rpx;
+  color: #bbb;
+  margin-top: 40rpx;
+  padding: 0 40rpx;
+  line-height: 1.5;
+}
