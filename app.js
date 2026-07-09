@@ -354,6 +354,36 @@ function findDefectsByCommunityName(communityName) {
   });
 }
 
+// 根据小区名称精确匹配学区
+function findSchoolByCommunityName(communityName) {
+  if (!communityName || communityName.trim().length < 2) return [];
+  
+  const name = communityName.trim();
+  
+  const matchedSchools = [];
+  
+  Object.entries(HANGZHOU_SCHOOL_DISTRICT_DATA).forEach(([schoolName, data]) => {
+    if (!data.districtCommunities || data.districtCommunities.length === 0) return;
+    
+    const isMatch = data.districtCommunities.some(c => {
+      // 精确匹配
+      if (c === name) return true;
+      // 包含匹配
+      if (c.includes(name) || name.includes(c)) return true;
+      // 模糊匹配
+      const cBase = c.replace(/苑|园|府|庭|轩|阁|居|邸|楼|厦|寓|公寓|花园|新城|名苑|雅苑|嘉园|家苑|一区|二区|三区|四区|五区|东区/g, '');
+      const nameBase = name.replace(/苑|园|府|庭|轩|阁|居|邸|楼|厦|寓|公寓|花园|新城|名苑|雅苑|嘉园|家苑|一区|二区|三区|四区|五区|东区/g, '');
+      return cBase === nameBase || cBase.includes(nameBase) || nameBase.includes(cBase);
+    });
+    
+    if (isMatch) {
+      matchedSchools.push({ name: schoolName, ...data });
+    }
+  });
+  
+  return matchedSchools;
+}
+
 // 根据区域和商圈查找附近硬伤
 // 逻辑：
 // 1. 如果选择了具体商圈，优先匹配 affectedBusinessDistricts 包含该商圈的硬伤（精确匹配）
@@ -555,13 +585,15 @@ const HANGZHOU_SEWER_RISK_DATA = {
 };
 
 // 杭州学区对口及预警数据
+// districtCommunities: 该学校学区范围内的小区列表（用于精确匹配）
 const HANGZHOU_SCHOOL_DISTRICT_DATA = {
   '学军小学求智校区': {
     district: '西湖区',
     level: '顶级',
     middleSchool: '十三中',
     middleSchoolLevel: '优质',
-    scope: ['文二路以北、保俶北路以西、文三路以南、教工路以东'],
+    scope: ['东至马塍路，南至文三路，西至保俶北路，北至文二路'],
+    districtCommunities: ['下马塍居民区', '马塍路24号', '马塍路26号', '马塍路28号', '马塍路29号', '马塍路30号', '马塍路31号', '马塍路32号', '马塍路33号', '马塍路34号', '马塍路35号', '西溪河下小区', '文二路206号院', '求智巷小区', '文二路240号院', '崇文公寓'],
     premium: 0.50,
     warning2026: '绿色',
     warning2027: '绿色',
@@ -573,7 +605,8 @@ const HANGZHOU_SCHOOL_DISTRICT_DATA = {
     level: '顶级',
     middleSchool: '紫金港中学',
     middleSchoolLevel: '优质',
-    scope: ['浙大紫金港校区周边、政苑小区、圣苑小区等'],
+    scope: ['浙大紫金港校区周边'],
+    districtCommunities: ['文鼎苑', '冠苑', '圣苑小区', '浙大紫金港教职工宿舍'],
     premium: 0.45,
     warning2026: '绿色',
     warning2027: '绿色',
@@ -585,21 +618,23 @@ const HANGZHOU_SCHOOL_DISTRICT_DATA = {
     level: '顶级',
     middleSchool: '十三中',
     middleSchoolLevel: '优质',
-    scope: ['文一路沿线、教工路以东、莫干山路以西'],
+    scope: ['东至莫干山路，南至文二路，西至教工路，北至余杭塘河'],
+    districtCommunities: ['白荡海人家', '湖墅新村', '大塘新村', '贾家弄小区', '莫干新村', '邮电新村', '沈塘新村', '石灰桥新村', '打索桥新村', '建工新村', '日晖新村', '塘河新村', '余杭塘河新村', '董家新村', '翠苑新村一区', '花园北村', '文一路家属区'],
     premium: 0.40,
     warning2026: '红色',
     warning2027: '红色',
     minResidencyYears: 2.7,
-    desc: '2026年落户需满2年7个月（截止2023.11.21），不足调剂至师苑校区，师资共享、直升十三中不变',
+    desc: '2026年落户需满2年7个月，不足调剂至师苑校区，师资共享、直升十三中不变',
   },
   '文三街小学': {
     district: '西湖区',
     level: '顶级',
     middleSchool: '十三中',
     middleSchoolLevel: '优质',
-    scope: ['文三路沿线、学院路以西、古翠路以东'],
+    scope: ['东至莫干山路，南至武林巷，西至保俶北路，北至文三路'],
+    districtCommunities: ['邮电新村', '沈塘新村', '武林巷小区', '马塍路小区', '文三新村', '上宁新村', '武林门新村', '世贸丽晶城', '世贸丽晶城宝石苑', '世贸丽晶城初阳苑', '世贸丽晶城栖霞苑', '世贸丽晶城望湖苑', '世贸丽晶城玉泉苑', '文三路103号院'],
     premium: 0.40,
-    warning2026: '红色',
+    warning2026: '绿色',
     warning2027: '黄色',
     minResidencyYears: 0,
     desc: '2026年一表生全收无调剂，2025年需落户2年5个月，2026年门槛大幅降低',
@@ -609,7 +644,8 @@ const HANGZHOU_SCHOOL_DISTRICT_DATA = {
     level: '顶级',
     middleSchool: '十三中',
     middleSchoolLevel: '优质',
-    scope: ['学院路以东、文二路以北、保俶北路以西'],
+    scope: ['东至教工路，南至文一路，西至学院路'],
+    districtCommunities: ['花园南村', '花园西村', '保亭村安置房', '金都城市芯宇', '今日嘉园', '学院路304号', '学院路312号'],
     premium: 0.38,
     warning2026: '绿色',
     warning2027: '绿色',
@@ -621,19 +657,21 @@ const HANGZHOU_SCHOOL_DISTRICT_DATA = {
     level: '优质',
     middleSchool: '翠苑中学',
     middleSchoolLevel: '普通',
-    scope: ['文华路沿线、古墩路以东'],
+    scope: ['东至学院路，南至文二路，西至古荡农灌河'],
+    districtCommunities: ['翠苑一区', '翠苑二区1-27幢', '翠苑三区', '翠苑四区', '翠苑五区', '古荡湾新村'],
     premium: 0.25,
     warning2026: '红色',
-    warning2027: '红色',
+    warning2027: 'red',
     minResidencyYears: 0.9,
     desc: '2026年落户需约11个月，部分一表生调剂至翠苑一小本部',
   },
   '卖鱼桥小学湖墅校区': {
     district: '拱墅区',
     level: '顶级',
-    middleSchool: '大关中学/文晖中学',
+    middleSchool: '大关中学',
     middleSchoolLevel: '普通',
-    scope: ['湖墅路沿线、上塘路以西、莫干山路以东'],
+    scope: ['湖墅路沿线、上塘路以西'],
+    districtCommunities: ['湖墅新村', '叶青苑', '信义坊', '仓基新村', '大兜路小区', '贾家弄', '珠儿潭小区'],
     premium: 0.35,
     warning2026: '红色',
     warning2027: '红色',
@@ -646,23 +684,12 @@ const HANGZHOU_SCHOOL_DISTRICT_DATA = {
     middleSchool: '文澜中学',
     middleSchoolLevel: '优质',
     scope: ['桥西板块、运河新城核心区'],
+    districtCommunities: ['大河宸章', '大家运河之星', '德信晓宸', '大家上洋', '吉祥里', '如意朗诗', '运河上宸', '碧玺华庭', '名城博园', '尚堂府', '江南里'],
     premium: 0.40,
     warning2026: '红色',
     warning2027: '红色',
     minResidencyYears: 0.2,
     desc: '2026年落户仅需约2个月，对口文澜中学（原民办转公，拱墅区顶级初中）',
-  },
-  '长寿桥小学': {
-    district: '拱墅区',
-    level: '优质',
-    middleSchool: '春蕾中学',
-    middleSchoolLevel: '普通',
-    scope: ['武林板块、延安路沿线'],
-    premium: 0.25,
-    warning2026: '红色',
-    warning2027: '红色',
-    minResidencyYears: 1.5,
-    desc: '市中心老牌名校，一表生有分流',
   },
   '采荷一小': {
     district: '上城区',
@@ -670,23 +697,12 @@ const HANGZHOU_SCHOOL_DISTRICT_DATA = {
     middleSchool: '采荷中学',
     middleSchoolLevel: '普通',
     scope: ['采荷街道、凯旋路沿线'],
+    districtCommunities: ['采荷一区', '采荷二区', '采荷三区', '采荷东区', '采荷嘉业', '静怡花苑', '怡和苑', '凯旋路家属区'],
     premium: 0.30,
     warning2026: '红色',
     warning2027: '红色',
     minResidencyYears: 5,
     desc: '2026-2028连续三年红色预警，2025年落户截止2021.1.19，需约5年',
-  },
-  '采荷二小': {
-    district: '上城区',
-    level: '优质',
-    middleSchool: '采荷中学',
-    middleSchoolLevel: '普通',
-    scope: ['采荷街道、秋涛路沿线'],
-    premium: 0.28,
-    warning2026: '红色',
-    warning2027: '红色',
-    minResidencyYears: 1,
-    desc: '2026-2027红色预警，2028转黄色',
   },
   '胜利实验学校': {
     district: '上城区',
@@ -694,9 +710,10 @@ const HANGZHOU_SCHOOL_DISTRICT_DATA = {
     middleSchool: '开元中学',
     middleSchoolLevel: '普通',
     scope: ['南星桥板块、钱江新城南翼'],
+    districtCommunities: ['复地连城国际', '钱江水晶城', '候潮府', '金色海岸', '春江花月', '水印城', '赞成林风', '金色家园'],
     premium: 0.40,
     warning2026: '黄色',
-    warning2027: '绿色',
+    warning2027: 'green',
     minResidencyYears: 0,
     desc: '上城区顶级公办，钱塘江沿岸豪宅配套学区',
   },
@@ -705,22 +722,24 @@ const HANGZHOU_SCHOOL_DISTRICT_DATA = {
     level: '顶级',
     middleSchool: '江南实验初中',
     middleSchoolLevel: '优质',
-    scope: ['江南大道以南、风情大道以西、北塘河以北（东方郡、春江郦城、明月江南、晓风印月等）'],
+    scope: ['江南大道以南、风情大道以西、北塘河以北'],
+    districtCommunities: ['东方郡', '春江郦城', '明月江南', '晓风印月', '铂金时代', '中央花城', '温馨人家', '风雅钱塘', '钱塘春晓', '江南豪园', '倾城之恋', '江南咏蝶苑', '江南望庄', '江锦国际', '海威钱江之星'],
     premium: 0.45,
     warning2026: '红色',
-    warning2027: '红色',
+    warning2027: 'red',
     minResidencyYears: 6,
-    desc: '滨江公办天花板，重高录取率14.66%全区第一，2026年落户需约6年（截止2020.8.25）',
+    desc: '滨江公办天花板，重高录取率14.66%全区第一，2026年落户需约6年',
   },
   '滨和小学': {
     district: '滨江区',
     level: '优质',
     middleSchool: '滨和中学',
     middleSchoolLevel: '优质',
-    scope: ['与月明共用大江南学区，四校任选'],
+    scope: ['与月明共用大江南学区'],
+    districtCommunities: ['东方郡', '春江郦城', '明月江南', '晓风印月', '铂金时代', '中央花城', '温馨人家', '风雅钱塘'],
     premium: 0.30,
     warning2026: '红色',
-    warning2027: '红色',
+    warning2027: 'red',
     minResidencyYears: 3,
     desc: '江南集团性价比分校，2026年落户需约3年，重高率25.3%，小班化办学',
   },
@@ -729,36 +748,13 @@ const HANGZHOU_SCHOOL_DISTRICT_DATA = {
     level: '优质',
     middleSchool: '闻涛中学',
     middleSchoolLevel: '普通',
-    scope: ['时代大道以东、钱塘江以南、江陵路以西、江南大道以北'],
+    scope: ['时代大道以东、钱塘江以南、江陵路以西'],
+    districtCommunities: ['彩虹城', '国信嘉园', '太阳国际', '盛元慧谷', '信诚嘉园', '江南华苑', '银色港湾', '钱江湾花园'],
     premium: 0.28,
     warning2026: '红色',
-    warning2027: '黄色',
+    warning2027: 'yellow',
     minResidencyYears: 2.5,
     desc: '2026年新增江畔小学分流，2027转黄色，综合性价比之王',
-  },
-  '钱江湾小学': {
-    district: '滨江区',
-    level: '优质',
-    middleSchool: '滨文中学',
-    middleSchoolLevel: '普通',
-    scope: ['浦沿街道沿江片区'],
-    premium: 0.20,
-    warning2026: '红色',
-    warning2027: '红色',
-    minResidencyYears: 2.5,
-    desc: '2025年落户截止2023.4.18，需约2.5年',
-  },
-  '湖畔学校': {
-    district: '滨江区',
-    level: '优质',
-    middleSchool: '湖畔中学',
-    middleSchoolLevel: '普通',
-    scope: ['长河街道、白马湖周边'],
-    premium: 0.22,
-    warning2026: '红色',
-    warning2027: '红色',
-    minResidencyYears: 6,
-    desc: '2026年落户需约6年（截止2020.9.10），与创意城小学共用学区',
   },
   '文清小学': {
     district: '钱塘区',
@@ -766,35 +762,12 @@ const HANGZHOU_SCHOOL_DISTRICT_DATA = {
     middleSchool: '学正中学',
     middleSchoolLevel: '普通',
     scope: ['下沙核心区'],
+    districtCommunities: ['保利湾天地', '和达城', '金沙湖壹号', '湖景居', '金沙阳光', '保利城市果岭'],
     premium: 0.20,
     warning2026: '红色',
-    warning2027: '红色',
+    warning2027: 'red',
     minResidencyYears: 2.5,
     desc: '2025年落户截止2023.9.11，钱塘区热门公办',
-  },
-  '学正小学': {
-    district: '钱塘区',
-    level: '优质',
-    middleSchool: '学正中学',
-    middleSchoolLevel: '普通',
-    scope: ['下沙沿江板块'],
-    premium: 0.18,
-    warning2026: '红色',
-    warning2027: '红色',
-    minResidencyYears: 5,
-    desc: '2025年落户截止2021.6.9，需约5年',
-  },
-  '天元公学西站校区': {
-    district: '余杭区',
-    level: '优质',
-    middleSchool: '天元公学初中部',
-    middleSchoolLevel: '优质',
-    scope: ['云城核心区'],
-    premium: 0.25,
-    warning2026: '绿色',
-    warning2027: '绿色',
-    minResidencyYears: 0,
-    desc: '余杭区优质民办学校，九年一贯制，2025年已开学招生',
   },
 };
 
@@ -1714,7 +1687,7 @@ function updateDistrictInfo(districtName) {
   }
 }
 
-// 小区名称匹配硬伤显示
+// 小区名称匹配硬伤和学区显示
 function updateCommunityDefectDetect(communityName) {
   const detectDiv = document.getElementById('communityDefectDetect');
   
@@ -1724,8 +1697,9 @@ function updateCommunityDefectDetect(communityName) {
   }
   
   const matchedDefects = findDefectsByCommunityName(communityName);
+  const matchedSchools = findSchoolByCommunityName(communityName);
   
-  if (matchedDefects.length === 0) {
+  if (matchedDefects.length === 0 && matchedSchools.length === 0) {
     detectDiv.style.display = 'none';
     return;
   }
@@ -1758,40 +1732,72 @@ function updateCommunityDefectDetect(communityName) {
     gas_station: 'gas_station',
   };
   
-  let html = `
-    <div style="font-weight:700;color:#991b1b;margin-bottom:10px;font-size:15px;">
-      ⚠️ 检测到"${communityName}"附近存在以下硬伤：
-    </div>
-  `;
+  let html = '';
   
-  matchedDefects.forEach(d => {
+  // 学区匹配结果
+  if (matchedSchools.length > 0) {
     html += `
-      <div style="display:flex;align-items:center;margin-bottom:8px;padding:8px;background:#fff;border-radius:6px;">
-        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${typeColorMap[d.type]};margin-right:10px;"></span>
-        <span style="flex:1;font-size:13px;">
-          <strong>${d.name}</strong>
-          <span style="color:#64748b;font-size:12px;margin-left:6px;">${d.description}，影响半径${d.impactRadius}m</span>
-        </span>
-        <span style="color:${severityColorMap[d.severity]};font-weight:600;font-size:12px;">${getDefectSeverityName(d.severity)}</span>
+      <div style="margin-bottom:16px;padding:12px;background:#ecfdf5;border-radius:8px;border-left:4px solid #059669;">
+        <div style="font-weight:700;color:#065f46;margin-bottom:10px;font-size:15px;">
+          🎓 检测到"${communityName}"对应学区：
+        </div>
+    `;
+    
+    matchedSchools.forEach(s => {
+      const warningColor = s.warning2026 === '红色' || s.warning2026 === 'red' ? '#dc2626' : s.warning2026 === '黄色' || s.warning2026 === 'yellow' ? '#d97706' : '#059669';
+      html += `
+        <div style="margin-bottom:10px;padding:10px;background:#fff;border-radius:6px;">
+          <div style="font-weight:600;font-size:14px;color:#065f46;">${s.name} <span style="font-size:12px;color:#64748b;">(${s.level})</span></div>
+          <div style="font-size:12px;color:#64748b;margin-top:4px;">📍 对口初中：${s.middleSchool}（${s.middleSchoolLevel}）</div>
+          <div style="display:flex;gap:16px;margin-top:6px;font-size:12px;">
+            <span>2026预警：<span style="color:${warningColor};font-weight:600;">${s.warning2026 === 'red' ? '红色' : s.warning2026 === 'yellow' ? '黄色' : s.warning2026}</span></span>
+            <span>落户要求：${s.minResidencyYears > 0 ? '≥' + s.minResidencyYears + '年' : '无限制'}</span>
+          </div>
+          <div style="font-size:11px;color:#64748b;margin-top:6px;">${s.desc}</div>
+        </div>
+      `;
+    });
+    
+    html += `</div>`;
+  }
+  
+  // 硬伤匹配结果
+  if (matchedDefects.length > 0) {
+    html += `
+      <div style="font-weight:700;color:#991b1b;margin-bottom:10px;font-size:15px;">
+        ⚠️ 检测到"${communityName}"附近存在以下硬伤：
       </div>
     `;
     
-    // 自动勾选对应硬伤
-    const value = defectValueMap[d.type];
-    if (value) {
-      const cb = document.querySelector(`input[name="defects"][value="${value}"]`);
-      if (cb && !cb.checked) {
-        cb.checked = true;
-        cb.closest('.form-checkbox-item').classList.add('checked');
+    matchedDefects.forEach(d => {
+      html += `
+        <div style="display:flex;align-items:center;margin-bottom:8px;padding:8px;background:#fff;border-radius:6px;">
+          <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${typeColorMap[d.type]};margin-right:10px;"></span>
+          <span style="flex:1;font-size:13px;">
+            <strong>${d.name}</strong>
+            <span style="color:#64748b;font-size:12px;margin-left:6px;">${d.description}，影响半径${d.impactRadius}m</span>
+          </span>
+          <span style="color:${severityColorMap[d.severity]};font-weight:600;font-size:12px;">${getDefectSeverityName(d.severity)}</span>
+        </div>
+      `;
+      
+      // 自动勾选对应硬伤
+      const value = defectValueMap[d.type];
+      if (value) {
+        const cb = document.querySelector(`input[name="defects"][value="${value}"]`);
+        if (cb && !cb.checked) {
+          cb.checked = true;
+          cb.closest('.form-checkbox-item').classList.add('checked');
+        }
       }
-    }
-  });
-  
-  html += `
-    <div style="margin-top:10px;font-size:12px;color:#7f1d1d;">
-      💡 已自动勾选对应的硬伤选项，您可以在下方"硬伤因素"区域调整。建议结合实际楼栋位置和朝向判断是否真正受影响。
-    </div>
-  `;
+    });
+    
+    html += `
+      <div style="margin-top:10px;font-size:12px;color:#7f1d1d;">
+        💡 已自动勾选对应的硬伤选项，您可以在下方"硬伤因素"区域调整。建议结合实际楼栋位置和朝向判断是否真正受影响。
+      </div>
+    `;
+  }
   
   detectDiv.innerHTML = html;
   detectDiv.style.display = 'block';
