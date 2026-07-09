@@ -286,6 +286,26 @@ const DEFECT_LOCATIONS = [
   { name: '杭州500kV变电站（瓶窑）', type: 'substation', district: '余杭区', address: '余杭区瓶窑镇', description: '大型500kV变电站', impactRadius: 500, severity: 'high' },
   { name: '杭州220kV变电站（三墩）', type: 'substation', district: '西湖区', address: '西湖区三墩镇', description: '220kV变电站', impactRadius: 300, severity: 'medium' },
   { name: '杭州220kV变电站（九堡）', type: 'substation', district: '上城区', address: '上城区九堡街道', description: '220kV变电站', impactRadius: 300, severity: 'medium' },
+
+  // 补充：钱塘区高架快速路（之前遗漏）
+  { name: '江东大道快速路', type: 'highway', district: '钱塘区', address: '钱塘区江东片区', description: '江东片区三横三纵快速系统重要一横，地下+地面+高架立体架构', impactRadius: 150, severity: 'high' },
+  { name: '钱塘快速路（下沙段）', type: 'highway', district: '钱塘区', address: '钱塘区下沙路与12号大街', description: '贯穿下沙片区的东西向快速路', impactRadius: 150, severity: 'high' },
+  { name: '头蓬快速路', type: 'highway', district: '钱塘区', address: '钱塘区头蓬片区', description: '大江东南北向重要快速路', impactRadius: 150, severity: 'high' },
+
+  // 补充：重要高速公路/跨江大桥（噪音影响）
+  { name: '沪杭甬高速杭州市区段', type: 'highway', district: '上城区', address: '上城区-萧山区', description: '贯穿城东的重要高速公路', impactRadius: 200, severity: 'high' },
+  { name: '杭州绕城高速（下沙大桥/钱江六桥）', type: 'highway', district: '钱塘区', address: '钱塘区下沙-萧山区', description: '日均车流量超11万辆，货车占比近四成，噪音严重', impactRadius: 250, severity: 'high' },
+  { name: '机场高速（S4）', type: 'highway', district: '萧山区', address: '萧山区-滨江区', description: '连接萧山机场的高速公路', impactRadius: 200, severity: 'high' },
+
+  // 补充：钱塘区公墓
+  { name: '新湾公墓', type: 'cemetery', district: '钱塘区', address: '钱塘区新湾街道', description: '钱塘区乡村公益性公墓', impactRadius: 1500, severity: 'medium' },
+  { name: '河庄公墓', type: 'cemetery', district: '钱塘区', address: '钱塘区河庄街道', description: '钱塘区乡村公益性公墓', impactRadius: 1500, severity: 'medium' },
+  { name: '河庄生态墓', type: 'cemetery', district: '钱塘区', address: '钱塘区河庄街道', description: '钱塘区生态公墓', impactRadius: 1500, severity: 'medium' },
+
+  // 补充：其他遗漏硬伤
+  { name: '西兴大桥（钱江三桥）', type: 'highway', district: '滨江区', address: '滨江区西兴-上城区', description: '日均车流量15万辆，超负荷运行，严重噪音', impactRadius: 200, severity: 'high' },
+  { name: '复兴大桥（钱江四桥）', type: 'highway', district: '滨江区', address: '滨江区长河-上城区', description: '日均车流量约14万辆，双层桥梁噪音大', impactRadius: 200, severity: 'high' },
+  { name: '杭州南站铁路', type: 'highway', district: '萧山区', address: '萧山区城厢街道', description: '铁路噪音及震动影响', impactRadius: 200, severity: 'medium' },
 ];
 
 // 根据区域查找附近硬伤
@@ -333,6 +353,143 @@ function getDefectSeverityName(severity) {
   return DEFECT_SEVERITY_MAP[severity] || severity;
 }
 
+// 杭州各区地势与易涝风险数据
+const HANGZHOU_TERRAIN_DATA = {
+  '上城区': {
+    elevation: '5-8m',
+    terrain: '西南和北部高、中部和东部低',
+    highestPoint: '皋亭山361.1m',
+    floodRisk: '中高风险',
+    lowLyingAreas: ['钱塘江北岸沿江板块', '婺江路雷霆路口周边', '九堡沿江片区', '丁桥低洼地带'],
+    desc: '老城核心区，地下水位埋深0.5-3m，汛期地下水位可抬升1.8m，钱塘江潮汐倒灌风险',
+  },
+  '拱墅区': {
+    elevation: '4.5-6.4m',
+    terrain: '东北高西南低',
+    highestPoint: '半山主峰283.9m',
+    floodRisk: '中高风险',
+    lowLyingAreas: ['运河沿线老旧片区', '石祥路郭家厍公交站周边', '半山路沿线', '湖墅北路', '和睦街道南门区域'],
+    desc: '京杭大运河纵贯，平原区海拔4.5-6.4m，老城区管网老化严重，软土沉降导致排水不畅',
+  },
+  '西湖区': {
+    elevation: '5-8m（平原区）',
+    terrain: '西高东低，西部为山地丘陵',
+    highestPoint: '西部天目山余脉',
+    floodRisk: '中等风险',
+    lowLyingAreas: ['蒋村/西溪湿地周边', '三墩部分低洼区', '虎跑路九溪/进龙河片区', '河坊街/南宋御街周边'],
+    desc: '东部平原海拔5-8m，西部丘陵山地，古河道粉砂层隐蔽窜水，梅雨季地下室返渗高发',
+  },
+  '滨江区': {
+    elevation: '5-8m',
+    terrain: '钱塘江口滨海围垦平原',
+    highestPoint: '无显著山地',
+    floodRisk: '中高风险',
+    lowLyingAreas: ['长河街道沿江片区', '西兴大桥/复兴大桥沿线', '浦沿沿江板块'],
+    desc: '钱塘江冲积平原，20-60m厚淤泥质软土层，地基持续不均匀沉降，沿江低层建筑潮汐式间歇返渗',
+  },
+  '萧山区': {
+    elevation: '平均23m（平原区7-49m）',
+    terrain: '西北高、东南低',
+    highestPoint: '大岩山104m',
+    floodRisk: '中高风险',
+    lowLyingAreas: ['益农镇（平均海拔7m）', '瓜沥镇（平均海拔14m）', '城河公园周边（海拔13m）', '萧山科技城围垦区'],
+    desc: '东部益农、瓜沥等地海拔仅7-14m，围垦区地势低洼，钱塘江潮汐影响显著',
+  },
+  '余杭区': {
+    elevation: '东部平原5-8m，西部山地1000m+',
+    terrain: '由西向东倾斜',
+    highestPoint: '窑头山1095m',
+    floodRisk: '高风险',
+    lowLyingAreas: ['闲林街道乐山弄（板块最低点，比省道低2m）', '五常街道湿地周边', '仓前街道部分低洼区', '未来科技城部分区域'],
+    desc: '地势类似漏斗，城西一带最低洼。闲林乐山弄是整个闲林板块最低点，雨季污水倒灌严重',
+  },
+  '临平区': {
+    elevation: '5-8m',
+    terrain: '杭嘉湖平原，地势平坦',
+    highestPoint: '无显著山地',
+    floodRisk: '中等风险',
+    lowLyingAreas: ['东湖街道部分区域', '乔司街道低洼地带', '临平新城局部'],
+    desc: '平原水网地带，地下水位较高，部分老旧小区存在雨水倒灌问题',
+  },
+  '钱塘区': {
+    elevation: '5-8m',
+    terrain: '钱塘江冲海积平原',
+    highestPoint: '无显著山地',
+    floodRisk: '高风险',
+    lowLyingAreas: ['下沙沿江板块', '大江东围垦区', '河庄街道低洼地带', '临江高科园周边'],
+    desc: '钱塘江冲积平原，20-60m厚淤泥质软土，沿江区域地势最低，受潮汐和暴雨双重影响',
+  },
+  '富阳区': {
+    elevation: '5-20m',
+    terrain: '东低西高',
+    highestPoint: '西部山区',
+    floodRisk: '中等风险',
+    lowLyingAreas: ['东洲街道（海拔低）', '横凉亭路金秋大道路口', '富阳城区部分低洼区'],
+    desc: '东洲地势较低，受富春江水位影响，部分路段积水问题突出',
+  },
+  '临安区': {
+    elevation: '平原区20-50m，西部山区1000m+',
+    terrain: '西高东低',
+    highestPoint: '清凉峰1787m',
+    floodRisk: '中等风险',
+    lowLyingAreas: ['石镜街513号周边', '万马路与吴越街交叉口', '玲珑街117号', '流霞街'],
+    desc: '城区位于东部河谷平原，西部山区汇水速度快，城区局部低洼点易积水',
+  },
+};
+
+// 杭州下水管道老化风险数据
+const HANGZHOU_SEWER_RISK_DATA = {
+  '上城区': {
+    riskLevel: '高',
+    agingAreas: ['河坊街/南宋御街周边（清末民国砖木结构）', '清波街道老民居', '紫阳街道老小区', '近江家园', '望江家园', '采荷街道老小区'],
+    desc: '老城核心区大量七八十年代工矿预制板家属楼，管网老化、管径不足，预制板多孔楼板空腔连通导致漏水横向游走',
+  },
+  '拱墅区': {
+    riskLevel: '高',
+    agingAreas: ['朝晖片区', '浙工新村', '杭二棉家属楼', '和睦街道老旧小区', '大关街道老小区', '天水街道老小区'],
+    desc: '运河沿线老旧片区管网破损率高，钢渣/粉煤灰回填层尖锐骨料刺穿管道，古河道粉砂层横向窜水',
+  },
+  '西湖区': {
+    riskLevel: '中',
+    agingAreas: ['蒋村/西溪片区', '三墩镇老小区', '留下镇老小区', '古荡老小区'],
+    desc: '部分区域为湖积淤软土，新建楼盘沉降裂缝多，老城区管网年代久远',
+  },
+  '滨江区': {
+    riskLevel: '中',
+    agingAreas: ['长河街道早期楼盘', '西兴街道老小区', '浦沿早期小区'],
+    desc: '沿江软土地基持续沉降，导致管道错位断裂，部分小区外围污水井反复堵塞返水',
+  },
+  '萧山区': {
+    riskLevel: '中',
+    agingAreas: ['城厢街道老小区', '北干街道早期小区', '萧山老城区'],
+    desc: '老城区部分管网建设年代较早，围垦区软土地基对管网稳定性有影响',
+  },
+  '余杭区': {
+    riskLevel: '高',
+    agingAreas: ['闲林街道乐山弄片区', '五常街道老小区', '老余杭镇', '仁和街道'],
+    desc: '闲林乐山弄承接闲林1/3污水流量，管网容量不足，人口剧增导致排污量猛增，山水汇入污水管网致雨天倒灌',
+  },
+  '临平区': {
+    riskLevel: '中',
+    agingAreas: ['临平街道庙前社区天都花园（1990年代）', '东湖街道老小区', '塘栖镇老小区'],
+    desc: '部分1990年代小区雨污管网老化，存在雨水倒灌地下室问题',
+  },
+  '钱塘区': {
+    riskLevel: '中',
+    agingAreas: ['下沙早期开发区小区', '大江东新建区管网待观察'],
+    desc: '下沙为围垦新城，早期建设标准相对较低，部分管网存在老化',
+  },
+  '富阳区': {
+    riskLevel: '中',
+    agingAreas: ['富阳城区老小区', '横凉亭路沿线'],
+    desc: '部分老城区管网老化，强排泵站正在建设中',
+  },
+  '临安区': {
+    riskLevel: '中',
+    agingAreas: ['临安城区老小区', '玲珑街道部分区域'],
+    desc: '局部低洼区域管网排水能力不足，正在分批改造',
+  },
+};
 
 // ============ 估值引擎 ============
 
@@ -949,14 +1106,71 @@ function updateDefectsAutoDetect() {
   const businessDistrict = document.getElementById('businessDistrict').value;
   const autoDetectDiv = document.getElementById('defectsAutoDetect');
   const autoListDiv = document.getElementById('defectsAutoList');
+  const terrainDiv = document.getElementById('terrainAutoDetect');
+  const terrainListDiv = document.getElementById('terrainAutoList');
+  const sewerDiv = document.getElementById('sewerAutoDetect');
+  const sewerListDiv = document.getElementById('sewerAutoList');
 
   if (!district) {
     autoDetectDiv.style.display = 'none';
+    terrainDiv.style.display = 'none';
+    sewerDiv.style.display = 'none';
     return;
   }
 
+  // === 地势与排水风险 ===
+  const terrain = HANGZHOU_TERRAIN_DATA[district];
+  if (terrain) {
+    const riskColor = terrain.floodRisk.includes('高') ? '#dc2626' : terrain.floodRisk.includes('中') ? '#d97706' : '#059669';
+    let terrainHtml = `
+      <div style="font-size:13px;line-height:1.7;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+          <span style="color:#64748b;">平均海拔</span><span>${terrain.elevation}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+          <span style="color:#64748b;">地势特征</span><span>${terrain.terrain}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+          <span style="color:#64748b;">内涝风险</span><span style="color:${riskColor};font-weight:600;">${terrain.floodRisk}</span>
+        </div>
+        <div style="margin-top:6px;padding:8px;background:#fff;border-radius:6px;">
+          <div style="font-weight:600;margin-bottom:4px;">⚠️ 已知低洼易涝点：</div>
+          ${terrain.lowLyingAreas.map(a => `<div style="color:#dc2626;font-size:12px;">• ${a}</div>`).join('')}
+        </div>
+        <div style="margin-top:6px;font-size:12px;color:#64748b;">${terrain.desc}</div>
+      </div>
+    `;
+    terrainListDiv.innerHTML = terrainHtml;
+    terrainDiv.style.display = 'block';
+  } else {
+    terrainDiv.style.display = 'none';
+  }
+
+  // === 下水管道老化风险 ===
+  const sewer = HANGZHOU_SEWER_RISK_DATA[district];
+  if (sewer) {
+    const riskColor = sewer.riskLevel === '高' ? '#dc2626' : sewer.riskLevel === '中' ? '#d97706' : '#059669';
+    let sewerHtml = `
+      <div style="font-size:13px;line-height:1.7;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+          <span style="color:#64748b;">管网老化风险等级</span><span style="color:${riskColor};font-weight:600;">${sewer.riskLevel}</span>
+        </div>
+        <div style="margin-top:6px;padding:8px;background:#fff;border-radius:6px;">
+          <div style="font-weight:600;margin-bottom:4px;">📍 高风险片区/小区：</div>
+          ${sewer.agingAreas.map(a => `<div style="font-size:12px;">• ${a}</div>`).join('')}
+        </div>
+        <div style="margin-top:6px;font-size:12px;color:#64748b;">${sewer.desc}</div>
+      </div>
+    `;
+    sewerListDiv.innerHTML = sewerHtml;
+    sewerDiv.style.display = 'block';
+  } else {
+    sewerDiv.style.display = 'none';
+  }
+
+  // === 硬伤检测 ===
   const defects = findNearbyDefects(district, businessDistrict);
-  
+
   if (defects.length === 0) {
     autoDetectDiv.style.display = 'none';
     return;
@@ -981,7 +1195,7 @@ function updateDefectsAutoDetect() {
 
   let html = '';
   const defectTypeSet = new Set();
-  
+
   defects.forEach(d => {
     defectTypeSet.add(d.type);
     html += `
