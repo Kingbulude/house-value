@@ -1,14 +1,14 @@
 {
-  "name": "house-valuator",
+  "name": "house-value",
   "version": "1.0.0",
-  "description": "房产估值计算器 - 微信小程序",
+  "description": "房产估值计算器 - 基于专家规则引擎的房产价值分析工具",
   "scripts": {
-    "build": "echo 'WeChat Mini Program build is handled by WeChat DevTools'",
+    "build": "cp -r web .cloudflare/pages || mkdir -p .cloudflare/pages && cp web/* .cloudflare/pages/",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "typescript": "^5.3.0"
   },
-  "keywords": ["wechat", "miniprogram", "real-estate", "calculator"],
+  "keywords": ["real-estate", "valuation", "calculator"],
   "license": "MIT"
 }
