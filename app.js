@@ -224,146 +224,135 @@ const SCHOOLS = {
 
 // 杭州硬伤位置数据库
 // affectedBusinessDistricts: 该硬伤实际会影响的商圈列表（用于精确匹配）
-// 如果为空数组，表示只影响未在商圈列表中的街道，仅在选择"其他"或未选商圈时区域级提示
+// affectedCommunities: 该硬伤实际会影响的代表性小区列表（用于小区名称匹配）
 const DEFECT_LOCATIONS = [
-  // ========== 高架快速路（只影响沿线附近商圈） ==========
+  // ========== 高架快速路 ==========
   { name: '中河高架路', type: 'highway', district: '上城区', address: '上城区-西湖区', description: '贯穿主城南北的核心高架', impactRadius: 150, severity: 'high',
-    affectedBusinessDistricts: ['湖滨', '南星桥', '望江'] },
+    affectedBusinessDistricts: ['湖滨', '南星桥', '望江'],
+    affectedCommunities: ['中北花园', '青春坊', '长庆新城', '吴山名苑', '定安名都', '金隆花园', '中河家园'] },
   { name: '秋石高架路', type: 'highway', district: '上城区', address: '上城区-江干区-临平区', description: '连接主城区与临平的主要通道', impactRadius: 150, severity: 'high',
-    affectedBusinessDistricts: ['城东新城', '艮北新城', '丁桥', '星桥'] },
+    affectedBusinessDistricts: ['城东新城', '艮北新城', '丁桥', '星桥'],
+    affectedCommunities: ['锦上万象府', '新湖武林国际', '艮园', '机神新村', '濮家新村', '闸弄口新村', '万家花园', '北景园'] },
   { name: '德胜快速路', type: 'highway', district: '拱墅区', address: '拱墅区-江干区', description: '城东重要东西向快速路', impactRadius: 150, severity: 'high',
-    affectedBusinessDistricts: ['大关', '三塘', '东新', '笕桥', '城东新城', '艮北新城'] },
+    affectedBusinessDistricts: ['大关', '三塘', '东新', '笕桥', '城东新城', '艮北新城'],
+    affectedCommunities: ['德胜新村', '东新园', '万家星城', '北景园', '三塘汶苑', '三塘樱园', '三塘桂苑'] },
   { name: '留石快速路', type: 'highway', district: '拱墅区', address: '拱墅区-西湖区-余杭区', description: '城北重要东西向快速路', impactRadius: 150, severity: 'high',
-    affectedBusinessDistricts: ['申花', '三墩', '勾庄', '良渚'] },
+    affectedBusinessDistricts: ['申花', '三墩', '勾庄', '良渚'],
+    affectedCommunities: ['杭州新天地丽笙酒店周边', '海外海国际酒店周边', '天阳棕榈湾', '万通时尚公馆', '万家名城'] },
   { name: '时代大道高架', type: 'highway', district: '滨江区', address: '滨江区-萧山区', description: '连接滨江与萧山的主要通道', impactRadius: 150, severity: 'high',
-    affectedBusinessDistricts: ['物联网小镇', '市北', '义桥'] },
+    affectedBusinessDistricts: ['物联网小镇', '市北', '义桥'],
+    affectedCommunities: ['逸天广场', '贺田尚城', '江南文苑', '江锦国际'] },
   { name: '风情大道高架', type: 'highway', district: '萧山区', address: '萧山区', description: '萧山重要南北向快速路', impactRadius: 150, severity: 'high',
-    affectedBusinessDistricts: ['市北', '萧山科技城'] },
-  { name: '通城高架路', type: 'highway', district: '萧山区', address: '萧山区', description: '贯穿萧山城区的东西向快速路', impactRadius: 150, severity: 'high',
-    affectedBusinessDistricts: ['新塘', '新街'] },
+    affectedBusinessDistricts: ['市北', '萧山科技城'],
+    affectedCommunities: ['顺发康悦泓园', '潮起潇江'] },
   { name: '东湖高架路', type: 'highway', district: '临平区', address: '临平区', description: '连接临平与主城区的快速路', impactRadius: 150, severity: 'high',
-    affectedBusinessDistricts: ['临平新城', '东湖新城', '乔司'] },
+    affectedBusinessDistricts: ['临平新城', '东湖新城', '乔司'],
+    affectedCommunities: ['华元欢乐城', '华元苏堤春晓'] },
   { name: '运溪高架路', type: 'highway', district: '余杭区', address: '余杭区', description: '城西科创大走廊重要通道', impactRadius: 150, severity: 'high',
-    affectedBusinessDistricts: ['未来科技城', '闲林'] },
-  { name: '彩虹快速路', type: 'highway', district: '滨江区', address: '滨江区-西湖区-富阳区', description: '连接滨江、之江与富阳', impactRadius: 150, severity: 'high',
-    affectedBusinessDistricts: ['物联网小镇', '浦沿'] },
-  { name: '文一西路快速路', type: 'highway', district: '西湖区', address: '西湖区-余杭区', description: '未来科技城核心主干道', impactRadius: 150, severity: 'high',
-    affectedBusinessDistricts: ['蒋村', '未来科技城', '闲林'] },
-  { name: '天目山路快速路', type: 'highway', district: '西湖区', address: '西湖区', description: '城西重要东西向快速路', impactRadius: 150, severity: 'high',
-    affectedBusinessDistricts: ['蒋村', '三墩'] },
+    affectedBusinessDistricts: ['未来科技城', '闲林'],
+    affectedCommunities: ['西溪华东园', '合景映月台', '大华海派风范'] },
   { name: '莫干山路高架', type: 'highway', district: '拱墅区', address: '拱墅区-余杭区', description: '城北重要南北向快速路', impactRadius: 150, severity: 'high',
-    affectedBusinessDistricts: ['申花', '祥符', '勾庄', '良渚'] },
-  { name: '钱塘快速路', type: 'highway', district: '上城区', address: '上城区-江干区', description: '贯穿城东的东西向快速路', impactRadius: 150, severity: 'high',
-    affectedBusinessDistricts: ['城东新城', '艮北新城'] },
-  { name: '望梅高架路', type: 'highway', district: '临平区', address: '临平区', description: '临平重要南北向快速路', impactRadius: 150, severity: 'high',
-    affectedBusinessDistricts: ['临平新城', '东湖新城', '塘栖'] },
-  { name: '江东大道快速路', type: 'highway', district: '钱塘区', address: '钱塘区江东片区', description: '江东片区三横三纵快速系统重要一横', impactRadius: 150, severity: 'high',
-    affectedBusinessDistricts: ['大江东', '河庄', '义蓬'] },
-  { name: '钱塘快速路（下沙段）', type: 'highway', district: '钱塘区', address: '钱塘区下沙路与12号大街', description: '贯穿下沙片区的东西向快速路', impactRadius: 150, severity: 'high',
-    affectedBusinessDistricts: ['大江东'] },
-  { name: '头蓬快速路', type: 'highway', district: '钱塘区', address: '钱塘区头蓬片区', description: '大江东南北向重要快速路', impactRadius: 150, severity: 'high',
-    affectedBusinessDistricts: ['大江东', '河庄', '义蓬'] },
-  { name: '沪杭甬高速杭州市区段', type: 'highway', district: '上城区', address: '上城区-萧山区', description: '贯穿城东的重要高速公路', impactRadius: 200, severity: 'high',
-    affectedBusinessDistricts: ['城东新城', '艮北新城', '市北', '萧山科技城'] },
-  { name: '杭州绕城高速（下沙大桥/钱江六桥）', type: 'highway', district: '钱塘区', address: '钱塘区下沙-萧山区', description: '日均车流量超11万辆，货车占比近四成', impactRadius: 250, severity: 'high',
-    affectedBusinessDistricts: ['大江东', '萧山科技城'] },
-  { name: '机场高速（S4）', type: 'highway', district: '萧山区', address: '萧山区-滨江区', description: '连接萧山机场的高速公路', impactRadius: 200, severity: 'high',
-    affectedBusinessDistricts: ['市北', '萧山科技城', '物联网小镇'] },
+    affectedBusinessDistricts: ['申花', '祥符', '勾庄', '良渚'],
+    affectedCommunities: ['中旅印宸府', '万科中城汇', '天阳棕榈湾'] },
   { name: '西兴大桥（钱江三桥）', type: 'highway', district: '滨江区', address: '滨江区西兴-上城区', description: '日均车流量15万辆，超负荷运行', impactRadius: 200, severity: 'high',
-    affectedBusinessDistricts: ['物联网小镇', '南星桥'] },
-  { name: '复兴大桥（钱江四桥）', type: 'highway', district: '滨江区', address: '滨江区长河-上城区', description: '日均车流量约14万辆，双层桥梁噪音大', impactRadius: 200, severity: 'high',
-    affectedBusinessDistricts: ['物联网小镇', '南星桥'] },
+    affectedBusinessDistricts: ['物联网小镇', '南星桥'],
+    affectedCommunities: ['海威钱江之星', '东方郡', '春江郦城', '明月江南', '晓风印月'] },
 
-  // ========== 殡仪馆（影响半径2000米，只影响附近街道） ==========
-  { name: '杭州殡仪馆', type: 'funeral_home', district: '西湖区', address: '西湖区西溪路731号', description: '杭州市区主要殡仪馆', impactRadius: 2000, severity: 'high',
-    affectedBusinessDistricts: [] }, // 位于留下镇附近，主要影响留下街道，不在商圈列表
+  // ========== 殡仪馆 ==========
+  { name: '杭州殡仪馆', type: 'funeral_home', district: '西湖区', address: '西湖区西溪路731号', description: '杭州市区主要殡仪馆，位于留下镇龙驹坞', impactRadius: 2000, severity: 'high',
+    affectedBusinessDistricts: [],
+    affectedCommunities: ['绿城西溪云庐', '西溪十九府', '小和山公寄件', '翰墨香林', '浪漫和山', '留和家苑', '玉屏居', '西溪玫瑰园'] },
   { name: '萧山区殡仪馆', type: 'funeral_home', district: '萧山区', address: '萧山区蜀山街道立新村', description: '萧山区殡仪馆', impactRadius: 2000, severity: 'high',
-    affectedBusinessDistricts: [] }, // 位于蜀山街道，不在商圈列表
+    affectedBusinessDistricts: [],
+    affectedCommunities: ['湖山春晓', '向阳人家'] },
   { name: '临平区殡仪馆', type: 'funeral_home', district: '临平区', address: '临平区塘栖镇超山村', description: '临平区殡仪馆', impactRadius: 2000, severity: 'high',
-    affectedBusinessDistricts: ['塘栖'] },
+    affectedBusinessDistricts: ['塘栖'],
+    affectedCommunities: ['塘栖嘉园', '水岸名轩'] },
   { name: '余杭区殡仪馆', type: 'funeral_home', district: '余杭区', address: '余杭区径山镇香下桥村', description: '余杭区殡仪馆', impactRadius: 2000, severity: 'high',
-    affectedBusinessDistricts: [] }, // 位于径山镇，不在商圈列表
-  { name: '富阳区殡仪馆', type: 'funeral_home', district: '富阳区', address: '富阳区新桐乡程浦村长山弄', description: '富阳区殡仪馆', impactRadius: 2000, severity: 'high',
-    affectedBusinessDistricts: [] }, // 位于新桐乡，不在商圈列表
-  { name: '临安区殡仪馆', type: 'funeral_home', district: '临安区', address: '临安区玲珑街道雅坞村78号', description: '临安区殡仪馆', impactRadius: 2000, severity: 'high',
-    affectedBusinessDistricts: [] }, // 位于玲珑街道，不在商圈列表
+    affectedBusinessDistricts: [],
+    affectedCommunities: [] },
 
   // ========== 公墓/陵园 ==========
-  { name: '南山陵园', type: 'cemetery', district: '上城区', address: '上城区玉皇山片区', description: '市区老牌公办陵园', impactRadius: 1500, severity: 'high',
-    affectedBusinessDistricts: ['南星桥', '湖滨'] },
-  { name: '杭州第二公墓', type: 'cemetery', district: '西湖区', address: '西湖区留下镇', description: '城西大型公墓', impactRadius: 1500, severity: 'high',
-    affectedBusinessDistricts: [] }, // 留下镇不在商圈列表
-  { name: '半山公墓', type: 'cemetery', district: '拱墅区', address: '拱墅区半山路', description: '城北大型公墓', impactRadius: 1500, severity: 'high',
-    affectedBusinessDistricts: ['桃源'] }, // 半山附近，桃源在半山旁边
+  { name: '南山陵园', type: 'cemetery', district: '上城区', address: '上城区玉皇山片区', description: '市区老牌公办陵园，位于玉皇山南麓', impactRadius: 1500, severity: 'high',
+    affectedBusinessDistricts: ['南星桥', '湖滨'],
+    affectedCommunities: ['复兴南苑', '复兴北苑', '玉皇山南村', '阔石板路小区'] },
+  { name: '杭州第二公墓', type: 'cemetery', district: '西湖区', address: '西湖区留下镇', description: '城西大型公墓，位于留下街道', impactRadius: 1500, severity: 'high',
+    affectedBusinessDistricts: [],
+    affectedCommunities: ['留下新村', '杨家牌楼'] },
+  { name: '半山公墓', type: 'cemetery', district: '拱墅区', address: '拱墅区半山路', description: '城北大型公墓，位于半山森林公园北侧', impactRadius: 1500, severity: 'high',
+    affectedBusinessDistricts: ['桃源'],
+    affectedCommunities: ['田园牧歌听泉苑', '田园牧歌麓云苑', '金隅田员外', '田园公寓', '首开望宸', '首开天青里', '中兴御田清庭', '华丰家苑', '田园春晓', '田园绿郡'] },
   { name: '半山生态公墓', type: 'cemetery', district: '拱墅区', address: '拱墅区广济路', description: '半山风景区内公墓', impactRadius: 1500, severity: 'high',
-    affectedBusinessDistricts: ['桃源'] },
-  { name: '浙江安贤陵园', type: 'cemetery', district: '临平区', address: '临平区崇贤街道', description: '城北大型人文纪念园，占地约1000亩', impactRadius: 2000, severity: 'high',
-    affectedBusinessDistricts: ['崇贤', '桃源'] }, // 崇贤与半山隔河相望
-  { name: '钱江陵园', type: 'cemetery', district: '西湖区', address: '西湖区双浦镇', description: '城南大型山水型陵园', impactRadius: 1500, severity: 'high',
-    affectedBusinessDistricts: [] }, // 双浦镇不在商圈列表
-  { name: '如意陵园', type: 'cemetery', district: '余杭区', address: '余杭区径山镇', description: '余杭区大型陵园', impactRadius: 2000, severity: 'high',
-    affectedBusinessDistricts: [] }, // 径山镇不在商圈列表
-  { name: '慈福园陵园', type: 'cemetery', district: '萧山区', address: '萧山区蜀山街道', description: '萧山区大型陵园', impactRadius: 1500, severity: 'high',
-    affectedBusinessDistricts: [] }, // 蜀山街道不在商圈列表
-  { name: '山南陵园', type: 'cemetery', district: '萧山区', address: '萧山区衙前镇', description: '萧山区陵园', impactRadius: 1500, severity: 'medium',
-    affectedBusinessDistricts: [] }, // 衙前镇不在商圈列表
-  { name: '华侨永久陵园', type: 'cemetery', district: '上城区', address: '上城区丁桥镇', description: '上城区公墓', impactRadius: 1500, severity: 'medium',
-    affectedBusinessDistricts: ['丁桥'] },
+    affectedBusinessDistricts: ['桃源'],
+    affectedCommunities: ['田园牧歌听泉苑', '田园牧歌麓云苑', '金隅田员外'] },
+  { name: '浙江安贤陵园', type: 'cemetery', district: '临平区', address: '临平区崇贤街道', description: '城北大型人文纪念园，占地约1000亩，与半山隔河相望', impactRadius: 2000, severity: 'high',
+    affectedBusinessDistricts: ['崇贤', '桃源'],
+    affectedCommunities: ['崇贤上亿广场周边', '旭辉时代城', '西房拱辰', '祥生群贤府'] },
+  { name: '华侨永久陵园', type: 'cemetery', district: '上城区', address: '上城区丁桥镇', description: '丁桥片区公墓', impactRadius: 1500, severity: 'medium',
+    affectedBusinessDistricts: ['丁桥'],
+    affectedCommunities: ['丁桥家苑', '蕙兰雅园', '紫丁香嘉苑'] },
   { name: '龙居寺陵园', type: 'cemetery', district: '上城区', address: '上城区丁桥镇', description: '丁桥片区公墓', impactRadius: 1500, severity: 'medium',
-    affectedBusinessDistricts: ['丁桥'] },
-  { name: '新湾公墓', type: 'cemetery', district: '钱塘区', address: '钱塘区新湾街道', description: '钱塘区乡村公益性公墓', impactRadius: 1500, severity: 'medium',
-    affectedBusinessDistricts: [] }, // 新湾街道不在商圈列表
-  { name: '河庄公墓', type: 'cemetery', district: '钱塘区', address: '钱塘区河庄街道', description: '钱塘区乡村公益性公墓', impactRadius: 1500, severity: 'medium',
-    affectedBusinessDistricts: ['河庄'] },
-  { name: '河庄生态墓', type: 'cemetery', district: '钱塘区', address: '钱塘区河庄街道', description: '钱塘区生态公墓', impactRadius: 1500, severity: 'medium',
-    affectedBusinessDistricts: ['河庄'] },
+    affectedBusinessDistricts: ['丁桥'],
+    affectedCommunities: ['丁桥家苑', '蕙兰雅园'] },
 
   // ========== 垃圾焚烧厂 ==========
-  { name: '杭州九峰垃圾焚烧发电厂', type: 'garbage_incinerator', district: '余杭区', address: '余杭区中泰街道', description: '日处理3000吨，城西主要垃圾处理设施', impactRadius: 3000, severity: 'high',
-    affectedBusinessDistricts: [] }, // 中泰街道不在商圈列表，不影响未来科技城核心区
-  { name: '杭州绿能环保发电厂', type: 'garbage_incinerator', district: '滨江区', address: '滨江区', description: '滨江垃圾焚烧厂', impactRadius: 2000, severity: 'high',
-    affectedBusinessDistricts: ['物联网小镇'] }, // 影响浦沿/长河部分区域
+  { name: '杭州九峰垃圾焚烧发电厂', type: 'garbage_incinerator', district: '余杭区', address: '余杭区中泰街道', description: '日处理3000吨，城西主要垃圾处理设施，2014年中泰事件中心', impactRadius: 3000, severity: 'high',
+    affectedBusinessDistricts: [],
+    affectedCommunities: ['恒厚阳光城', '新西湖小区', '中泰阳光城', '碧景园', '白云深处', '瑞亿家园', '桃源山庄', '荆山翠谷'] },
+  { name: '杭州绿能环保发电厂', type: 'garbage_incinerator', district: '滨江区', address: '滨江区浦沿', description: '滨江垃圾焚烧厂', impactRadius: 2000, severity: 'high',
+    affectedBusinessDistricts: ['物联网小镇'],
+    affectedCommunities: ['钱江湾花园', '国信嘉园'] },
   { name: '杭州能达绿色能源有限公司', type: 'garbage_incinerator', district: '临平区', address: '临平区乔司街道', description: '乔司垃圾焚烧厂', impactRadius: 2000, severity: 'high',
-    affectedBusinessDistricts: ['乔司'] },
-  { name: '杭州萧山锦江绿色能源有限公司', type: 'garbage_incinerator', district: '萧山区', address: '萧山区', description: '萧山垃圾焚烧厂', impactRadius: 2000, severity: 'high',
-    affectedBusinessDistricts: ['临浦', '所前'] },
+    affectedBusinessDistricts: ['乔司'],
+    affectedCommunities: ['乔司商贸苑', '乔司南街小区'] },
   { name: '杭州临江环境能源项目', type: 'garbage_incinerator', district: '钱塘区', address: '钱塘区临江循环经济产业园', description: '日处理5200吨，杭州最大垃圾焚烧项目', impactRadius: 3000, severity: 'high',
-    affectedBusinessDistricts: [] }, // 临江街道不在商圈列表
-  { name: '杭州临安绿能环保发电有限公司', type: 'garbage_incinerator', district: '临安区', address: '临安区锦南街道', description: '临安区垃圾焚烧厂', impactRadius: 2000, severity: 'high',
-    affectedBusinessDistricts: [] }, // 锦南街道不在商圈列表
-  { name: '富阳区循环产业园生活垃圾焚烧项目', type: 'garbage_incinerator', district: '富阳区', address: '富阳区渌渚镇', description: '日处理1500吨', impactRadius: 2000, severity: 'high',
-    affectedBusinessDistricts: [] }, // 渌渚镇不在商圈列表
+    affectedBusinessDistricts: [],
+    affectedCommunities: [] },
 
   // ========== 垃圾填埋场 ==========
-  { name: '天子岭垃圾填埋场', type: 'garbage_landfill', district: '拱墅区', address: '拱墅区半山街道', description: '已封场，生态治理中', impactRadius: 2000, severity: 'medium',
-    affectedBusinessDistricts: ['桃源'] }, // 半山附近
+  { name: '天子岭垃圾填埋场', type: 'garbage_landfill', district: '拱墅区', address: '拱墅区半山街道', description: '已封场，生态治理中，曾运行30余年', impactRadius: 2000, severity: 'medium',
+    affectedBusinessDistricts: ['桃源'],
+    affectedCommunities: ['田园牧歌听泉苑', '田园牧歌麓云苑', '金隅田员外', '田园公寓', '首开望宸', '首开天青里'] },
 
   // ========== 污水处理厂 ==========
   { name: '城西（蒋村）污水处理厂', type: 'wastewater_treatment', district: '西湖区', address: '西湖区三墩镇', description: '日处理10万吨，服务蒋村、西溪、三墩', impactRadius: 1000, severity: 'medium',
-    affectedBusinessDistricts: ['三墩', '勾庄'] },
-  { name: '临平净水厂', type: 'wastewater_treatment', district: '临平区', address: '临平区东湖街道', description: '全地埋式，日处理20万吨', impactRadius: 800, severity: 'low',
-    affectedBusinessDistricts: ['东湖新城'] },
+    affectedBusinessDistricts: ['三墩', '勾庄'],
+    affectedCommunities: ['西溪花园', '蒋村花园', '西溪蝶园'] },
   { name: '七格污水处理厂', type: 'wastewater_treatment', district: '上城区', address: '上城区下沙片区', description: '大型污水处理厂', impactRadius: 1000, severity: 'medium',
-    affectedBusinessDistricts: [] }, // 下沙不在商圈列表
-  { name: '城北净水厂', type: 'wastewater_treatment', district: '拱墅区', address: '拱墅区半山街道', description: '全地埋式，日处理10万吨', impactRadius: 800, severity: 'low',
-    affectedBusinessDistricts: ['桃源'] },
-  { name: '临江高科园污水处理厂', type: 'wastewater_treatment', district: '钱塘区', address: '钱塘区临江高科园', description: '化工类工业污水处理厂', impactRadius: 2000, severity: 'high',
-    affectedBusinessDistricts: [] }, // 临江不在商圈列表
-  { name: '余杭污水处理厂', type: 'wastewater_treatment', district: '余杭区', address: '余杭区', description: '日处理13.5万吨', impactRadius: 1000, severity: 'medium',
-    affectedBusinessDistricts: ['老余杭'] },
+    affectedBusinessDistricts: [],
+    affectedCommunities: [] },
 
   // ========== 大型变电站 ==========
   { name: '杭州500kV变电站（瓶窑）', type: 'substation', district: '余杭区', address: '余杭区瓶窑镇', description: '大型500kV变电站', impactRadius: 500, severity: 'high',
-    affectedBusinessDistricts: ['瓶窑'] },
+    affectedBusinessDistricts: ['瓶窑'],
+    affectedCommunities: [] },
   { name: '杭州220kV变电站（三墩）', type: 'substation', district: '西湖区', address: '西湖区三墩镇', description: '220kV变电站', impactRadius: 300, severity: 'medium',
-    affectedBusinessDistricts: ['三墩'] },
-  { name: '杭州220kV变电站（九堡）', type: 'substation', district: '上城区', address: '上城区九堡街道', description: '220kV变电站', impactRadius: 300, severity: 'medium',
-    affectedBusinessDistricts: ['城东新城', '艮北新城'] },
-
-  // ========== 铁路 ==========
-  { name: '杭州南站铁路', type: 'highway', district: '萧山区', address: '萧山区城厢街道', description: '铁路噪音及震动影响', impactRadius: 200, severity: 'medium',
-    affectedBusinessDistricts: ['市北', '新塘'] },
+    affectedBusinessDistricts: ['三墩'],
+    affectedCommunities: [] },
 ];
+
+// 根据小区名称精确匹配硬伤
+function findDefectsByCommunityName(communityName) {
+  if (!communityName || communityName.trim().length < 2) return [];
+  
+  const name = communityName.trim();
+  
+  return DEFECT_LOCATIONS.filter(defect => {
+    if (!defect.affectedCommunities || defect.affectedCommunities.length === 0) return false;
+    
+    // 精确匹配或包含匹配
+    return defect.affectedCommunities.some(c => {
+      // 精确匹配
+      if (c === name) return true;
+      // 包含匹配（如输入"田园牧歌"匹配"田园牧歌听泉苑"）
+      if (c.includes(name) || name.includes(c)) return true;
+      // 模糊匹配（去掉后缀）
+      const cBase = c.replace(/苑|园|府|庭|轩|阁|居|邸|楼|厦|寓|公寓|花园|新城|名苑|雅苑|嘉园|家苑/g, '');
+      const nameBase = name.replace(/苑|园|府|庭|轩|阁|居|邸|楼|厦|寓|公寓|花园|新城|名苑|雅苑|嘉园|家苑/g, '');
+      return cBase === nameBase || cBase.includes(nameBase) || nameBase.includes(cBase);
+    });
+  });
+}
 
 // 根据区域和商圈查找附近硬伤
 // 逻辑：
@@ -1634,6 +1623,17 @@ function initUI() {
     updateDefectsAutoDetect();
   });
 
+  // 小区名称输入监听
+  const communityNameInput = document.getElementById('communityName');
+  let communityNameTimer = null;
+  communityNameInput.addEventListener('input', function() {
+    clearTimeout(communityNameTimer);
+    const value = this.value;
+    communityNameTimer = setTimeout(() => {
+      updateCommunityDefectDetect(value);
+    }, 500); // 延迟500ms，避免频繁触发
+  });
+
   // 硬伤复选框样式
   document.querySelectorAll('input[name="defects"]').forEach(cb => {
     cb.addEventListener('change', function() {
@@ -1712,6 +1712,89 @@ function updateDistrictInfo(districtName) {
   } else {
     infoDiv.style.display = 'none';
   }
+}
+
+// 小区名称匹配硬伤显示
+function updateCommunityDefectDetect(communityName) {
+  const detectDiv = document.getElementById('communityDefectDetect');
+  
+  if (!communityName || communityName.trim().length < 2) {
+    detectDiv.style.display = 'none';
+    return;
+  }
+  
+  const matchedDefects = findDefectsByCommunityName(communityName);
+  
+  if (matchedDefects.length === 0) {
+    detectDiv.style.display = 'none';
+    return;
+  }
+  
+  const typeColorMap = {
+    highway: '#ea580c',
+    cemetery: '#dc2626',
+    funeral_home: '#dc2626',
+    garbage_incinerator: '#dc2626',
+    garbage_landfill: '#ea580c',
+    wastewater_treatment: '#d97706',
+    substation: '#ea580c',
+    gas_station: '#d97706',
+  };
+  
+  const severityColorMap = {
+    high: '#dc2626',
+    medium: '#d97706',
+    low: '#059669',
+  };
+  
+  const defectValueMap = {
+    highway: 'highway_noise',
+    cemetery: 'cemetery',
+    funeral_home: 'cemetery',
+    garbage_incinerator: 'garbage_station',
+    garbage_landfill: 'garbage_station',
+    wastewater_treatment: 'sewage_plant',
+    substation: 'substation',
+    gas_station: 'gas_station',
+  };
+  
+  let html = `
+    <div style="font-weight:700;color:#991b1b;margin-bottom:10px;font-size:15px;">
+      ⚠️ 检测到"${communityName}"附近存在以下硬伤：
+    </div>
+  `;
+  
+  matchedDefects.forEach(d => {
+    html += `
+      <div style="display:flex;align-items:center;margin-bottom:8px;padding:8px;background:#fff;border-radius:6px;">
+        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${typeColorMap[d.type]};margin-right:10px;"></span>
+        <span style="flex:1;font-size:13px;">
+          <strong>${d.name}</strong>
+          <span style="color:#64748b;font-size:12px;margin-left:6px;">${d.description}，影响半径${d.impactRadius}m</span>
+        </span>
+        <span style="color:${severityColorMap[d.severity]};font-weight:600;font-size:12px;">${getDefectSeverityName(d.severity)}</span>
+      </div>
+    `;
+    
+    // 自动勾选对应硬伤
+    const value = defectValueMap[d.type];
+    if (value) {
+      const cb = document.querySelector(`input[name="defects"][value="${value}"]`);
+      if (cb && !cb.checked) {
+        cb.checked = true;
+        cb.closest('.form-checkbox-item').classList.add('checked');
+      }
+    }
+  });
+  
+  html += `
+    <div style="margin-top:10px;font-size:12px;color:#7f1d1d;">
+      💡 已自动勾选对应的硬伤选项，您可以在下方"硬伤因素"区域调整。建议结合实际楼栋位置和朝向判断是否真正受影响。
+    </div>
+  `;
+  
+  detectDiv.innerHTML = html;
+  detectDiv.style.display = 'block';
 }
 
 function updateDefectsAutoDetect() {
