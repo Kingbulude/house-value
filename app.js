@@ -5,6 +5,509 @@
 
 // ============ 杭州城市知识库 ============
 
+// 杭州房地产政策风险与预期数据
+const HANGZHOU_POLICY_RISK_DATA = {
+  currentPolicy: {
+    purchaseLimit: {
+      name: '限购政策',
+      status: 'active',
+      desc: '杭州户籍家庭限购2套，非杭州户籍家庭限购1套（需连续缴纳2年社保）',
+      impact: '中',
+      impactDesc: '限制购房资格，对热点板块成交有抑制作用',
+    },
+    loanLimit: {
+      name: '限贷政策',
+      status: 'active',
+      desc: '首套房首付比例不低于30%，二套房首付比例不低于60%（无房有贷）或70%（有房有贷）',
+      impact: '高',
+      impactDesc: '直接影响购房杠杆，对改善型需求影响较大',
+    },
+    saleLimit: {
+      name: '限售政策',
+      status: 'active',
+      desc: '新房网签之日起5年内不得转让，二手房交易不受限',
+      impact: '中',
+      impactDesc: '锁定流动性，影响短期炒房行为',
+    },
+    guidePrice: {
+      name: '二手房指导价',
+      status: 'active',
+      desc: '2021年出台，对热点学区房挂牌价有参考限制作用',
+      impact: '中高',
+      impactDesc: '抑制学区房炒作，对挂牌价有压制作用',
+    },
+    taxPolicy: {
+      name: '税收政策',
+      status: 'active',
+      desc: '满五唯一免征个税和增值税，不满2年全额征收5.3%增值税',
+      impact: '高',
+      impactDesc: '直接影响交易成本，满五唯一房源更受欢迎',
+    },
+  },
+  schoolPolicyChanges: {
+    '多校划片': {
+      name: '多校划片',
+      status: 'planning',
+      desc: '教育部鼓励多校划片，杭州部分区已试点',
+      impact: '高',
+      impactDesc: '可能导致学区房价值重估，传统学区房溢价可能下降',
+      affectedAreas: ['西湖区', '拱墅区', '上城区'],
+    },
+    '公民同招': {
+      name: '公民同招',
+      status: 'active',
+      desc: '公办和民办学校同时招生，取消民办提前录取',
+      impact: '中',
+      impactDesc: '公办学校地位提升，学区房价值相对稳定',
+    },
+    '对口初中调整': {
+      name: '对口初中调整',
+      status: 'possible',
+      desc: '每年可能有部分小学对口初中调整',
+      impact: '高',
+      impactDesc: '对口初中变化直接影响学区价值，需关注每年学区划分',
+      affectedAreas: ['滨江区', '余杭区'],
+    },
+  },
+  futurePolicyExpectations: {
+    '限购放松': {
+      name: '限购放松预期',
+      probability: '中',
+      desc: '杭州近期已多次调整限购政策，后续可能进一步放松',
+      impact: '高',
+      impactDesc: '若放松限购，刚需和改善需求可能释放，推动房价上涨',
+    },
+    '房贷利率调整': {
+      name: '房贷利率调整',
+      probability: '高',
+      desc: '全国房贷利率持续下行，杭州可能跟进',
+      impact: '高',
+      impactDesc: '利率下降降低购房成本，刺激需求',
+    },
+    '学区政策改革': {
+      name: '学区政策改革',
+      probability: '中',
+      desc: '教育部推动教育公平，多校划片可能扩大试点',
+      impact: '高',
+      impactDesc: '传统学区房溢价可能收窄',
+    },
+  },
+};
+
+// 杭州市场流动性指标（按板块）
+const HANGZHOU_LIQUIDITY_DATA = {
+  '钱江新城': {
+    monthlyTurnover: 25,
+    avgListingDays: 35,
+    currentListings: 85,
+    marketStatus: 'hot',
+    desc: '高端改善需求旺盛，成交活跃',
+  },
+  '钱江世纪城': {
+    monthlyTurnover: 30,
+    avgListingDays: 30,
+    currentListings: 120,
+    marketStatus: 'hot',
+    desc: '亚运效应持续，刚需和投资需求并存',
+  },
+  '未来科技城': {
+    monthlyTurnover: 45,
+    avgListingDays: 28,
+    currentListings: 180,
+    marketStatus: 'hot',
+    desc: '产业人口导入，刚需和改善需求旺盛',
+  },
+  '申花': {
+    monthlyTurnover: 20,
+    avgListingDays: 40,
+    currentListings: 65,
+    marketStatus: 'warm',
+    desc: '改善型需求为主，价格稳定',
+  },
+  '蒋村': {
+    monthlyTurnover: 18,
+    avgListingDays: 45,
+    currentListings: 55,
+    marketStatus: 'warm',
+    desc: '学区房为主，流动性一般',
+  },
+  '滨江区政府': {
+    monthlyTurnover: 35,
+    avgListingDays: 32,
+    currentListings: 100,
+    marketStatus: 'hot',
+    desc: '产业人口密集，租赁和刚需需求旺盛',
+  },
+  '物联网小镇': {
+    monthlyTurnover: 25,
+    avgListingDays: 38,
+    currentListings: 75,
+    marketStatus: 'warm',
+    desc: '刚需为主，价格相对稳定',
+  },
+  '武林': {
+    monthlyTurnover: 12,
+    avgListingDays: 55,
+    currentListings: 40,
+    marketStatus: 'cool',
+    desc: '老小区为主，改善需求不足',
+  },
+  '湖滨': {
+    monthlyTurnover: 8,
+    avgListingDays: 60,
+    currentListings: 25,
+    marketStatus: 'cool',
+    desc: '旅游区，居住属性弱，成交较少',
+  },
+  '城东新城': {
+    monthlyTurnover: 22,
+    avgListingDays: 42,
+    currentListings: 90,
+    marketStatus: 'warm',
+    desc: '刚需板块，价格亲民，成交稳定',
+  },
+  '艮北新城': {
+    monthlyTurnover: 18,
+    avgListingDays: 48,
+    currentListings: 60,
+    marketStatus: 'warm',
+    desc: '次新板块，刚需和改善需求并存',
+  },
+  '运河新城': {
+    monthlyTurnover: 10,
+    avgListingDays: 55,
+    currentListings: 45,
+    marketStatus: 'cool',
+    desc: '规划中板块，配套尚未成熟，成交较少',
+  },
+  '三墩': {
+    monthlyTurnover: 28,
+    avgListingDays: 40,
+    currentListings: 110,
+    marketStatus: 'warm',
+    desc: '刚需板块，价格亲民，成交活跃',
+  },
+  '良渚': {
+    monthlyTurnover: 35,
+    avgListingDays: 35,
+    currentListings: 140,
+    marketStatus: 'warm',
+    desc: '刚需为主，价格稳定，成交活跃',
+  },
+  '闲林': {
+    monthlyTurnover: 15,
+    avgListingDays: 52,
+    currentListings: 80,
+    marketStatus: 'cool',
+    desc: '刚需板块，交通不便，流动性一般',
+  },
+  '老余杭': {
+    monthlyTurnover: 20,
+    avgListingDays: 45,
+    currentListings: 70,
+    marketStatus: 'warm',
+    desc: '刚需板块，价格亲民，成交稳定',
+  },
+  '临平新城': {
+    monthlyTurnover: 22,
+    avgListingDays: 42,
+    currentListings: 85,
+    marketStatus: 'warm',
+    desc: '刚需板块，价格亲民，成交稳定',
+  },
+  '大江东': {
+    monthlyTurnover: 8,
+    avgListingDays: 60,
+    currentListings: 50,
+    marketStatus: 'cool',
+    desc: '产业板块，居住需求有限，流动性弱',
+  },
+  '丁桥': {
+    monthlyTurnover: 20,
+    avgListingDays: 48,
+    currentListings: 75,
+    marketStatus: 'warm',
+    desc: '刚需板块，价格亲民，成交稳定',
+  },
+  '崇贤': {
+    monthlyTurnover: 12,
+    avgListingDays: 55,
+    currentListings: 55,
+    marketStatus: 'cool',
+    desc: '刚需板块，交通不便，流动性一般',
+  },
+};
+
+// 杭州物业品质评分数据
+const HANGZHOU_PROPERTY_MANAGEMENT_DATA = {
+  '绿城服务': {
+    score: 95,
+    level: 'S',
+    avgFee: 3.5,
+    strengths: ['绿化维护', '安保严格', '设施维护', '社区活动'],
+    desc: '杭州物业标杆，业主满意度极高，二手房溢价明显',
+  },
+  '滨江物业': {
+    score: 92,
+    level: 'S',
+    avgFee: 3.2,
+    strengths: ['安保严格', '设施维护', '客服响应'],
+    desc: '杭州顶级物业，与绿城并称"双雄"',
+  },
+  '万科物业': {
+    score: 88,
+    level: 'A',
+    avgFee: 2.8,
+    strengths: ['标准化管理', '线上服务', '设施维护'],
+    desc: '全国龙头，管理规范，服务标准化',
+  },
+  '龙湖智慧服务': {
+    score: 86,
+    level: 'A',
+    avgFee: 3.0,
+    strengths: ['园林维护', '客服响应', '智能化管理'],
+    desc: '龙湖"钻石级"物业，园林景观维护出色',
+  },
+  '华润物业': {
+    score: 84,
+    level: 'A',
+    avgFee: 2.8,
+    strengths: ['商业配套', '设施维护'],
+    desc: '央企背景，综合体项目管理经验丰富',
+  },
+  '保利物业': {
+    score: 82,
+    level: 'A',
+    avgFee: 2.5,
+    strengths: ['安保', '设施维护'],
+    desc: '央企背景，管理稳健',
+  },
+  '中海物业': {
+    score: 80,
+    level: 'A',
+    avgFee: 2.6,
+    strengths: ['工程维护', '安保'],
+    desc: '央企背景，工程品质过硬',
+  },
+  '招商物业': {
+    score: 78,
+    level: 'B',
+    avgFee: 2.4,
+    strengths: ['安保', '客服'],
+    desc: '央企背景，近年口碑提升',
+  },
+  '大家物业': {
+    score: 76,
+    level: 'B',
+    avgFee: 2.2,
+    strengths: ['本地经验', '社区维护'],
+    desc: '杭州本土老牌物业，口碑尚可',
+  },
+  '杭房物业': {
+    score: 74,
+    level: 'B',
+    avgFee: 2.0,
+    strengths: ['本地经验'],
+    desc: '杭州本土国企物业，中规中矩',
+  },
+  '融创服务': {
+    score: 70,
+    level: 'B',
+    avgFee: 2.5,
+    strengths: ['前期服务'],
+    desc: '近年财务压力大，部分项目服务质量下降',
+  },
+  '碧桂园服务': {
+    score: 65,
+    level: 'C',
+    avgFee: 1.8,
+    strengths: ['性价比'],
+    desc: '高周转模式，服务质量一般',
+  },
+  '绿城物业（非绿城开发项目）': {
+    score: 85,
+    level: 'A',
+    avgFee: 2.8,
+    strengths: ['品牌背书', '管理规范'],
+    desc: '绿城代管项目，服务质量略低于绿城自有项目',
+  },
+  '本地小物业': {
+    score: 60,
+    level: 'C',
+    avgFee: 1.5,
+    strengths: ['价格低'],
+    desc: '本地小型物业公司，服务质量参差不齐',
+  },
+};
+
+// 杭州户型与得房率数据
+const HANGZHOU_HOUSE_TYPE_DATA = {
+  '方正通透': {
+    modifier: 1.08,
+    desc: '户型方正，南北通透，无浪费面积',
+  },
+  '方正': {
+    modifier: 1.05,
+    desc: '户型方正，但可能不通透',
+  },
+  '南北通透': {
+    modifier: 1.06,
+    desc: '南北通透，但户型可能不方正',
+  },
+  '一般': {
+    modifier: 1.00,
+    desc: '户型一般，存在一定浪费面积',
+  },
+  '较差': {
+    modifier: 0.95,
+    desc: '户型较差，存在明显浪费面积或朝向问题',
+  },
+};
+
+// 建筑结构类型数据
+const HANGZHOU_BUILDING_STRUCTURE_DATA = {
+  '钢混结构': {
+    modifier: 1.00,
+    desc: '钢筋混凝土结构，抗震性能好，耐久性强',
+  },
+  '框架结构': {
+    modifier: 1.00,
+    desc: '框架结构，空间灵活，抗震性能较好',
+  },
+  '砖混结构': {
+    modifier: 0.90,
+    desc: '砖混结构，抗震性能较差，多见于90年代及以前老小区',
+  },
+  '剪力墙结构': {
+    modifier: 1.02,
+    desc: '剪力墙结构，抗震性能好，多用于高层住宅',
+  },
+};
+
+// 外墙材质数据
+const HANGZHOU_EXTERIOR_MATERIAL_DATA = {
+  '石材干挂': {
+    modifier: 1.08,
+    desc: '高档石材干挂，外观大气，维护成本低',
+  },
+  '真石漆': {
+    modifier: 1.02,
+    desc: '真石漆，仿石材效果，耐久性较好',
+  },
+  '涂料': {
+    modifier: 0.98,
+    desc: '普通涂料，易老化，需定期翻新',
+  },
+  '瓷砖': {
+    modifier: 0.98,
+    desc: '瓷砖贴面，可能存在脱落风险',
+  },
+};
+
+// 小区规模与密度数据
+const HANGZHOU_COMMUNITY_SCALE_DATA = {
+  '小型社区': {
+    range: '100户以下',
+    modifier: 1.02,
+    desc: '户数少，居住安静，邻里关系紧密',
+  },
+  '中型社区': {
+    range: '100-500户',
+    modifier: 1.00,
+    desc: '规模适中，配套完善，管理方便',
+  },
+  '大型社区': {
+    range: '500-1500户',
+    modifier: 0.98,
+    desc: '规模较大，配套齐全，但可能嘈杂',
+  },
+  '超大型社区': {
+    range: '1500户以上',
+    modifier: 0.95,
+    desc: '户数过多，物业管理难度大，可能存在停车难等问题',
+  },
+};
+
+// 容积率数据
+const HANGZHOU_FAR_DATA = {
+  '低密度': {
+    range: '<1.5',
+    modifier: 1.10,
+    desc: '容积率低，居住舒适度高，多见于别墅、洋房小区',
+  },
+  '中低密度': {
+    range: '1.5-2.0',
+    modifier: 1.05,
+    desc: '容积率适中，居住舒适度较好',
+  },
+  '中等密度': {
+    range: '2.0-2.5',
+    modifier: 1.00,
+    desc: '容积率中等，常见于普通高层小区',
+  },
+  '高密度': {
+    range: '2.5-3.5',
+    modifier: 0.95,
+    desc: '容积率较高，楼间距较近，居住舒适度一般',
+  },
+  '超高层密集': {
+    range: '>3.5',
+    modifier: 0.90,
+    desc: '容积率过高，楼间距小，采光通风可能受影响',
+  },
+};
+
+// 产权与交易成本数据
+const HANGZHOU_PROPERTY_RIGHT_DATA = {
+  '满五唯一': {
+    costDesc: '免征个税和增值税',
+    modifier: 1.02,
+    desc: '交易成本最低，最受欢迎',
+  },
+  '满五年非唯一': {
+    costDesc: '免征增值税，需缴纳1%个税',
+    modifier: 1.00,
+    desc: '交易成本较低',
+  },
+  '满二年': {
+    costDesc: '免征增值税，需缴纳1%个税',
+    modifier: 1.00,
+    desc: '交易成本较低',
+  },
+  '不满二年': {
+    costDesc: '需缴纳5.3%增值税+1%个税',
+    modifier: 0.95,
+    desc: '交易成本最高，不受欢迎',
+  },
+};
+
+// 自然灾害风险数据
+const HANGZHOU_NATURAL_DISASTER_DATA = {
+  '地震风险': {
+    level: '低',
+    desc: '杭州位于长江中下游平原，地震活动较少，抗震设防烈度为6度',
+    impact: '极低',
+  },
+  '台风风险': {
+    level: '中',
+    desc: '每年台风季（7-9月）可能受影响，沿江沿海区域需关注',
+    impact: '低',
+    affectedAreas: ['上城区沿江', '滨江区沿江', '萧山区沿江', '钱塘区沿海'],
+  },
+  '洪涝风险': {
+    level: '中高',
+    desc: '低洼区域暴雨时可能积水，特别是运河沿线、钱塘江沿线',
+    impact: '中',
+    affectedAreas: ['拱墅区运河沿线', '上城区沿江', '余杭区闲林', '钱塘区下沙'],
+  },
+  '山体滑坡风险': {
+    level: '低',
+    desc: '山区及山脚区域需关注，特别是暴雨后',
+    impact: '低',
+    affectedAreas: ['西湖区龙井/九溪', '富阳区山区', '临安区山区'],
+  },
+};
+
 const HANGZHOU_CITY = {
   name: '杭州',
   tier: '新一线城市（超大城市）',
@@ -1156,6 +1659,116 @@ function calcSchoolPremium(schoolName) {
   return 0.05;
 }
 
+function calcPropertyManagementModifier(propertyName) {
+  if (!propertyName) return 1.00;
+  const pm = HANGZHOU_PROPERTY_MANAGEMENT_DATA[propertyName];
+  if (pm) {
+    const baseScore = pm.score;
+    // 分数越高溢价越大，70分基准，每高1分+0.5%
+    const modifier = 1 + ((baseScore - 70) / 100) * 0.005;
+    return Math.max(0.90, Math.min(1.15, modifier));
+  }
+  return 1.00;
+}
+
+function calcHouseTypeModifier(houseType) {
+  if (!houseType) return 1.00;
+  const ht = HANGZHOU_HOUSE_TYPE_DATA[houseType];
+  if (ht) return ht.modifier;
+  return 1.00;
+}
+
+function calcBuildingStructureModifier(structure) {
+  if (!structure) return 1.00;
+  const bs = HANGZHOU_BUILDING_STRUCTURE_DATA[structure];
+  if (bs) return bs.modifier;
+  return 1.00;
+}
+
+function calcExteriorMaterialModifier(material) {
+  if (!material) return 1.00;
+  const em = HANGZHOU_EXTERIOR_MATERIAL_DATA[material];
+  if (em) return em.modifier;
+  return 1.00;
+}
+
+function calcCommunityScaleModifier(scale) {
+  if (!scale) return 1.00;
+  const cs = HANGZHOU_COMMUNITY_SCALE_DATA[scale];
+  if (cs) return cs.modifier;
+  return 1.00;
+}
+
+function calcFarModifier(far) {
+  if (!far) return 1.00;
+  const fd = HANGZHOU_FAR_DATA[far];
+  if (fd) return fd.modifier;
+  return 1.00;
+}
+
+function calcPropertyRightModifier(propertyRight) {
+  if (!propertyRight) return 1.00;
+  const pr = HANGZHOU_PROPERTY_RIGHT_DATA[propertyRight];
+  if (pr) return pr.modifier;
+  return 1.00;
+}
+
+function calcPolicyRiskModifier(district) {
+  if (!district) return { coefficient: 1.00, description: '政策信息不足' };
+  
+  const policy = HANGZHOU_POLICY_RISK_DATA.currentPolicy;
+  let coefficient = 1.00;
+  let descriptions = [];
+  
+  if (policy.purchaseLimit.status === 'active') {
+    coefficient *= 0.98;
+    descriptions.push('限购政策影响购房资格');
+  }
+  if (policy.loanLimit.status === 'active') {
+    coefficient *= 0.98;
+    descriptions.push('限贷政策影响购房杠杆');
+  }
+  if (policy.saleLimit.status === 'active') {
+    coefficient *= 0.99;
+    descriptions.push('限售政策锁定流动性');
+  }
+  if (policy.guidePrice.status === 'active') {
+    coefficient *= 0.98;
+    descriptions.push('二手房指导价压制挂牌价');
+  }
+  
+  return {
+    coefficient: Math.max(0.90, coefficient),
+    description: descriptions.length > 0 ? descriptions.join('；') : '政策影响较小',
+  };
+}
+
+function calcLiquidityModifier(businessDistrict) {
+  if (!businessDistrict) return { coefficient: 1.00, description: '流动性信息不足' };
+  
+  const liquidity = HANGZHOU_LIQUIDITY_DATA[businessDistrict];
+  if (!liquidity) return { coefficient: 1.00, description: '板块流动性数据缺失' };
+  
+  let coefficient = 1.00;
+  
+  switch (liquidity.marketStatus) {
+    case 'hot':
+      coefficient = 1.05;
+      break;
+    case 'warm':
+      coefficient = 1.00;
+      break;
+    case 'cool':
+      coefficient = 0.95;
+      break;
+  }
+  
+  return {
+    coefficient,
+    description: `${liquidity.desc}，月均成交${liquidity.monthlyTurnover}套，平均挂牌${liquidity.avgListingDays}天`,
+  };
+}
+
 
 /**
  * 区位系数计算
@@ -1446,6 +2059,8 @@ function calculateValuation(input) {
     hasTier3Hospital, hospitalDistance, hasCommunityHospital,
     hasPark, parkDistance, hasWater,
     buildingPosition, selectedDefects,
+    propertyName, houseType, buildingStructure, exteriorMaterial,
+    communityScale, far, propertyRight,
   } = input;
 
   const results = {};
@@ -1462,14 +2077,22 @@ function calculateValuation(input) {
     const ageMod = calcAgeModifier(buildingAge);
     const elevMod = calcElevatorModifier(hasElevator, totalFloors);
     const schoolPrem = calcSchoolPremium(schoolName);
+    const pmMod = calcPropertyManagementModifier(propertyName);
+    const htMod = calcHouseTypeModifier(houseType);
+    const bsMod = calcBuildingStructureModifier(buildingStructure);
+    const emMod = calcExteriorMaterialModifier(exteriorMaterial);
+    const csMod = calcCommunityScaleModifier(communityScale);
+    const farMod = calcFarModifier(far);
+    const prMod = calcPropertyRightModifier(propertyRight);
 
     const marketSentiment = calcMarketSentiment(district);
 
-    unitPrice = unitPrice * areaMod * oriMod * floorMod * decMod * ageMod * elevMod * (1 + schoolPrem) * marketSentiment.coefficient;
+    unitPrice = unitPrice * areaMod * oriMod * floorMod * decMod * ageMod * elevMod * (1 + schoolPrem) * pmMod * htMod * bsMod * emMod * csMod * farMod * prMod * marketSentiment.coefficient;
 
     factors.marketComparison = {
       areaMod, oriMod, floorMod, decMod, ageMod, elevMod,
-      schoolPrem, marketSentiment: marketSentiment.coefficient,
+      schoolPrem, pmMod, htMod, bsMod, emMod, csMod, farMod, prMod,
+      marketSentiment: marketSentiment.coefficient,
     };
 
     marketTotal = unitPrice * area;
@@ -1491,9 +2114,8 @@ function calculateValuation(input) {
   // === 3. 成本法（简化版）===
   let costTotal = null;
   if (marketPrice && area) {
-    // 假设土地成本占60%，建筑成本占40%
     const landCost = marketPrice * 0.60;
-    const buildCost = marketPrice * 0.40 * 3000 / Math.max(marketPrice * 0.40, 1); // 建筑成本约3000元/㎡
+    const buildCost = marketPrice * 0.40 * 3000 / Math.max(marketPrice * 0.40, 1);
     const depreciation = buildingAge ? Math.min(buildingAge * 0.01, 0.30) : 0;
     const depreciatedBuild = buildCost * (1 - depreciation);
     const costUnitPrice = landCost + depreciatedBuild;
@@ -1511,40 +2133,40 @@ function calculateValuation(input) {
   if (incomeTotal !== null) { weightedSum += incomeTotal * weights.income; totalWeight += weights.income; }
   if (costTotal !== null) { weightedSum += costTotal * weights.cost; totalWeight += weights.cost; }
 
-  // 归一化
   let baseValuation = totalWeight > 0 ? weightedSum / totalWeight : 0;
 
   // === 专家调整项 ===
 
-  // 区位系数
   const location = calcLocationCoefficient(district, businessDistrict);
 
-  // 配套系数
   const amenities = calcAmenitiesScore(input);
   const amenitiesCoefficient = 1 + ((amenities.total - 60) / 100) * 0.3;
 
-  // 硬伤系数
   const defects = calcDefects(selectedDefects || []);
 
-  // 楼栋位置系数
   const buildingPosMod = calcBuildingPositionModifier(buildingPosition);
 
-  // 综合调整
-  const expertFactor = location.coefficient * amenitiesCoefficient * defects.coefficient * buildingPosMod;
+  const policyRisk = calcPolicyRiskModifier(district);
+  
+  const liquidity = calcLiquidityModifier(businessDistrict);
+
+  const expertFactor = location.coefficient * amenitiesCoefficient * defects.coefficient * buildingPosMod * policyRisk.coefficient * liquidity.coefficient;
 
   const finalValuation = baseValuation * expertFactor;
 
-  // 估值区间（±10%）
   const lowerBound = finalValuation * 0.90;
   const upperBound = finalValuation * 1.10;
 
-  // 置信度
   let confidence = 50;
   if (marketPrice) confidence += 20;
   if (monthlyRent) confidence += 15;
   if (metroDistance != null) confidence += 5;
   if (schoolName) confidence += 5;
   if (selectedDefects && selectedDefects.length > 0) confidence += 5;
+  if (propertyName) confidence += 3;
+  if (houseType) confidence += 3;
+  if (buildingStructure) confidence += 3;
+  if (propertyRight) confidence += 3;
   confidence = Math.min(confidence, 95);
 
   return {
@@ -1564,6 +2186,8 @@ function calculateValuation(input) {
       amenitiesCoefficient,
       defects,
       buildingPosition: { coefficient: buildingPosMod, position: buildingPosition },
+      policyRisk,
+      liquidity,
       marketComparison: factors.marketComparison || null,
       incomeApproach: factors.incomeApproach || null,
     },
@@ -2060,6 +2684,13 @@ function handleSubmit() {
     hasWater: formData.get('hasWater') === 'on',
     buildingPosition: formData.get('buildingPosition') || '一般位置',
     selectedDefects: formData.getAll('defects'),
+    propertyName: formData.get('propertyName') || '',
+    houseType: formData.get('houseType') || '',
+    buildingStructure: formData.get('buildingStructure') || '',
+    exteriorMaterial: formData.get('exteriorMaterial') || '',
+    communityScale: formData.get('communityScale') || '',
+    far: formData.get('far') || '',
+    propertyRight: formData.get('propertyRight') || '',
   };
 
   // 基本验证
