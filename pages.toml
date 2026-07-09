@@ -1,4 +1,0 @@
-# Cloudflare Pages 配置
-[build]
-command = "mkdir -p .cloudflare/pages && cp -r web/* .cloudflare/pages/"
-publish = ".cloudflare/pages"

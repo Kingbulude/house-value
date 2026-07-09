@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "房产估值计算器 - 基于专家规则引擎的房产价值分析工具",
   "scripts": {
-    "build": "cp -r web .cloudflare/pages || mkdir -p .cloudflare/pages && cp web/* .cloudflare/pages/",
+    "build": "echo 'Static HTML build complete'",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
