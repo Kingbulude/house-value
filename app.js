@@ -491,6 +491,545 @@ const HANGZHOU_SEWER_RISK_DATA = {
   },
 };
 
+// 杭州学区对口及预警数据
+const HANGZHOU_SCHOOL_DISTRICT_DATA = {
+  '学军小学求智校区': {
+    district: '西湖区',
+    level: '顶级',
+    middleSchool: '十三中',
+    middleSchoolLevel: '优质',
+    scope: ['文二路以北、保俶北路以西、文三路以南、教工路以东'],
+    premium: 0.50,
+    warning2026: '绿色',
+    warning2027: '绿色',
+    minResidencyYears: 0,
+    desc: '西湖区公办天花板，2026年一表生全收无调剂，直升十三中（西湖区第一梯队初中）',
+  },
+  '学军小学紫金港校区': {
+    district: '西湖区',
+    level: '顶级',
+    middleSchool: '紫金港中学',
+    middleSchoolLevel: '优质',
+    scope: ['浙大紫金港校区周边、政苑小区、圣苑小区等'],
+    premium: 0.45,
+    warning2026: '绿色',
+    warning2027: '绿色',
+    minResidencyYears: 0,
+    desc: '学军首个分校，成绩与本部旗鼓相当，对口紫金港中学（西湖区第一梯队）',
+  },
+  '文一街小学文一校区': {
+    district: '西湖区',
+    level: '顶级',
+    middleSchool: '十三中',
+    middleSchoolLevel: '优质',
+    scope: ['文一路沿线、教工路以东、莫干山路以西'],
+    premium: 0.40,
+    warning2026: '红色',
+    warning2027: '红色',
+    minResidencyYears: 2.7,
+    desc: '2026年落户需满2年7个月（截止2023.11.21），不足调剂至师苑校区，师资共享、直升十三中不变',
+  },
+  '文三街小学': {
+    district: '西湖区',
+    level: '顶级',
+    middleSchool: '十三中',
+    middleSchoolLevel: '优质',
+    scope: ['文三路沿线、学院路以西、古翠路以东'],
+    premium: 0.40,
+    warning2026: '红色',
+    warning2027: '黄色',
+    minResidencyYears: 0,
+    desc: '2026年一表生全收无调剂，2025年需落户2年5个月，2026年门槛大幅降低',
+  },
+  '行知小学': {
+    district: '西湖区',
+    level: '顶级',
+    middleSchool: '十三中',
+    middleSchoolLevel: '优质',
+    scope: ['学院路以东、文二路以北、保俶北路以西'],
+    premium: 0.38,
+    warning2026: '绿色',
+    warning2027: '绿色',
+    minResidencyYears: 0,
+    desc: '一表生全部兜底不调剂，次新商品房多，适合改善家庭',
+  },
+  '翠苑一小文华校区': {
+    district: '西湖区',
+    level: '优质',
+    middleSchool: '翠苑中学',
+    middleSchoolLevel: '普通',
+    scope: ['文华路沿线、古墩路以东'],
+    premium: 0.25,
+    warning2026: '红色',
+    warning2027: '红色',
+    minResidencyYears: 0.9,
+    desc: '2026年落户需约11个月，部分一表生调剂至翠苑一小本部',
+  },
+  '卖鱼桥小学湖墅校区': {
+    district: '拱墅区',
+    level: '顶级',
+    middleSchool: '大关中学/文晖中学',
+    middleSchoolLevel: '普通',
+    scope: ['湖墅路沿线、上塘路以西、莫干山路以东'],
+    premium: 0.35,
+    warning2026: '红色',
+    warning2027: '红色',
+    minResidencyYears: 0.8,
+    desc: '2026年落户需约10个月，拱墅区老牌名校',
+  },
+  '文澜实验学校': {
+    district: '拱墅区',
+    level: '顶级',
+    middleSchool: '文澜中学',
+    middleSchoolLevel: '优质',
+    scope: ['桥西板块、运河新城核心区'],
+    premium: 0.40,
+    warning2026: '红色',
+    warning2027: '红色',
+    minResidencyYears: 0.2,
+    desc: '2026年落户仅需约2个月，对口文澜中学（原民办转公，拱墅区顶级初中）',
+  },
+  '长寿桥小学': {
+    district: '拱墅区',
+    level: '优质',
+    middleSchool: '春蕾中学',
+    middleSchoolLevel: '普通',
+    scope: ['武林板块、延安路沿线'],
+    premium: 0.25,
+    warning2026: '红色',
+    warning2027: '红色',
+    minResidencyYears: 1.5,
+    desc: '市中心老牌名校，一表生有分流',
+  },
+  '采荷一小': {
+    district: '上城区',
+    level: '优质',
+    middleSchool: '采荷中学',
+    middleSchoolLevel: '普通',
+    scope: ['采荷街道、凯旋路沿线'],
+    premium: 0.30,
+    warning2026: '红色',
+    warning2027: '红色',
+    minResidencyYears: 5,
+    desc: '2026-2028连续三年红色预警，2025年落户截止2021.1.19，需约5年',
+  },
+  '采荷二小': {
+    district: '上城区',
+    level: '优质',
+    middleSchool: '采荷中学',
+    middleSchoolLevel: '普通',
+    scope: ['采荷街道、秋涛路沿线'],
+    premium: 0.28,
+    warning2026: '红色',
+    warning2027: '红色',
+    minResidencyYears: 1,
+    desc: '2026-2027红色预警，2028转黄色',
+  },
+  '胜利实验学校': {
+    district: '上城区',
+    level: '顶级',
+    middleSchool: '开元中学',
+    middleSchoolLevel: '普通',
+    scope: ['南星桥板块、钱江新城南翼'],
+    premium: 0.40,
+    warning2026: '黄色',
+    warning2027: '绿色',
+    minResidencyYears: 0,
+    desc: '上城区顶级公办，钱塘江沿岸豪宅配套学区',
+  },
+  '江南实验学校月明校区': {
+    district: '滨江区',
+    level: '顶级',
+    middleSchool: '江南实验初中',
+    middleSchoolLevel: '优质',
+    scope: ['江南大道以南、风情大道以西、北塘河以北（东方郡、春江郦城、明月江南、晓风印月等）'],
+    premium: 0.45,
+    warning2026: '红色',
+    warning2027: '红色',
+    minResidencyYears: 6,
+    desc: '滨江公办天花板，重高录取率14.66%全区第一，2026年落户需约6年（截止2020.8.25）',
+  },
+  '滨和小学': {
+    district: '滨江区',
+    level: '优质',
+    middleSchool: '滨和中学',
+    middleSchoolLevel: '优质',
+    scope: ['与月明共用大江南学区，四校任选'],
+    premium: 0.30,
+    warning2026: '红色',
+    warning2027: '红色',
+    minResidencyYears: 3,
+    desc: '江南集团性价比分校，2026年落户需约3年，重高率25.3%，小班化办学',
+  },
+  '闻涛小学': {
+    district: '滨江区',
+    level: '优质',
+    middleSchool: '闻涛中学',
+    middleSchoolLevel: '普通',
+    scope: ['时代大道以东、钱塘江以南、江陵路以西、江南大道以北'],
+    premium: 0.28,
+    warning2026: '红色',
+    warning2027: '黄色',
+    minResidencyYears: 2.5,
+    desc: '2026年新增江畔小学分流，2027转黄色，综合性价比之王',
+  },
+  '钱江湾小学': {
+    district: '滨江区',
+    level: '优质',
+    middleSchool: '滨文中学',
+    middleSchoolLevel: '普通',
+    scope: ['浦沿街道沿江片区'],
+    premium: 0.20,
+    warning2026: '红色',
+    warning2027: '红色',
+    minResidencyYears: 2.5,
+    desc: '2025年落户截止2023.4.18，需约2.5年',
+  },
+  '湖畔学校': {
+    district: '滨江区',
+    level: '优质',
+    middleSchool: '湖畔中学',
+    middleSchoolLevel: '普通',
+    scope: ['长河街道、白马湖周边'],
+    premium: 0.22,
+    warning2026: '红色',
+    warning2027: '红色',
+    minResidencyYears: 6,
+    desc: '2026年落户需约6年（截止2020.9.10），与创意城小学共用学区',
+  },
+  '文清小学': {
+    district: '钱塘区',
+    level: '优质',
+    middleSchool: '学正中学',
+    middleSchoolLevel: '普通',
+    scope: ['下沙核心区'],
+    premium: 0.20,
+    warning2026: '红色',
+    warning2027: '红色',
+    minResidencyYears: 2.5,
+    desc: '2025年落户截止2023.9.11，钱塘区热门公办',
+  },
+  '学正小学': {
+    district: '钱塘区',
+    level: '优质',
+    middleSchool: '学正中学',
+    middleSchoolLevel: '普通',
+    scope: ['下沙沿江板块'],
+    premium: 0.18,
+    warning2026: '红色',
+    warning2027: '红色',
+    minResidencyYears: 5,
+    desc: '2025年落户截止2021.6.9，需约5年',
+  },
+  '天元公学西站校区': {
+    district: '余杭区',
+    level: '优质',
+    middleSchool: '天元公学初中部',
+    middleSchoolLevel: '优质',
+    scope: ['云城核心区'],
+    premium: 0.25,
+    warning2026: '绿色',
+    warning2027: '绿色',
+    minResidencyYears: 0,
+    desc: '余杭区优质民办学校，九年一贯制，2025年已开学招生',
+  },
+};
+
+// 杭州地铁线路数据（运营+在建+规划）
+const HANGZHOU_METRO_DATA = [
+  // 运营线路
+  { line: '1号线', status: '运营', openYear: 2012, type: '普通', stations: ['湘湖','滨康路','西兴','滨和路','江陵路','近江','婺江路','城站','定安路','龙翔桥','凤起路','武林广场','西湖文化广场','打铁关','闸弄口','火车东站','彭埠','七堡','九和路','九堡','客运中心','下沙西','金沙湖','高沙路','文泽路','文海南路','云水','下沙江滨','杭州大会展中心','港城大道','南阳','向阳路','萧山国际机场'], coverage: '主城-下沙-萧山机场', impactLevel: '高' },
+  { line: '2号线', status: '运营', openYear: 2014, type: '普通', stations: ['朝阳','曹家桥','潘水','人民路','杭发厂','人民广场','建设一路','建设三路','振宁路','飞虹路','盈丰路','钱江世纪城','钱江路','庆春广场','庆菱路','建国北路','中河北路','凤起路','武林门','沈塘桥','下宁桥','学院路','古翠路','文新','三坝','虾龙圩','三墩','墩祥街','金家渡','白洋','杜甫村','良渚'], coverage: '主城-萧山-良渚', impactLevel: '高' },
+  { line: '3号线', status: '运营', openYear: 2022, type: '普通', stations: ['吴山前村','汤家村','火车西站','龙舟北路','文一西路','绿汀路','创明路','全丰','高教路','联胜路','洪园','西溪湿地南','花坞','东岳','古墩路','古荡新村','古荡','黄龙体育中心','黄龙洞','武林门','武林广场','西湖文化广场','潮王路','香积寺','大关','善贤','新天地街','汽轮广场','华丰路','同协路','桃花湖公园','丁桥','华鹤街','黄鹤山','星桥'], coverage: '城西-主城-丁桥', impactLevel: '高' },
+  { line: '4号线', status: '运营', openYear: 2015, type: '普通', stations: ['池华街','金家渡','好运街','储运路','平安桥','吴家角港','独城生态公园','桃源街','皋亭坝','新天地街','华中南路','笕桥老街','黎明','明石路','彭埠','火车东站','新风','新塘','景芳','钱江路','江锦路','市民中心','城星路','近江','甬江路','南星桥','水澄桥','复兴路','八卦田','地铁大厦','浦沿','杨家墩','中医药大学','联庄','水澄桥'], coverage: '浦沿-主城-桃源', impactLevel: '高' },
+  { line: '5号线', status: '运营', openYear: 2020, type: '普通', stations: ['姑娘桥','双桥','萧山国际机场','港城大道','大会展中心','坎山','衙前','火车南站','通惠中路','育才北路','人民广场','金鸡路','博奥路','江晖路','聚才路','长河','南星桥','候潮门','江城路','城站','万安桥','建国北路','宝善桥','打铁关','杭氧','东新园','西文街','善贤','拱宸桥东','大运河','萍水街','三坝','浙大紫金港','蒋村','五常','永福','杭师大仓前','良睦路','创景路','葛巷','绿汀路','金星'], coverage: '姑娘桥-主城-未来科技城', impactLevel: '高' },
+  { line: '6号线', status: '运营', openYear: 2020, type: '普通', stations: ['枸桔弄','火车东站','元宝塘','昙花庵路','三堡','亚运村','丰北','钱江世纪城','博览中心','奥体中心','星民','江陵路','江汉路','长河','建业路','诚业路','伟业路','中医药大学','西浦路','之浦路','枫桦西路','美院象山','音乐学院','中村','野生动物园东','银湖','虎啸杏','受降','富阳客运中心','高桥','新桥','公望街','桂花西路','双浦'], coverage: '富阳-之江-滨江-亚运村', impactLevel: '高' },
+  { line: '7号线', status: '运营', openYear: 2020, type: '普通', stations: ['吴山广场','江城路','莫邪塘','观音塘','市民中心','兴议','明星路','建设三路','新兴路','新汉路','新街','合欢路','盈中','坎山','新港','萧山国际机场','永盛路','新镇路','义蓬','塘新线','青六中路','启成路','江东二路'], coverage: '吴山广场-萧山机场-大江东', impactLevel: '高' },
+  { line: '8号线', status: '运营', openYear: 2021, type: '普通', stations: ['文海南路','工商大学云滨','桥头堡','河庄路','青西三路','青六中路','仓北村','冯娄村','新湾路'], coverage: '下沙-大江东', impactLevel: '中' },
+  { line: '9号线', status: '运营', openYear: 2021, type: '普通', stations: ['观音塘','新业路','钱江路','江河汇','三堡','御道','五堡','六堡','红普南路','九睦路','九堡','客运中心','乔司南','乔司','翁梅','临平南高铁站','南苑','临平','邱山大街','荷禹路','五洲路','龙安'], coverage: '钱江新城-九堡-临平', impactLevel: '高' },
+  { line: '10号线', status: '运营', openYear: 2022, type: '普通', stations: ['黄龙体育中心','文三路','学院路','翠柏路','北大桥','和睦','花园岗','渡驾桥','祥园路','杭行路','金德路','逸盛路'], coverage: '黄龙-城北-仁和方向', impactLevel: '中' },
+  { line: '16号线', status: '运营', openYear: 2020, type: '普通', stations: ['九州街','临安广场','农林大学','青山湖','八百里','青山湖科技城','南峰','南湖','中泰','禹航路','凤新路','绿汀路'], coverage: '临安-未来科技城', impactLevel: '中' },
+  { line: '19号线', status: '运营', openYear: 2022, type: '快线', stations: ['苕溪','火车西站','创景路','海创园','荆长路','西溪湿地北','五联','文三路','沈塘桥','西湖文化广场','驿城路','火车东站','御道','平澜路','耕文路','知行路','萧山国际机场','永盛路'], coverage: '火车西站-萧山机场快线', impactLevel: '极高' },
+
+  // 在建线路（地铁四期）
+  { line: '3号线二期', status: '在建', openYear: 2027, type: '普通', stations: ['星桥','世纪大道'], coverage: '临平延伸', impactLevel: '中' },
+  { line: '4号线三期西延', status: '在建', openYear: 2027, type: '普通', stations: ['池华街','莲池路','西湖大学东','西湖大学','云谷'], coverage: '云谷-西湖大学', impactLevel: '高' },
+  { line: '4号线三期南延', status: '在建', openYear: 2027, type: '普通', stations: ['浦沿','闻堰'], coverage: '浦沿-闻堰', impactLevel: '中' },
+  { line: '9号线二期', status: '在建', openYear: 2026, type: '普通', stations: ['龙安','康信路','兴元路','康泰路','星河北路','兴盛路','兴超路','塘栖'], coverage: '临平-塘栖', impactLevel: '中' },
+  { line: '10号线二期', status: '在建', openYear: 2026, type: '普通', stations: ['逸盛路','双陈','云会','仁和南'], coverage: '仁和方向', impactLevel: '中' },
+  { line: '10号线三期', status: '在建', openYear: 2026, type: '普通', stations: ['仁和南','仁和','仁和北'], coverage: '仁和延伸', impactLevel: '中' },
+  { line: '12号线一期', status: '在建', openYear: 2027, type: '普通', stations: ['火车西站','站北路','杭师大仓前','海创园','黄泥坞','高教路','小和山','慈母桥','龙坞','叶埠桥','庙山','美院象山','丽景路','科海路','双浦'], coverage: '火车西站-闲林-双浦', impactLevel: '高' },
+  { line: '15号线一期', status: '在建', openYear: 2027, type: '快线', stations: ['亚太路','蜀山','向旭路','南秀路','西山公园','萧棉路','金鸡路','建设一路','建设三路','丰二路','合丰','盈丰路','丰北','江河汇','景芳','华家池','松艮路','打铁关','和平广场','城北体育公园','七古登','蔡马','瓜山','谢村','平安桥','蒋家浜','龙腾街','崇贤'], coverage: '萧山-钱江世纪城-钱江新城-运河新城-崇贤', impactLevel: '极高' },
+  { line: '18号线一期', status: '在建', openYear: 2027, type: '快线', stations: ['义桥','时代大道','闻堰','湘滨路','白马湖','江晖路','江汉路','大小莲花','平澜路','耕文路','知行路','亚运村','九堡','丰收湖','永玄路','文正街','世纪大道'], coverage: '义桥-闻堰-滨江-九堡-临平', impactLevel: '极高' },
+];
+
+// 杭州重大城市规划板块
+const HANGZHOU_URBAN_PLAN_DATA = {
+  '云城': {
+    level: '市级核心',
+    positioning: '杭州第三中心',
+    coverage: ['余杭区仓前、五常、良渚部分区域'],
+    keyProjects: ['杭州西站','浙大校友总部经济园','超重力实验室','天元公学西站校区','龙湖云城天街'],
+    metro: ['3号线','19号线','12号线（在建）'],
+    premium: 0.15,
+    desc: '城西科创大走廊核心，规划58平方公里，科创CBD+高铁枢纽，定位为"时代中脊、未来之芯"',
+  },
+  '未来科技城': {
+    level: '市级核心',
+    positioning: '城西科创大走廊引擎',
+    coverage: ['余杭区仓前、五常、闲林部分区域'],
+    keyProjects: ['阿里巴巴西溪总部','海创园','之江实验室','人工智能小镇'],
+    metro: ['5号线','16号线','19号线'],
+    premium: 0.12,
+    desc: '全国四大未来科技城之一，数字经济核心产业营收超6365亿元',
+  },
+  '钱江世纪城': {
+    level: '市级核心',
+    positioning: '杭州第二中心',
+    coverage: ['萧山区盈丰、宁围街道'],
+    keyProjects: ['杭州奥体中心','杭州国际博览中心','钱江世纪公园','亚运村'],
+    metro: ['2号线','6号线','15号线（在建）'],
+    premium: 0.15,
+    desc: '与钱江新城隔江相望，G20和亚运主场馆所在地，杭州新封面',
+  },
+  '运河新城': {
+    level: '市级重点',
+    positioning: '大城北核心',
+    coverage: ['拱墅区康桥、上塘、半山街道'],
+    keyProjects: ['中国京杭大运河博物院','大运河未来艺术科技中心','大运汇','杭钢云谷'],
+    metro: ['4号线','15号线（在建）'],
+    premium: 0.08,
+    desc: '23公里滨水绿廊+文化地标集群，从工业遗存转型为文创电竞高地',
+  },
+  '三江汇': {
+    level: '市级重点',
+    positioning: '未来城市实践区',
+    coverage: ['西湖区之江、双浦','滨江区浦沿','萧山区闻堰'],
+    keyProjects: ['之江实验室','中国美院象山校区','湘湖旅游度假区'],
+    metro: ['6号线','4号线三期南延（在建）','18号线（在建）'],
+    premium: 0.06,
+    desc: '钱塘江、富春江、浦阳江三江交汇处，生态+科创融合示范区',
+  },
+  '临平数智城': {
+    level: '市级重点',
+    positioning: '杭州城东新中心',
+    coverage: ['临平区南苑、东湖、乔司街道'],
+    keyProjects: ['算力小镇','临平银泰城','艺尚小镇'],
+    metro: ['9号线','3号线二期（在建）'],
+    premium: 0.05,
+    desc: '杭州东部数字经济新高地，融入主城区的重要节点',
+  },
+  '大江东/江海之城': {
+    level: '区级重点',
+    positioning: '钱塘区核心',
+    coverage: ['钱塘区河庄、义蓬、新湾街道'],
+    keyProjects: ['江东大道快速路','钱塘高铁站（规划）','临江高科园'],
+    metro: ['7号线','8号线'],
+    premium: 0.03,
+    desc: '高端制造+临空经济，杭州先进制造业基地',
+  },
+  '奥体-亚运村': {
+    level: '市级核心',
+    positioning: '国际赛事中心',
+    coverage: ['萧山区盈丰街道','上城区彭埠部分'],
+    keyProjects: ['奥体中心','亚运村','杭州国际博览中心'],
+    metro: ['6号线','7号线','15号线（在建）'],
+    premium: 0.12,
+    desc: '亚运会主场馆区，杭州新地标集群',
+  },
+};
+
+// 热门物业品牌溢价系数
+const PROPERTY_BRAND_PREMIUM = {
+  '绿城': { premium: 0.08, level: 'S', desc: '杭州本土顶级品牌，二手房溢价明显，物业口碑极佳' },
+  '滨江': { premium: 0.08, level: 'S', desc: '杭州本土顶级品牌，豪宅代名词，石材干挂+蓝宝石泳池标配' },
+  '万科': { premium: 0.05, level: 'A', desc: '全国龙头，杭州口碑稳健，物业标准化程度高' },
+  '龙湖': { premium: 0.05, level: 'A', desc: '天街商业+住宅联动，园林景观和物业口碑好' },
+  '华润': { premium: 0.05, level: 'A', desc: '万象系商业加持，综合体开发能力强' },
+  '保利': { premium: 0.04, level: 'A', desc: '央企背景，产品稳健，部分高端项目溢价高' },
+  '中海': { premium: 0.04, level: 'A', desc: '央企背景，工程品质过硬' },
+  '招商蛇口': { premium: 0.04, level: 'A', desc: '央企背景，近年杭州项目口碑提升' },
+  '建发': { premium: 0.05, level: 'A', desc: '新中式风格独特，杭州多个红盘，产品力强' },
+  '大家': { premium: 0.03, level: 'B', desc: '杭州本土老牌房企，品质可靠' },
+  '杭房': { premium: 0.02, level: 'B', desc: '杭州本土国企，稳健但创新力一般' },
+  '融创': { premium: 0.02, level: 'B', desc: '近年财务压力大，杭州项目交付质量参差不齐' },
+  '碧桂园': { premium: -0.02, level: 'C', desc: '高周转模式，品质一般，杭州项目溢价为负' },
+};
+
+// 杭州三甲医院及专科强项
+const HANGZHOU_HOSPITAL_DATA = {
+  '浙一医院': {
+    district: '上城区/余杭区',
+    level: '三甲',
+    branches: ['庆春院区','总部一期（余杭）','之江院区'],
+    specialties: ['传染病','肝胆胰外科','器官移植','全科医学'],
+    desc: '全国TOP10综合医院，总部在余杭未来科技城',
+  },
+  '浙二医院': {
+    district: '上城区/滨江区',
+    level: '三甲',
+    branches: ['解放路院区','滨江院区','城东院区'],
+    specialties: ['心血管','神经外科','眼科','骨科'],
+    desc: '全国TOP15综合医院，滨江院区设施最新',
+  },
+  '邵逸夫医院': {
+    district: '上城区/钱塘区',
+    level: '三甲',
+    branches: ['庆春院区','下沙院区'],
+    specialties: ['微创外科','消化内科','妇产科'],
+    desc: '浙江省最早通过JCI认证的医院，管理和服务口碑好',
+  },
+  '省儿保（浙江大学医学院附属儿童医院）': {
+    district: '上城区/滨江区',
+    level: '三甲专科',
+    branches: ['湖滨院区','滨江院区'],
+    specialties: ['小儿内科','小儿外科','新生儿科'],
+    desc: '华东地区最大儿科医院，全国儿科TOP3',
+  },
+  '省中医院': {
+    district: '上城区',
+    level: '三甲',
+    branches: ['湖滨院区'],
+    specialties: ['中医内科','肿瘤科','针灸推拿'],
+    desc: '浙江省最好的中医院',
+  },
+  '市一医院': {
+    district: '上城区',
+    level: '三甲',
+    branches: ['湖滨院区','城北院区'],
+    specialties: ['消化内科','眼科','耳鼻喉科'],
+    desc: '杭州市老牌综合医院',
+  },
+  '市二医院': {
+    district: '拱墅区',
+    level: '三甲',
+    branches: ['拱宸桥院区'],
+    specialties: ['肿瘤科','老年病科'],
+    desc: '拱墅区主要综合医院',
+  },
+  '浙江医院': {
+    district: '西湖区',
+    level: '三甲',
+    branches: ['灵隐院区','三墩院区'],
+    specialties: ['老年医学','康复医学'],
+    desc: '以老年医学为特色',
+  },
+  '省肿瘤医院': {
+    district: '拱墅区',
+    level: '三甲专科',
+    branches: ['半山院区'],
+    specialties: ['肿瘤内科','肿瘤外科','放疗科'],
+    desc: '浙江省肿瘤治疗中心',
+  },
+  '省妇产科医院': {
+    district: '上城区',
+    level: '三甲专科',
+    branches: ['湖滨院区','钱江院区'],
+    specialties: ['妇科','产科','生殖医学'],
+    desc: '浙江省最好的妇产科医院',
+  },
+};
+
+// 杭州产业园区/就业中心
+const HANGZHOU_INDUSTRIAL_PARK_DATA = {
+  '阿里巴巴西溪园区': {
+    district: '余杭区',
+    type: '互联网总部',
+    employees: '数万人',
+    coverage: ['未来科技城核心区'],
+    rentImpact: 0.15,
+    desc: '阿里总部，杭州数字经济第一引擎，周边租金和房价溢价显著',
+  },
+  '阿里云谷园区': {
+    district: '西湖区',
+    type: '云计算总部',
+    employees: '数千人',
+    coverage: ['云谷板块'],
+    rentImpact: 0.10,
+    desc: '阿里云全球总部，西湖大学南侧',
+  },
+  '网易杭州': {
+    district: '滨江区/西湖区',
+    type: '互联网',
+    employees: '数千人',
+    coverage: ['滨江长河街道','云谷'],
+    rentImpact: 0.08,
+    desc: '网易总部在滨江，云谷设第二总部',
+  },
+  '海康威视': {
+    district: '滨江区',
+    type: '数字安防',
+    employees: '数万人',
+    coverage: ['滨江物联网小镇'],
+    rentImpact: 0.10,
+    desc: '全球安防龙头，滨江核心就业引擎',
+  },
+  '华为杭州研究所': {
+    district: '滨江区',
+    type: '通信/IT',
+    employees: '数千人',
+    coverage: ['滨江区'],
+    rentImpact: 0.08,
+    desc: '华为在杭州最大的研发中心',
+  },
+  '新华三': {
+    district: '滨江区',
+    type: '网络设备',
+    employees: '数千人',
+    coverage: ['滨江区'],
+    rentImpact: 0.06,
+    desc: '紫光旗下网络设备龙头',
+  },
+  '字节跳动华东中心': {
+    district: '余杭区',
+    type: '互联网',
+    employees: '数千人',
+    coverage: ['未来科技城'],
+    rentImpact: 0.08,
+    desc: '字节跳动在杭州的华东总部',
+  },
+  'vivo全球AI研发中心': {
+    district: '余杭区',
+    type: '智能终端',
+    employees: '数千人',
+    coverage: ['未来科技城'],
+    rentImpact: 0.06,
+    desc: 'vivo在杭州的AI研发中心',
+  },
+  'OPPO': {
+    district: '余杭区',
+    type: '智能终端',
+    employees: '数千人',
+    coverage: ['未来科技城'],
+    rentImpact: 0.06,
+    desc: 'OPPO在杭州的研发中心',
+  },
+  '杭州医药港': {
+    district: '钱塘区',
+    type: '生物医药',
+    employees: '数千人',
+    coverage: ['钱塘区下沙片区'],
+    rentImpact: 0.05,
+    desc: '浙江省生物医药产业核心区',
+  },
+  '萧山经开区': {
+    district: '萧山区',
+    type: '综合制造',
+    employees: '数万人',
+    coverage: ['萧山区市北、萧山科技城'],
+    rentImpact: 0.04,
+    desc: '国家级经开区，制造业集聚',
+  },
+  '临平算力小镇': {
+    district: '临平区',
+    type: '数字经济',
+    employees: '数千人',
+    coverage: ['临平区乔司、南苑街道'],
+    rentImpact: 0.04,
+    desc: '杭州东部算力产业新高地',
+  },
+};
+
 // ============ 估值引擎 ============
 
 /**
@@ -1110,12 +1649,89 @@ function updateDefectsAutoDetect() {
   const terrainListDiv = document.getElementById('terrainAutoList');
   const sewerDiv = document.getElementById('sewerAutoDetect');
   const sewerListDiv = document.getElementById('sewerAutoList');
+  const schoolDiv = document.getElementById('schoolAutoDetect');
+  const schoolListDiv = document.getElementById('schoolAutoList');
+  const metroDiv = document.getElementById('metroAutoDetect');
+  const metroListDiv = document.getElementById('metroAutoList');
+  const planDiv = document.getElementById('planAutoDetect');
+  const planListDiv = document.getElementById('planAutoList');
 
   if (!district) {
     autoDetectDiv.style.display = 'none';
     terrainDiv.style.display = 'none';
     sewerDiv.style.display = 'none';
+    schoolDiv.style.display = 'none';
+    metroDiv.style.display = 'none';
+    planDiv.style.display = 'none';
     return;
+  }
+
+  // === 学区信息 ===
+  const schools = Object.entries(HANGZHOU_SCHOOL_DISTRICT_DATA).filter(([name, data]) => data.district === district);
+  if (schools.length > 0) {
+    let schoolHtml = '';
+    schools.forEach(([name, data]) => {
+      const warningColor = data.warning2026 === '红色' ? '#dc2626' : data.warning2026 === '黄色' ? '#d97706' : '#059669';
+      schoolHtml += `
+        <div style="margin-bottom:10px;padding:8px;background:#fff;border-radius:6px;">
+          <div style="font-weight:600;font-size:14px;">${name} <span style="font-size:12px;color:#64748b;">(${data.level})</span></div>
+          <div style="font-size:12px;color:#64748b;margin-top:2px;">对口初中：${data.middleSchool}（${data.middleSchoolLevel}）</div>
+          <div style="display:flex;gap:12px;margin-top:4px;font-size:12px;">
+            <span>2026预警：<span style="color:${warningColor};font-weight:600;">${data.warning2026}</span></span>
+            <span>落户年限：${data.minResidencyYears > 0 ? '≥' + data.minResidencyYears + '年' : '无限制'}</span>
+          </div>
+          <div style="font-size:11px;color:#64748b;margin-top:4px;">${data.desc}</div>
+        </div>
+      `;
+    });
+    schoolListDiv.innerHTML = schoolHtml;
+    schoolDiv.style.display = 'block';
+  } else {
+    schoolDiv.style.display = 'none';
+  }
+
+  // === 地铁线路 ===
+  const metroLines = HANGZHOU_METRO_DATA.filter(m => m.coverage.includes(district.replace('区', '')));
+  if (metroLines.length > 0) {
+    let metroHtml = '';
+    metroLines.forEach(m => {
+      const statusColor = m.status === '运营' ? '#059669' : '#d97706';
+      metroHtml += `
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:13px;">
+          <span style="font-weight:600;">${m.line}</span>
+          <span style="display:flex;gap:8px;">
+            <span style="color:${statusColor};font-size:12px;">${m.status}${m.status === '在建' ? '(' + m.openYear + '通车)' : ''}</span>
+            <span style="color:#64748b;font-size:12px;">${m.type}</span>
+          </span>
+        </div>
+      `;
+    });
+    metroListDiv.innerHTML = metroHtml;
+    metroDiv.style.display = 'block';
+  } else {
+    metroDiv.style.display = 'none';
+  }
+
+  // === 城市规划板块 ===
+  const plans = Object.entries(HANGZHOU_URBAN_PLAN_DATA).filter(([name, data]) => {
+    return data.coverage.some(c => c.includes(district.replace('区', '')));
+  });
+  if (plans.length > 0) {
+    let planHtml = '';
+    plans.forEach(([name, data]) => {
+      planHtml += `
+        <div style="margin-bottom:10px;padding:8px;background:#fff;border-radius:6px;">
+          <div style="font-weight:600;font-size:14px;">${name} <span style="font-size:12px;color:#92400e;">(${data.level})</span></div>
+          <div style="font-size:12px;color:#64748b;margin-top:2px;">定位：${data.positioning}</div>
+          <div style="font-size:12px;color:#64748b;margin-top:2px;">重点项目：${data.keyProjects.join('、')}</div>
+          <div style="font-size:11px;color:#64748b;margin-top:4px;">${data.desc}</div>
+        </div>
+      `;
+    });
+    planListDiv.innerHTML = planHtml;
+    planDiv.style.display = 'block';
+  } else {
+    planDiv.style.display = 'none';
   }
 
   // === 地势与排水风险 ===
