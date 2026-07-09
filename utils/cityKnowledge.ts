@@ -364,6 +364,125 @@ export const hangzhouSchools: Record<string, { level: string; premium: number }>
   '富阳中学': { level: '普通', premium: 0.10 },
 };
 
+// 杭州硬伤位置数据库（长期固定的不利设施）
+// 数据来源：杭州市政府公开数据、殡仪馆一览表、公墓名录、环保设施公示
+export interface DefectLocation {
+  name: string;
+  type: 'highway' | 'cemetery' | 'funeral_home' | 'garbage_incinerator' | 'garbage_landfill' | 'wastewater_treatment' | 'substation' | 'gas_station';
+  district: string;
+  address: string;
+  description: string;
+  impactRadius: number; // 影响半径（米）
+  severity: 'high' | 'medium' | 'low';
+}
+
+export const hangzhouDefectLocations: DefectLocation[] = [
+  // ========== 高架快速路 ==========
+  // 中河高架
+  { name: '中河高架路', type: 'highway', district: '上城区', address: '上城区-西湖区', description: '贯穿主城南北的核心高架', impactRadius: 150, severity: 'high' },
+  // 秋石高架
+  { name: '秋石高架路', type: 'highway', district: '上城区', address: '上城区-江干区-临平区', description: '连接主城区与临平的主要通道', impactRadius: 150, severity: 'high' },
+  // 德胜高架
+  { name: '德胜快速路', type: 'highway', district: '拱墅区', address: '拱墅区-江干区', description: '城东重要东西向快速路', impactRadius: 150, severity: 'high' },
+  // 留石高架
+  { name: '留石快速路', type: 'highway', district: '拱墅区', address: '拱墅区-西湖区-余杭区', description: '城北重要东西向快速路', impactRadius: 150, severity: 'high' },
+  // 时代高架
+  { name: '时代大道高架', type: 'highway', district: '滨江区', address: '滨江区-萧山区', description: '连接滨江与萧山的主要通道', impactRadius: 150, severity: 'high' },
+  // 风情大道高架
+  { name: '风情大道高架', type: 'highway', district: '萧山区', address: '萧山区', description: '萧山重要南北向快速路', impactRadius: 150, severity: 'high' },
+  // 通城高架
+  { name: '通城高架路', type: 'highway', district: '萧山区', address: '萧山区', description: '贯穿萧山城区的东西向快速路', impactRadius: 150, severity: 'high' },
+  // 东湖高架
+  { name: '东湖高架路', type: 'highway', district: '临平区', address: '临平区', description: '连接临平与主城区的快速路', impactRadius: 150, severity: 'high' },
+  // 运溪高架
+  { name: '运溪高架路', type: 'highway', district: '余杭区', address: '余杭区', description: '城西科创大走廊重要通道', impactRadius: 150, severity: 'high' },
+  // 彩虹高架
+  { name: '彩虹快速路', type: 'highway', district: '滨江区', address: '滨江区-西湖区-富阳区', description: '连接滨江、之江与富阳', impactRadius: 150, severity: 'high' },
+  // 文一西路高架
+  { name: '文一西路快速路', type: 'highway', district: '西湖区', address: '西湖区-余杭区', description: '未来科技城核心主干道', impactRadius: 150, severity: 'high' },
+  // 天目山路快速路
+  { name: '天目山路快速路', type: 'highway', district: '西湖区', address: '西湖区', description: '城西重要东西向快速路', impactRadius: 150, severity: 'high' },
+  // 莫干山路高架
+  { name: '莫干山路高架', type: 'highway', district: '拱墅区', address: '拱墅区-余杭区', description: '城北重要南北向快速路', impactRadius: 150, severity: 'high' },
+  // 钱塘快速路
+  { name: '钱塘快速路', type: 'highway', district: '上城区', address: '上城区-江干区', description: '贯穿城东的东西向快速路', impactRadius: 150, severity: 'high' },
+  // 望梅高架
+  { name: '望梅高架路', type: 'highway', district: '临平区', address: '临平区', description: '临平重要南北向快速路', impactRadius: 150, severity: 'high' },
+
+  // ========== 殡仪馆 ==========
+  { name: '杭州殡仪馆', type: 'funeral_home', district: '西湖区', address: '西湖区西溪路731号', description: '杭州市区主要殡仪馆', impactRadius: 2000, severity: 'high' },
+  { name: '萧山区殡仪馆', type: 'funeral_home', district: '萧山区', address: '萧山区蜀山街道立新村', description: '萧山区殡仪馆', impactRadius: 2000, severity: 'high' },
+  { name: '临平区殡仪馆', type: 'funeral_home', district: '临平区', address: '临平区塘栖镇超山村', description: '临平区殡仪馆', impactRadius: 2000, severity: 'high' },
+  { name: '余杭区殡仪馆', type: 'funeral_home', district: '余杭区', address: '余杭区径山镇香下桥村', description: '余杭区殡仪馆', impactRadius: 2000, severity: 'high' },
+  { name: '富阳区殡仪馆', type: 'funeral_home', district: '富阳区', address: '富阳区新桐乡程浦村长山弄', description: '富阳区殡仪馆', impactRadius: 2000, severity: 'high' },
+  { name: '临安区殡仪馆', type: 'funeral_home', district: '临安区', address: '临安区玲珑街道雅坞村78号', description: '临安区殡仪馆', impactRadius: 2000, severity: 'high' },
+
+  // ========== 公墓/陵园 ==========
+  { name: '南山陵园', type: 'cemetery', district: '上城区', address: '上城区玉皇山片区白云路66号', description: '市区老牌公办陵园，紧邻八卦田', impactRadius: 1500, severity: 'high' },
+  { name: '杭州第二公墓', type: 'cemetery', district: '西湖区', address: '西湖区留下镇石马村午潮山麓', description: '城西大型公墓', impactRadius: 1500, severity: 'high' },
+  { name: '半山公墓', type: 'cemetery', district: '拱墅区', address: '拱墅区半山路298号', description: '城北大型公墓', impactRadius: 1500, severity: 'high' },
+  { name: '半山生态公墓', type: 'cemetery', district: '拱墅区', address: '拱墅区广济路186-5号', description: '半山风景区内公墓', impactRadius: 1500, severity: 'high' },
+  { name: '浙江安贤陵园', type: 'cemetery', district: '临平区', address: '临平区崇贤街道水洪庙村', description: '城北大型人文纪念园，占地约1000亩', impactRadius: 2000, severity: 'high' },
+  { name: '钱江陵园', type: 'cemetery', district: '西湖区', address: '西湖区双浦镇周富村', description: '城南大型山水型陵园', impactRadius: 1500, severity: 'high' },
+  { name: '如意陵园', type: 'cemetery', district: '余杭区', address: '余杭区径山镇麻车头村', description: '余杭区大型陵园', impactRadius: 2000, severity: 'high' },
+  { name: '慈福园陵园', type: 'cemetery', district: '萧山区', address: '萧山区蜀山街道章潘桥村', description: '萧山区大型陵园', impactRadius: 1500, severity: 'high' },
+  { name: '山南陵园', type: 'cemetery', district: '萧山区', address: '萧山区衙前镇山南富村', description: '萧山区陵园', impactRadius: 1500, severity: 'medium' },
+  { name: '临安天竹园公墓', type: 'cemetery', district: '临安区', address: '临安区玲珑街道前山村', description: '临安区公墓', impactRadius: 1500, severity: 'medium' },
+  { name: '华侨永久陵园', type: 'cemetery', district: '上城区', address: '上城区丁桥镇高城村', description: '上城区公墓', impactRadius: 1500, severity: 'medium' },
+  { name: '龙居寺陵园', type: 'cemetery', district: '上城区', address: '上城区丁桥镇皋城村', description: '丁桥片区公墓', impactRadius: 1500, severity: 'medium' },
+
+  // ========== 垃圾焚烧厂 ==========
+  { name: '杭州九峰垃圾焚烧发电厂', type: 'garbage_incinerator', district: '余杭区', address: '余杭区中泰街道九峰石矿内', description: '日处理3000吨，城西主要垃圾处理设施', impactRadius: 3000, severity: 'high' },
+  { name: '杭州绿能环保发电厂', type: 'garbage_incinerator', district: '滨江区', address: '滨江区', description: '滨江垃圾焚烧厂', impactRadius: 2000, severity: 'high' },
+  { name: '杭州能达绿色能源有限公司', type: 'garbage_incinerator', district: '临平区', address: '临平区乔司街道', description: '乔司垃圾焚烧厂', impactRadius: 2000, severity: 'high' },
+  { name: '杭州萧山锦江绿色能源有限公司', type: 'garbage_incinerator', district: '萧山区', address: '萧山区', description: '萧山垃圾焚烧厂', impactRadius: 2000, severity: 'high' },
+  { name: '杭州临江环境能源项目', type: 'garbage_incinerator', district: '钱塘区', address: '钱塘区临江循环经济产业园', description: '日处理5200吨，杭州最大垃圾焚烧项目', impactRadius: 3000, severity: 'high' },
+  { name: '杭州临安绿能环保发电有限公司', type: 'garbage_incinerator', district: '临安区', address: '临安区锦南街道', description: '临安区垃圾焚烧厂', impactRadius: 2000, severity: 'high' },
+  { name: '富阳区循环产业园生活垃圾焚烧项目', type: 'garbage_incinerator', district: '富阳区', address: '富阳区渌渚镇', description: '日处理1500吨', impactRadius: 2000, severity: 'high' },
+
+  // ========== 垃圾填埋场 ==========
+  { name: '天子岭垃圾填埋场', type: 'garbage_landfill', district: '拱墅区', address: '拱墅区半山街道', description: '已封场，生态治理中', impactRadius: 2000, severity: 'medium' },
+
+  // ========== 污水处理厂 ==========
+  { name: '城西（蒋村）污水处理厂', type: 'wastewater_treatment', district: '西湖区', address: '西湖区三墩镇塘河村竹牌头巷1号', description: '日处理10万吨，服务蒋村、西溪、三墩', impactRadius: 1000, severity: 'medium' },
+  { name: '临平净水厂', type: 'wastewater_treatment', district: '临平区', address: '临平区东湖街道红梅路1号', description: '全地埋式，日处理20万吨', impactRadius: 800, severity: 'low' },
+  { name: '七格污水处理厂', type: 'wastewater_treatment', district: '上城区', address: '上城区下沙片区', description: '大型污水处理厂', impactRadius: 1000, severity: 'medium' },
+  { name: '城北净水厂', type: 'wastewater_treatment', district: '拱墅区', address: '拱墅区半山街道', description: '全地埋式，日处理10万吨', impactRadius: 800, severity: 'low' },
+  { name: '之江净水厂', type: 'wastewater_treatment', district: '西湖区', address: '西湖区之江度假区', description: '全地埋式，上盖停车场', impactRadius: 800, severity: 'low' },
+  { name: '临江高科园污水处理厂', type: 'wastewater_treatment', district: '钱塘区', address: '钱塘区临江高科园', description: '化工类工业污水处理厂', impactRadius: 2000, severity: 'high' },
+  { name: '余杭污水处理厂', type: 'wastewater_treatment', district: '余杭区', address: '余杭区', description: '日处理13.5万吨', impactRadius: 1000, severity: 'medium' },
+
+  // ========== 大型变电站 ==========
+  { name: '杭州500kV变电站（瓶窑）', type: 'substation', district: '余杭区', address: '余杭区瓶窑镇', description: '大型500kV变电站', impactRadius: 500, severity: 'high' },
+  { name: '杭州220kV变电站（三墩）', type: 'substation', district: '西湖区', address: '西湖区三墩镇', description: '220kV变电站', impactRadius: 300, severity: 'medium' },
+  { name: '杭州220kV变电站（九堡）', type: 'substation', district: '上城区', address: '上城区九堡街道', description: '220kV变电站', impactRadius: 300, severity: 'medium' },
+  { name: '杭州220kV变电站（临平）', type: 'substation', district: '临平区', address: '临平区', description: '220kV变电站', impactRadius: 300, severity: 'medium' },
+];
+
+// 根据区域查找附近硬伤
+export function findNearbyDefects(districtName: string, businessDistrict?: string): DefectLocation[] {
+  return hangzhouDefectLocations.filter(defect => {
+    // 精确匹配区域
+    if (defect.district === districtName) return true;
+    
+    // 商圈匹配（部分商圈跨区域）
+    if (businessDistrict) {
+      // 一些商圈跨区域的特殊情况
+      const crossDistrictMap: Record<string, string[]> = {
+        '申花': ['拱墅区', '西湖区'],
+        '蒋村': ['西湖区'],
+        '城东新城': ['上城区'],
+        '艮北新城': ['上城区'],
+        '运河新城': ['拱墅区'],
+      };
+      const districtsForBD = crossDistrictMap[businessDistrict];
+      if (districtsForBD && districtsForBD.includes(defect.district)) return true;
+    }
+    
+    return false;
+  });
+}
+
 // 获取区域信息
 export function getDistrictInfo(districtName: string): DistrictInfo | null {
   return hangzhouDistricts[districtName] || null;
@@ -442,9 +561,11 @@ export default {
   districts: hangzhouDistricts,
   businessDistricts: hangzhouBusinessDistricts,
   schools: hangzhouSchools,
+  defectLocations: hangzhouDefectLocations,
   getDistrictInfo,
   getBusinessDistrictFactor,
   getSchoolPremium,
   getCityTrend,
   getCapRateByDistrict,
+  findNearbyDefects,
 };

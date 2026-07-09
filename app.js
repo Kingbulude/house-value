@@ -222,6 +222,117 @@ const SCHOOLS = {
   '富阳中学': { level: '普通', premium: 0.10 },
 };
 
+// 杭州硬伤位置数据库
+const DEFECT_LOCATIONS = [
+  // 高架快速路
+  { name: '中河高架路', type: 'highway', district: '上城区', address: '上城区-西湖区', description: '贯穿主城南北的核心高架', impactRadius: 150, severity: 'high' },
+  { name: '秋石高架路', type: 'highway', district: '上城区', address: '上城区-江干区-临平区', description: '连接主城区与临平的主要通道', impactRadius: 150, severity: 'high' },
+  { name: '德胜快速路', type: 'highway', district: '拱墅区', address: '拱墅区-江干区', description: '城东重要东西向快速路', impactRadius: 150, severity: 'high' },
+  { name: '留石快速路', type: 'highway', district: '拱墅区', address: '拱墅区-西湖区-余杭区', description: '城北重要东西向快速路', impactRadius: 150, severity: 'high' },
+  { name: '时代大道高架', type: 'highway', district: '滨江区', address: '滨江区-萧山区', description: '连接滨江与萧山的主要通道', impactRadius: 150, severity: 'high' },
+  { name: '风情大道高架', type: 'highway', district: '萧山区', address: '萧山区', description: '萧山重要南北向快速路', impactRadius: 150, severity: 'high' },
+  { name: '通城高架路', type: 'highway', district: '萧山区', address: '萧山区', description: '贯穿萧山城区的东西向快速路', impactRadius: 150, severity: 'high' },
+  { name: '东湖高架路', type: 'highway', district: '临平区', address: '临平区', description: '连接临平与主城区的快速路', impactRadius: 150, severity: 'high' },
+  { name: '运溪高架路', type: 'highway', district: '余杭区', address: '余杭区', description: '城西科创大走廊重要通道', impactRadius: 150, severity: 'high' },
+  { name: '彩虹快速路', type: 'highway', district: '滨江区', address: '滨江区-西湖区-富阳区', description: '连接滨江、之江与富阳', impactRadius: 150, severity: 'high' },
+  { name: '文一西路快速路', type: 'highway', district: '西湖区', address: '西湖区-余杭区', description: '未来科技城核心主干道', impactRadius: 150, severity: 'high' },
+  { name: '天目山路快速路', type: 'highway', district: '西湖区', address: '西湖区', description: '城西重要东西向快速路', impactRadius: 150, severity: 'high' },
+  { name: '莫干山路高架', type: 'highway', district: '拱墅区', address: '拱墅区-余杭区', description: '城北重要南北向快速路', impactRadius: 150, severity: 'high' },
+  { name: '钱塘快速路', type: 'highway', district: '上城区', address: '上城区-江干区', description: '贯穿城东的东西向快速路', impactRadius: 150, severity: 'high' },
+  { name: '望梅高架路', type: 'highway', district: '临平区', address: '临平区', description: '临平重要南北向快速路', impactRadius: 150, severity: 'high' },
+
+  // 殡仪馆
+  { name: '杭州殡仪馆', type: 'funeral_home', district: '西湖区', address: '西湖区西溪路731号', description: '杭州市区主要殡仪馆', impactRadius: 2000, severity: 'high' },
+  { name: '萧山区殡仪馆', type: 'funeral_home', district: '萧山区', address: '萧山区蜀山街道立新村', description: '萧山区殡仪馆', impactRadius: 2000, severity: 'high' },
+  { name: '临平区殡仪馆', type: 'funeral_home', district: '临平区', address: '临平区塘栖镇超山村', description: '临平区殡仪馆', impactRadius: 2000, severity: 'high' },
+  { name: '余杭区殡仪馆', type: 'funeral_home', district: '余杭区', address: '余杭区径山镇香下桥村', description: '余杭区殡仪馆', impactRadius: 2000, severity: 'high' },
+  { name: '富阳区殡仪馆', type: 'funeral_home', district: '富阳区', address: '富阳区新桐乡程浦村长山弄', description: '富阳区殡仪馆', impactRadius: 2000, severity: 'high' },
+  { name: '临安区殡仪馆', type: 'funeral_home', district: '临安区', address: '临安区玲珑街道雅坞村78号', description: '临安区殡仪馆', impactRadius: 2000, severity: 'high' },
+
+  // 公墓/陵园
+  { name: '南山陵园', type: 'cemetery', district: '上城区', address: '上城区玉皇山片区', description: '市区老牌公办陵园', impactRadius: 1500, severity: 'high' },
+  { name: '杭州第二公墓', type: 'cemetery', district: '西湖区', address: '西湖区留下镇', description: '城西大型公墓', impactRadius: 1500, severity: 'high' },
+  { name: '半山公墓', type: 'cemetery', district: '拱墅区', address: '拱墅区半山路', description: '城北大型公墓', impactRadius: 1500, severity: 'high' },
+  { name: '半山生态公墓', type: 'cemetery', district: '拱墅区', address: '拱墅区广济路', description: '半山风景区内公墓', impactRadius: 1500, severity: 'high' },
+  { name: '浙江安贤陵园', type: 'cemetery', district: '临平区', address: '临平区崇贤街道', description: '城北大型人文纪念园，占地约1000亩', impactRadius: 2000, severity: 'high' },
+  { name: '钱江陵园', type: 'cemetery', district: '西湖区', address: '西湖区双浦镇', description: '城南大型山水型陵园', impactRadius: 1500, severity: 'high' },
+  { name: '如意陵园', type: 'cemetery', district: '余杭区', address: '余杭区径山镇', description: '余杭区大型陵园', impactRadius: 2000, severity: 'high' },
+  { name: '慈福园陵园', type: 'cemetery', district: '萧山区', address: '萧山区蜀山街道', description: '萧山区大型陵园', impactRadius: 1500, severity: 'high' },
+  { name: '山南陵园', type: 'cemetery', district: '萧山区', address: '萧山区衙前镇', description: '萧山区陵园', impactRadius: 1500, severity: 'medium' },
+  { name: '华侨永久陵园', type: 'cemetery', district: '上城区', address: '上城区丁桥镇', description: '上城区公墓', impactRadius: 1500, severity: 'medium' },
+  { name: '龙居寺陵园', type: 'cemetery', district: '上城区', address: '上城区丁桥镇', description: '丁桥片区公墓', impactRadius: 1500, severity: 'medium' },
+
+  // 垃圾焚烧厂
+  { name: '杭州九峰垃圾焚烧发电厂', type: 'garbage_incinerator', district: '余杭区', address: '余杭区中泰街道', description: '日处理3000吨，城西主要垃圾处理设施', impactRadius: 3000, severity: 'high' },
+  { name: '杭州绿能环保发电厂', type: 'garbage_incinerator', district: '滨江区', address: '滨江区', description: '滨江垃圾焚烧厂', impactRadius: 2000, severity: 'high' },
+  { name: '杭州能达绿色能源有限公司', type: 'garbage_incinerator', district: '临平区', address: '临平区乔司街道', description: '乔司垃圾焚烧厂', impactRadius: 2000, severity: 'high' },
+  { name: '杭州萧山锦江绿色能源有限公司', type: 'garbage_incinerator', district: '萧山区', address: '萧山区', description: '萧山垃圾焚烧厂', impactRadius: 2000, severity: 'high' },
+  { name: '杭州临江环境能源项目', type: 'garbage_incinerator', district: '钱塘区', address: '钱塘区临江循环经济产业园', description: '日处理5200吨，杭州最大垃圾焚烧项目', impactRadius: 3000, severity: 'high' },
+  { name: '杭州临安绿能环保发电有限公司', type: 'garbage_incinerator', district: '临安区', address: '临安区锦南街道', description: '临安区垃圾焚烧厂', impactRadius: 2000, severity: 'high' },
+  { name: '富阳区循环产业园生活垃圾焚烧项目', type: 'garbage_incinerator', district: '富阳区', address: '富阳区渌渚镇', description: '日处理1500吨', impactRadius: 2000, severity: 'high' },
+
+  // 垃圾填埋场
+  { name: '天子岭垃圾填埋场', type: 'garbage_landfill', district: '拱墅区', address: '拱墅区半山街道', description: '已封场，生态治理中', impactRadius: 2000, severity: 'medium' },
+
+  // 污水处理厂
+  { name: '城西（蒋村）污水处理厂', type: 'wastewater_treatment', district: '西湖区', address: '西湖区三墩镇', description: '日处理10万吨，服务蒋村、西溪、三墩', impactRadius: 1000, severity: 'medium' },
+  { name: '临平净水厂', type: 'wastewater_treatment', district: '临平区', address: '临平区东湖街道', description: '全地埋式，日处理20万吨', impactRadius: 800, severity: 'low' },
+  { name: '七格污水处理厂', type: 'wastewater_treatment', district: '上城区', address: '上城区下沙片区', description: '大型污水处理厂', impactRadius: 1000, severity: 'medium' },
+  { name: '城北净水厂', type: 'wastewater_treatment', district: '拱墅区', address: '拱墅区半山街道', description: '全地埋式，日处理10万吨', impactRadius: 800, severity: 'low' },
+  { name: '临江高科园污水处理厂', type: 'wastewater_treatment', district: '钱塘区', address: '钱塘区临江高科园', description: '化工类工业污水处理厂', impactRadius: 2000, severity: 'high' },
+  { name: '余杭污水处理厂', type: 'wastewater_treatment', district: '余杭区', address: '余杭区', description: '日处理13.5万吨', impactRadius: 1000, severity: 'medium' },
+
+  // 大型变电站
+  { name: '杭州500kV变电站（瓶窑）', type: 'substation', district: '余杭区', address: '余杭区瓶窑镇', description: '大型500kV变电站', impactRadius: 500, severity: 'high' },
+  { name: '杭州220kV变电站（三墩）', type: 'substation', district: '西湖区', address: '西湖区三墩镇', description: '220kV变电站', impactRadius: 300, severity: 'medium' },
+  { name: '杭州220kV变电站（九堡）', type: 'substation', district: '上城区', address: '上城区九堡街道', description: '220kV变电站', impactRadius: 300, severity: 'medium' },
+];
+
+// 根据区域查找附近硬伤
+function findNearbyDefects(districtName, businessDistrict) {
+  return DEFECT_LOCATIONS.filter(defect => {
+    if (defect.district === districtName) return true;
+    if (businessDistrict) {
+      const crossDistrictMap = {
+        '申花': ['拱墅区', '西湖区'],
+        '蒋村': ['西湖区'],
+        '城东新城': ['上城区'],
+        '艮北新城': ['上城区'],
+        '运河新城': ['拱墅区'],
+      };
+      const districtsForBD = crossDistrictMap[businessDistrict];
+      if (districtsForBD && districtsForBD.includes(defect.district)) return true;
+    }
+    return false;
+  });
+}
+
+// 硬伤类型映射
+const DEFECT_TYPE_MAP = {
+  highway: '高架/主干道',
+  cemetery: '公墓/陵园',
+  funeral_home: '殡仪馆',
+  garbage_incinerator: '垃圾焚烧厂',
+  garbage_landfill: '垃圾填埋场',
+  wastewater_treatment: '污水处理厂',
+  substation: '变电站/高压线',
+  gas_station: '加油站',
+};
+
+const DEFECT_SEVERITY_MAP = {
+  high: '严重',
+  medium: '中等',
+  low: '轻微',
+};
+
+function getDefectTypeName(type) {
+  return DEFECT_TYPE_MAP[type] || type;
+}
+
+function getDefectSeverityName(severity) {
+  return DEFECT_SEVERITY_MAP[severity] || severity;
+}
+
 
 // ============ 估值引擎 ============
 
@@ -740,11 +851,17 @@ function initUI() {
     districtSelect.appendChild(opt);
   }
 
-  // 区域变化时更新商圈和学校
+  // 区域变化时更新商圈、学校和硬伤检测
   districtSelect.addEventListener('change', function() {
     updateBusinessDistricts(this.value);
     updateSchools(this.value);
     updateDistrictInfo(this.value);
+    updateDefectsAutoDetect();
+  });
+
+  // 商圈变化时更新硬伤检测
+  document.getElementById('businessDistrict').addEventListener('change', function() {
+    updateDefectsAutoDetect();
   });
 
   // 硬伤复选框样式
@@ -825,6 +942,86 @@ function updateDistrictInfo(districtName) {
   } else {
     infoDiv.style.display = 'none';
   }
+}
+
+function updateDefectsAutoDetect() {
+  const district = document.getElementById('district').value;
+  const businessDistrict = document.getElementById('businessDistrict').value;
+  const autoDetectDiv = document.getElementById('defectsAutoDetect');
+  const autoListDiv = document.getElementById('defectsAutoList');
+
+  if (!district) {
+    autoDetectDiv.style.display = 'none';
+    return;
+  }
+
+  const defects = findNearbyDefects(district, businessDistrict);
+  
+  if (defects.length === 0) {
+    autoDetectDiv.style.display = 'none';
+    return;
+  }
+
+  const typeColorMap = {
+    highway: '#ea580c',
+    cemetery: '#dc2626',
+    funeral_home: '#dc2626',
+    garbage_incinerator: '#dc2626',
+    garbage_landfill: '#ea580c',
+    wastewater_treatment: '#d97706',
+    substation: '#ea580c',
+    gas_station: '#d97706',
+  };
+
+  const severityColorMap = {
+    high: '#dc2626',
+    medium: '#d97706',
+    low: '#059669',
+  };
+
+  let html = '';
+  const defectTypeSet = new Set();
+  
+  defects.forEach(d => {
+    defectTypeSet.add(d.type);
+    html += `
+      <div style="display:flex;align-items:center;margin-bottom:6px;font-size:13px;">
+        <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${typeColorMap[d.type]};margin-right:8px;"></span>
+        <span style="flex:1;">${d.name}</span>
+        <span style="color:${severityColorMap[d.severity]};font-weight:600;font-size:12px;">${getDefectSeverityName(d.severity)}</span>
+      </div>
+    `;
+  });
+
+  autoListDiv.innerHTML = html;
+  autoDetectDiv.style.display = 'block';
+
+  const defectValueMap = {
+    highway: 'highway_noise',
+    cemetery: 'cemetery',
+    funeral_home: 'cemetery',
+    garbage_incinerator: 'garbage_station',
+    garbage_landfill: 'garbage_station',
+    wastewater_treatment: 'sewage_plant',
+    substation: 'substation',
+    gas_station: 'gas_station',
+  };
+
+  document.querySelectorAll('input[name="defects"]').forEach(cb => {
+    cb.checked = false;
+    cb.closest('.form-checkbox-item').classList.remove('checked');
+  });
+
+  defectTypeSet.forEach(type => {
+    const value = defectValueMap[type];
+    if (value) {
+      const cb = document.querySelector(`input[name="defects"][value="${value}"]`);
+      if (cb) {
+        cb.checked = true;
+        cb.closest('.form-checkbox-item').classList.add('checked');
+      }
+    }
+  });
 }
 
 function handleSubmit() {
