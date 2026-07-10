@@ -1,13 +1,6 @@
 const STORAGE_KEY = 'house_value_history';
 const MAX_ITEMS = 10;
 
-export interface HistoryItem {
-  id: string;
-  timestamp: number;
-  input: Record<string, unknown>;
-  result: Record<string, unknown>;
-}
-
 export function saveHistory(input, result) {
   const history = getHistory();
   const item = {
