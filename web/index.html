@@ -190,10 +190,28 @@
 
     <div class="card">
       <div class="card-title"><span class="icon">🎓</span>教育配套</div>
-      <div class="form-group">
-        <label class="form-label">对口学校</label>
-        <input class="form-input" type="text" name="schoolName" id="schoolName" list="schoolList" placeholder="如：学军小学、文澜中学">
-        <datalist id="schoolList"></datalist>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">幼儿园</label>
+          <input class="form-input" type="text" name="kindergarten" id="kindergarten" placeholder="如：省府机关幼儿园">
+        </div>
+        <div class="form-group">
+          <label class="form-label">小学</label>
+          <input class="form-input" type="text" name="primarySchool" id="primarySchool" placeholder="如：学军小学">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">初中</label>
+          <input class="form-input" type="text" name="middleSchool" id="middleSchool" placeholder="如：文澜中学">
+        </div>
+        <div class="form-group">
+          <label class="form-label">高中</label>
+          <input class="form-input" type="text" name="highSchool" id="highSchool" placeholder="如：杭二中">
+        </div>
+      </div>
+      <div style="font-size:12px;color:#94a3b8;margin-top:-8px;">
+        提示：填写对口学校名称，系统会自动识别学校等级并计算学区溢价。不填则不加分。
       </div>
     </div>
 

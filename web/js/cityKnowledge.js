@@ -282,22 +282,41 @@ export const BUSINESS_DISTRICTS = {
 };
 
 export const SCHOOLS = {
-  '学军小学': { level: '顶级', premium: 0.45 },
-  '胜利实验学校': { level: '顶级', premium: 0.40 },
-  '天长小学': { level: '顶级', premium: 0.40 },
-  '卖鱼桥小学': { level: '顶级', premium: 0.35 },
-  '保俶塔实验学校': { level: '顶级', premium: 0.35 },
-  '江南实验学校': { level: '优质', premium: 0.30 },
-  '文澜中学': { level: '优质', premium: 0.30 },
-  '杭二中白马湖学校': { level: '优质', premium: 0.25 },
-  '崇文世纪城实验学校': { level: '优质', premium: 0.25 },
-  '天元公学': { level: '优质', premium: 0.25 },
-  '杭师大附属学校': { level: '优质', premium: 0.20 },
-  '萧山中学': { level: '普通', premium: 0.15 },
-  '余杭第一中学': { level: '普通', premium: 0.15 },
-  '杭州第四中学': { level: '普通', premium: 0.15 },
-  '临安中学': { level: '普通', premium: 0.10 },
-  '富阳中学': { level: '普通', premium: 0.10 },
+  // 小学
+  '学军小学': { type: 'primary', level: '顶尖', premium: 0.35 },
+  '文三街小学': { type: 'primary', level: '顶尖', premium: 0.35 },
+  '天长小学': { type: 'primary', level: '顶尖', premium: 0.35 },
+  '胜利小学': { type: 'primary', level: '顶尖', premium: 0.35 },
+  '保俶塔实验学校': { type: 'primary', level: '优质', premium: 0.25 },
+  '采荷一小': { type: 'primary', level: '优质', premium: 0.25 },
+  '江南实验学校': { type: 'primary', level: '优质', premium: 0.25 },
+  '崇文小学': { type: 'primary', level: '优质', premium: 0.25 },
+  '育才外国语': { type: 'primary', level: '普通', premium: 0.15 },
+  '濮家小学': { type: 'primary', level: '普通', premium: 0.10 },
+  '丁兰小学': { type: 'primary', level: '普通', premium: 0.10 },
+  // 初中
+  '文澜中学': { type: 'middle', level: '顶尖', premium: 0.35 },
+  '建兰中学': { type: 'middle', level: '顶尖', premium: 0.35 },
+  '公益中学': { type: 'middle', level: '顶尖', premium: 0.35 },
+  '采荷实验': { type: 'middle', level: '优质', premium: 0.25 },
+  '江南实验学校': { type: 'middle', level: '优质', premium: 0.25 },
+  '杭二中白马湖学校': { type: 'middle', level: '优质', premium: 0.25 },
+  '崇文世纪城实验学校': { type: 'middle', level: '优质', premium: 0.25 },
+  '天元公学': { type: 'middle', level: '优质', premium: 0.25 },
+  '杭师大附属学校': { type: 'middle', level: '优质', premium: 0.20 },
+  // 高中
+  '杭州第二中学': { type: 'high', level: '顶尖', premium: 0.20 },
+  '杭州学军中学': { type: 'high', level: '顶尖', premium: 0.20 },
+  '杭州高级中学': { type: 'high', level: '顶尖', premium: 0.20 },
+  '杭州第四中学': { type: 'high', level: '普通', premium: 0.10 },
+  '萧山中学': { type: 'high', level: '普通', premium: 0.10 },
+  '余杭第一中学': { type: 'high', level: '普通', premium: 0.10 },
+  '临安中学': { type: 'high', level: '普通', premium: 0.05 },
+  '富阳中学': { type: 'high', level: '普通', premium: 0.05 },
+  // 幼儿园
+  '省府机关幼儿园': { type: 'kindergarten', level: '优质', premium: 0.10 },
+  '杭州市机关幼儿园': { type: 'kindergarten', level: '优质', premium: 0.10 },
+  '西湖区文三路幼儿园': { type: 'kindergarten', level: '优质', premium: 0.08 },
 };
 
 export const DISTRICT_BD_MAP = {

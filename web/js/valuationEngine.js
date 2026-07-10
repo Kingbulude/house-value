@@ -68,14 +68,43 @@ export function calcElevatorModifier(hasElevator, totalFloors) {
   return hasElevator ? 1.00 : 0.90;
 }
 
-export function calcSchoolPremium(schoolName) {
-  if (!schoolName) return 0;
-  const school = SCHOOLS[schoolName];
-  if (school) return school.premium;
-  if (schoolName.includes('实验') || schoolName.includes('师范') || schoolName.includes('附属')) {
-    return 0.15;
-  }
-  return 0.05;
+export function calcSchoolPremium(schoolInput) {
+  if (!schoolInput) return { total: 0, schools: [] };
+  
+  const { kindergarten, primarySchool, middleSchool, highSchool } = schoolInput;
+  const schools = [];
+  let totalPremium = 0;
+
+  const typeWeights = {
+    kindergarten: 0.4,
+    primary: 1.0,
+    middle: 1.0,
+    high: 0.6,
+  };
+
+  const processSchool = (name, type) => {
+    if (!name) return;
+    const school = SCHOOLS[name];
+    if (school && school.type === type) {
+      const weightedPremium = school.premium * typeWeights[type];
+      totalPremium += weightedPremium;
+      schools.push({ name, type, level: school.level, premium: school.premium, weightedPremium });
+    } else if (name) {
+      const defaultPremium = type === 'primary' || type === 'middle' ? 0.08 : 0.03;
+      const weightedPremium = defaultPremium * typeWeights[type];
+      totalPremium += weightedPremium;
+      schools.push({ name, type, level: '普通', premium: defaultPremium, weightedPremium });
+    }
+  };
+
+  processSchool(kindergarten, 'kindergarten');
+  processSchool(primarySchool, 'primary');
+  processSchool(middleSchool, 'middle');
+  processSchool(highSchool, 'high');
+
+  totalPremium = Math.min(totalPremium, 0.50);
+
+  return { total: totalPremium, schools };
 }
 
 export function calcLocationCoefficient(districtName, businessDistrict) {
@@ -105,7 +134,8 @@ export function calcLocationCoefficient(districtName, businessDistrict) {
 }
 
 export function calcAmenitiesScore(input) {
-  const { metroDistance, metroLines, busRoutes, schoolName,
+  const { metroDistance, metroLines, busRoutes,
+    kindergarten, primarySchool, middleSchool, highSchool,
     mallCount, hasMarket, restaurantCount,
     hasTier3Hospital, hospitalDistance, hasCommunityHospital,
     hasPark, parkDistance, hasWater } = input;
@@ -131,18 +161,42 @@ export function calcAmenitiesScore(input) {
 
   let educationScore = 0;
   let educationDetail = [];
-  if (schoolName) {
-    const school = SCHOOLS[schoolName];
-    if (school) {
-      educationScore = school.level === '顶级' ? 20 : school.level === '优质' ? 15 : 10;
-      educationDetail.push(`${schoolName}（${school.level}，+${educationScore}）`);
-    } else {
-      educationScore = 8;
-      educationDetail.push(`${schoolName}（普通学区+8）`);
-    }
-  }
 
-  let commercialScore = 0;
+  const schoolInputs = [
+    { name: kindergarten, type: 'kindergarten', label: '幼儿园' },
+    { name: primarySchool, type: 'primary', label: '小学' },
+    { name: middleSchool, type: 'middle', label: '初中' },
+    { name: highSchool, type: 'high', label: '高中' },
+  ];
+
+  const typeMaxScores = {
+    kindergarten: 5,
+    primary: 8,
+    middle: 8,
+    high: 4,
+  };
+
+  const levelScoreMap = {
+    '顶尖': { kindergarten: 5, primary: 8, middle: 8, high: 4 },
+    '优质': { kindergarten: 4, primary: 6, middle: 6, high: 3 },
+    '普通': { kindergarten: 2, primary: 3, middle: 3, high: 1 },
+  };
+
+  schoolInputs.forEach(({ name, type, label }) => {
+    if (!name) return;
+    const school = SCHOOLS[name];
+    let score = 0;
+    if (school && school.type === type) {
+      score = levelScoreMap[school.level][type] || typeMaxScores[type];
+      educationDetail.push(`${label}：${name}（${school.level}，+${score}）`);
+    } else {
+      score = typeMaxScores[type] * 0.3;
+      educationDetail.push(`${label}：${name}（普通，+${Math.round(score)}）`);
+    }
+    educationScore += score;
+  });
+
+  educationScore = Math.min(educationScore, 25);
   let commercialDetail = [];
   if (mallCount >= 2) { commercialScore += 12; commercialDetail.push(`${mallCount}个商场（+12）`); }
   else if (mallCount === 1) { commercialScore += 8; commercialDetail.push(`1个商场（+8）`); }
@@ -325,7 +379,8 @@ export function calculateValuation(input) {
     district, businessDistrict, communityName,
     area, floor, totalFloors, orientation, decoration, buildingAge, hasElevator,
     marketPrice, monthlyRent,
-    metroDistance, metroLines, busRoutes, schoolName,
+    metroDistance, metroLines, busRoutes,
+    kindergarten, primarySchool, middleSchool, highSchool,
     mallCount, hasMarket, restaurantCount,
     hasTier3Hospital, hospitalDistance, hasCommunityHospital,
     hasPark, parkDistance, hasWater,
@@ -346,7 +401,8 @@ export function calculateValuation(input) {
     const decMod = calcDecorationModifier(decoration);
     const ageMod = calcAgeModifier(buildingAge);
     const elevMod = calcElevatorModifier(hasElevator, totalFloors);
-    const schoolPrem = calcSchoolPremium(schoolName);
+    const schoolPremResult = calcSchoolPremium({ kindergarten, primarySchool, middleSchool, highSchool });
+    const schoolPrem = schoolPremResult.total;
 
     const marketSentiment = calcMarketSentiment(district);
 
@@ -354,7 +410,7 @@ export function calculateValuation(input) {
 
     factors.marketComparison = {
       areaMod, oriMod, floorMod, decMod, ageMod, elevMod,
-      schoolPrem, marketSentiment: marketSentiment.coefficient,
+      schoolPrem, schoolDetails: schoolPremResult.schools, marketSentiment: marketSentiment.coefficient,
     };
 
     marketTotal = unitPrice * area;
