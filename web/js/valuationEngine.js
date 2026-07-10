@@ -1,4 +1,4 @@
-import { HANGZHOU_CITY, HANGZHOU_DISTRICTS, BUSINESS_DISTRICTS, SCHOOLS } from './cityKnowledge.js';
+import { HANGZHOU_CITY, HANGZHOU_DISTRICTS, BUSINESS_DISTRICTS, SCHOOLS, matchCommunityDefects } from './cityKnowledge.js';
 
 export function calcAreaModifier(area) {
   if (area < 50) return 1.05;
@@ -432,7 +432,33 @@ export function calculateValuation(input) {
   const ageMod = calcAgeModifier(buildingAge);
   const elevMod = calcElevatorModifier(hasElevator, totalFloors);
   const buildingPosMod = calcBuildingPositionModifier(buildingPosition);
-  const defects = calcDefects(selectedDefects || []);
+  
+  // 自动匹配小区硬伤
+  const communityDefectMatch = matchCommunityDefects(communityName);
+  let autoDefectKeys = [];
+  if (communityDefectMatch) {
+    const nameToKey = {
+      '高架/高速噪音': 'highway_noise',
+      '主干道噪音': 'main_road_noise',
+      '公墓/殡仪馆': 'cemetery',
+      '变电站/高压线': 'substation',
+      '垃圾处理站': 'garbage_station',
+      '污水处理厂': 'sewage_plant',
+      '机场航线噪音': 'airport_noise',
+      '地势低洼易涝': 'low_ground',
+      '加油站/加气站': 'gas_station',
+      '采光严重不足': 'poor_lighting',
+      '工厂污染': 'factory_pollution',
+      '治安差/红灯区': 'red_light',
+    };
+    autoDefectKeys = communityDefectMatch.defects
+      .map(d => nameToKey[d])
+      .filter(Boolean);
+  }
+  
+  const userDefects = selectedDefects || [];
+  const allDefects = [...new Set([...userDefects, ...autoDefectKeys])];
+  const defects = calcDefects(allDefects);
 
   // 楼栋级修正总系数
   const buildingModifier = areaMod * oriMod * floorMod * decMod * ageMod * elevMod * buildingPosMod * defects.coefficient;
@@ -588,6 +614,7 @@ export function calculateValuation(input) {
       liquidityDiscount,
     },
     holdingCost,
+    communityDefectMatch: communityDefectMatch || null,
   };
 }
 

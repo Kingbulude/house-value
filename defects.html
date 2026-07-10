@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>硬伤小区名录 | 房估计算器</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="header">
+  <h1>硬伤小区名录</h1>
+  <p>杭州已知存在不利因素的小区汇总 · 仅供参考</p>
+</div>
+
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="icon">📋</span>名录说明</div>
+    </div>
+    <div class="card-content">
+      <p style="font-size:13px;color:#64748b;line-height:1.8;margin:0;">
+        本名录基于公开新闻报道、业主投诉、论坛讨论等信息整理，仅供参考。<br>
+        数据可能存在滞后或偏差，具体情况请以实际勘察为准。<br>
+        名录中的小区在使用"房估计算器"时，输入小区名称会自动匹配对应的硬伤扣分。<br>
+        <strong style="color:#ef4444;">免责声明：</strong>本数据仅供学习交流，不构成购房建议。如有错误或需补充，请通过意见反馈告知。
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="icon">🔍</span>搜索筛选</div>
+    </div>
+    <div class="card-content">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <input class="form-input" type="text" id="searchInput" placeholder="搜索小区名称..." style="flex:1;min-width:200px;">
+        <select class="form-select" id="districtFilter" style="width:auto;">
+          <option value="">全部区域</option>
+        </select>
+        <select class="form-select" id="defectFilter" style="width:auto;">
+          <option value="">全部硬伤类型</option>
+          <option value="高架/高速噪音">高架/高速噪音</option>
+          <option value="主干道噪音">主干道噪音</option>
+          <option value="公墓/殡仪馆">公墓/殡仪馆</option>
+          <option value="变电站/高压线">变电站/高压线</option>
+          <option value="垃圾处理站">垃圾处理站</option>
+          <option value="污水处理厂">污水处理厂</option>
+          <option value="地势低洼易涝">地势低洼易涝</option>
+          <option value="工厂污染">工厂污染</option>
+          <option value="加油站/加气站">加油站/加气站</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="icon">🏠</span>小区列表</div>
+      <span id="resultCount" class="card-toggle" style="font-size:13px;color:#64748b;">共 0 个</span>
+    </div>
+    <div class="card-content">
+      <table id="defectTable" style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead>
+          <tr style="background:#f8fafc;">
+            <th style="padding:10px;text-align:left;border-bottom:2px solid #e2e8f0;font-weight:600;">小区名称</th>
+            <th style="padding:10px;text-align:left;border-bottom:2px solid #e2e8f0;font-weight:600;">区域/板块</th>
+            <th style="padding:10px;text-align:left;border-bottom:2px solid #e2e8f0;font-weight:600;">硬伤类型</th>
+            <th style="padding:10px;text-align:left;border-bottom:2px solid #e2e8f0;font-weight:600;">影响程度</th>
+            <th style="padding:10px;text-align:left;border-bottom:2px solid #e2e8f0;font-weight:600;">说明</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:20px;">
+    <a href="index.html" style="color:#3b82f6;text-decoration:none;font-size:14px;">← 返回房估计算器</a>
+  </div>
+</div>
+
+<script type="module">
+  import { DEFECT_COMMUNITIES, HANGZHOU_DISTRICTS } from './js/cityKnowledge.js';
+
+  const levelMap = {
+    high: { text: '严重', color: '#ef4444' },
+    medium: { text: '中等', color: '#f59e0b' },
+    low: { text: '轻微', color: '#10b981' },
+  };
+
+  const districts = [...new Set(Object.values(DEFECT_COMMUNITIES).map(d => d.district))];
+  const districtFilter = document.getElementById('districtFilter');
+  districts.forEach(d => {
+    const opt = document.createElement('option');
+    opt.value = d;
+    opt.textContent = d;
+    districtFilter.appendChild(opt);
+  });
+
+  function renderTable(data) {
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = '';
+    document.getElementById('resultCount').textContent = `共 ${data.length} 个`;
+
+    data.forEach(([name, info]) => {
+      const tr = document.createElement('tr');
+      const level = levelMap[info.level] || { text: info.level, color: '#64748b' };
+      tr.innerHTML = `
+        <td style="padding:10px;border-bottom:1px solid #e2e8f0;font-weight:500;">${name}</td>
+        <td style="padding:10px;border-bottom:1px solid #e2e8f0;color:#64748b;">${info.district} · ${info.businessDistrict}</td>
+        <td style="padding:10px;border-bottom:1px solid #e2e8f0;">
+          ${info.defects.map(d => `<span style="display:inline-block;padding:2px 8px;background:#f1f5f9;border-radius:4px;font-size:12px;margin:2px;color:#475569;">${d}</span>`).join('')}
+        </td>
+        <td style="padding:10px;border-bottom:1px solid #e2e8f0;"><span style="color:${level.color};font-weight:500;">${level.text}</span></td>
+        <td style="padding:10px;border-bottom:1px solid #e2e8f0;color:#64748b;font-size:12px;line-height:1.5;">${info.source || ''}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function filterData() {
+    const search = document.getElementById('searchInput').value.trim().toLowerCase();
+    const district = document.getElementById('districtFilter').value;
+    const defect = document.getElementById('defectFilter').value;
+
+    const filtered = Object.entries(DEFECT_COMMUNITIES).filter(([name, info]) => {
+      if (search && !name.toLowerCase().includes(search)) return false;
+      if (district && info.district !== district) return false;
+      if (defect && !info.defects.includes(defect)) return false;
+      return true;
+    });
+
+    renderTable(filtered);
+  }
+
+  document.getElementById('searchInput').addEventListener('input', filterData);
+  document.getElementById('districtFilter').addEventListener('change', filterData);
+  document.getElementById('defectFilter').addEventListener('change', filterData);
+
+  renderTable(Object.entries(DEFECT_COMMUNITIES));
+</script>
+
+</body>
+</html>

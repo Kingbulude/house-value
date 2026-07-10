@@ -415,3 +415,159 @@ export function matchCommunity(communityName) {
   
   return null;
 }
+
+export const DEFECT_COMMUNITIES = {
+  '绿城春来晴翠': {
+    district: '滨江区',
+    businessDistrict: '浦沿',
+    defects: ['垃圾处理站', '公墓/殡仪馆'],
+    source: '东侧约1公里垃圾焚烧厂，400米浦沿陵园',
+    level: 'medium',
+  },
+  '中天官河锦庭': {
+    district: '滨江区',
+    businessDistrict: '滨江区政府',
+    defects: ['污水处理厂'],
+    source: '小区南面污水处理厂',
+    level: 'medium',
+  },
+  '旭辉滨江东方悦府': {
+    district: '萧山区',
+    businessDistrict: '湘湖',
+    defects: ['公墓/殡仪馆'],
+    source: '南侧500米西郊生态公墓，萧山最大公墓',
+    level: 'high',
+  },
+  '都会艺境': {
+    district: '萧山区',
+    businessDistrict: '湘湖',
+    defects: ['公墓/殡仪馆'],
+    source: '东侧临近公墓，东边套可见',
+    level: 'medium',
+  },
+  '世茂茂悦府': {
+    district: '上城区',
+    businessDistrict: '艮北新城',
+    defects: ['工厂污染'],
+    source: '外立面大面积脱落，200多户漏水，开发商停修',
+    level: 'high',
+  },
+  '宋都香悦郡': {
+    district: '拱墅区',
+    businessDistrict: '桃源',
+    defects: ['工厂污染'],
+    source: '真石漆外立面脱落严重，7号楼四面都有脱落，质检不合格',
+    level: 'high',
+  },
+  '吉如家园': {
+    district: '拱墅区',
+    businessDistrict: '运河新城',
+    defects: ['工厂污染'],
+    source: '回迁房，保温层老化脱落，墙面霉变渗水，维修资金缺口600万',
+    level: 'medium',
+  },
+  '九龙仓华发天荟': {
+    district: '拱墅区',
+    businessDistrict: '申花',
+    defects: ['工厂污染'],
+    source: '外立面问题投诉集中',
+    level: 'low',
+  },
+  '畅想江澜湾': {
+    district: '萧山区',
+    businessDistrict: '萧山科技城',
+    defects: ['垃圾处理站'],
+    source: '开发商填埋建筑垃圾，刺激性气味，绿化死亡',
+    level: 'high',
+  },
+  '荣望轩': {
+    district: '萧山区',
+    businessDistrict: '萧山科技城',
+    defects: ['高架/高速噪音', '主干道噪音'],
+    source: '临近地铁19号线知行路站，未做全封闭隔音，高层噪音严重',
+    level: 'medium',
+  },
+  '华元爱丁郡': {
+    district: '余杭区',
+    businessDistrict: '闲林',
+    defects: ['地势低洼易涝'],
+    source: '排水系统不完善，下雨天积水严重',
+    level: 'medium',
+  },
+  '九溪新村': {
+    district: '西湖区',
+    businessDistrict: '之江',
+    defects: ['地势低洼易涝'],
+    source: '九溪沿线，钱塘江水位7.0米以上易积水，2024年被淹',
+    level: 'high',
+  },
+  '民航小区': {
+    district: '西湖区',
+    businessDistrict: '之江',
+    defects: ['地势低洼易涝'],
+    source: '九溪社区低洼地带，老年人占比70-80%，易受内涝影响',
+    level: 'high',
+  },
+  '龙门坎村': {
+    district: '西湖区',
+    businessDistrict: '留下',
+    defects: ['地势低洼易涝'],
+    source: '三面环山Y形山坳，山洪和山体滑坡风险，1990年曾造成人员伤亡',
+    level: 'high',
+  },
+  '绿城锦海棠': {
+    district: '余杭区',
+    businessDistrict: '勾庄',
+    defects: ['主干道噪音'],
+    source: '南侧第一排临好运街主干道，噪音灰尘较大',
+    level: 'low',
+  },
+  '星合映': {
+    district: '临平区',
+    businessDistrict: '崇贤',
+    defects: ['工厂污染'],
+    source: '漏水和外立面脱落问题严峻，集体换物业后仍未解决',
+    level: 'medium',
+  },
+  '光合映': {
+    district: '临平区',
+    businessDistrict: '崇贤',
+    defects: ['工厂污染'],
+    source: '漏水和外立面脱落问题严峻，集体换物业后仍未解决',
+    level: 'medium',
+  },
+  '群贤府': {
+    district: '临平区',
+    businessDistrict: '崇贤',
+    defects: ['工厂污染'],
+    source: '漏水和外立面脱落问题严峻，集体换物业后仍未解决',
+    level: 'medium',
+  },
+  '金航府': {
+    district: '临平区',
+    businessDistrict: '崇贤',
+    defects: ['工厂污染'],
+    source: '漏水和外立面脱落问题严峻，集体换物业后仍未解决',
+    level: 'medium',
+  },
+  '郡枫绿园': {
+    district: '拱墅区',
+    businessDistrict: '丁桥',
+    defects: ['工厂污染'],
+    source: '外立面鼓包、漏水，室内发霉',
+    level: 'medium',
+  },
+};
+
+export function matchCommunityDefects(communityName) {
+  if (!communityName) return null;
+  const name = communityName.trim();
+  
+  for (const [commName, info] of Object.entries(DEFECT_COMMUNITIES)) {
+    if (commName.includes(name) || name.includes(commName)) {
+      return { name: commName, ...info };
+    }
+  }
+  
+  return null;
+}
