@@ -49,20 +49,35 @@ body {
   margin: 0;
 }
 
-/* 卡片 */
+/* 表单折叠 */
 .card {
   background: var(--card);
   border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 16px;
+  padding: 0;
+  margin-bottom: 12px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
   border: 1px solid var(--border);
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.card-header {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  background: white;
+}
+
+.card-header:hover {
+  background: #f8fafc;
 }
 
 .card-title {
   font-size: 16px;
   font-weight: 600;
-  margin: 0 0 16px 0;
+  margin: 0;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -77,6 +92,32 @@ body {
   background: var(--primary-light);
   border-radius: 6px;
   font-size: 14px;
+}
+
+.card-toggle {
+  font-size: 20px;
+  color: var(--text-secondary);
+  transition: transform 0.2s ease;
+  line-height: 1;
+}
+
+.card-toggle.expanded {
+  transform: rotate(180deg);
+}
+
+.card-content {
+  padding: 0 20px 20px;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.card.collapsed .card-content {
+  max-height: 0;
+  padding-bottom: 0;
+}
+
+.card:not(.collapsed) .card-content {
+  max-height: 1000px;
 }
 
 /* 表单 */
@@ -170,22 +211,6 @@ body {
 .btn-primary:disabled {
   background: #94a3b8;
   cursor: not-allowed;
-}
-
-.btn-secondary {
-  padding: 12px;
-  background: white;
-  color: var(--primary);
-  border: 1px solid var(--primary);
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.btn-secondary:hover {
-  background: var(--primary-light);
 }
 
 /* 结果区域 */
