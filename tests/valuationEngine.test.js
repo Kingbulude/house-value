@@ -12,6 +12,8 @@ import {
   calcBuildingPositionModifier,
   calcMarketSentiment,
   getCapRate,
+  getDistrictBasePrice,
+  calcLiquidityDiscount,
   calculateValuation,
   calculateHoldingCost,
   formatPrice,
@@ -324,6 +326,37 @@ describe('getCapRate', () => {
   });
 });
 
+describe('getDistrictBasePrice', () => {
+  it('should return base price for known business district', () => {
+    expect(getDistrictBasePrice('上城区', '钱江新城')).toBe(70000);
+    expect(getDistrictBasePrice('余杭区', '未来科技城')).toBe(45000);
+  });
+
+  it('should return null for unknown district/business district', () => {
+    expect(getDistrictBasePrice('未知区', '')).toBeNull();
+  });
+});
+
+describe('calcLiquidityDiscount', () => {
+  it('should return 0 for small area and low price', () => {
+    expect(calcLiquidityDiscount(89, 3000000)).toBe(0);
+  });
+
+  it('should return discount for large area', () => {
+    expect(calcLiquidityDiscount(150, 3000000)).toBeGreaterThan(0);
+    expect(calcLiquidityDiscount(250, 3000000)).toBeGreaterThan(0);
+  });
+
+  it('should return discount for high total price', () => {
+    expect(calcLiquidityDiscount(89, 7000000)).toBeGreaterThan(0);
+    expect(calcLiquidityDiscount(89, 12000000)).toBeGreaterThan(0);
+  });
+
+  it('should cap discount at 5%', () => {
+    expect(calcLiquidityDiscount(300, 15000000)).toBeLessThanOrEqual(0.05);
+  });
+});
+
 describe('calculateValuation', () => {
   const baseInput = {
     district: '上城区',
@@ -368,6 +401,34 @@ describe('calculateValuation', () => {
     expect(result.methods.cost).toBeGreaterThan(0);
   });
 
+  it('should anchor on market price and only apply building modifiers', () => {
+    const result = calculateValuation(baseInput);
+    // 市场法 = 50000 * 89 * 楼栋修正系数（不包含区位/配套/学区溢价）
+    const expectedMarket = 50000 * 89 * result.factors.buildingModifiers.total;
+    expect(result.methods.market).toBe(Math.round(expectedMarket));
+    expect(result.marketAnchor).toBe('同小区均价');
+  });
+
+  it('should use dynamic weights when both market price and rent provided', () => {
+    const result = calculateValuation(baseInput);
+    expect(result.weights.market).toBe(0.75);
+    expect(result.weights.income).toBe(0.15);
+    expect(result.weights.cost).toBe(0.10);
+  });
+
+  it('should use dynamic weights when only market price provided', () => {
+    const input = { ...baseInput, monthlyRent: 0 };
+    const result = calculateValuation(input);
+    expect(result.weights.market).toBe(0.80);
+    expect(result.weights.cost).toBe(0.20);
+  });
+
+  it('should use dynamic weights when only rent provided', () => {
+    const input = { ...baseInput, marketPrice: 0 };
+    const result = calculateValuation(input);
+    expect(result.weights.income).toBe(0.60);
+  });
+
   it('should handle missing market price', () => {
     const input = { ...baseInput, marketPrice: 0 };
     const result = calculateValuation(input);
@@ -405,11 +466,25 @@ describe('calculateValuation', () => {
   it('should calculate confidence correctly', () => {
     const input1 = { ...baseInput, metroDistance: null, kindergarten: '', primarySchool: '', middleSchool: '', highSchool: '', selectedDefects: [] };
     const result1 = calculateValuation(input1);
-    expect(result1.confidence).toBe(50 + 20 + 15);
+    expect(result1.confidence).toBe(40 + 25 + 15);
 
     const input2 = { ...baseInput };
     const result2 = calculateValuation(input2);
-    expect(result2.confidence).toBe(95);
+    expect(result2.confidence).toBe(40 + 25 + 15 + 5 + 5);
+  });
+
+  it('should apply liquidity discount', () => {
+    const result = calculateValuation(baseInput);
+    expect(result.factors.liquidityDiscount).toBeDefined();
+    expect(result.factors.liquidityDiscount).toBeGreaterThanOrEqual(0);
+  });
+
+  it('should return building modifiers in factors', () => {
+    const result = calculateValuation(baseInput);
+    expect(result.factors.buildingModifiers).toBeDefined();
+    expect(result.factors.buildingModifiers.total).toBeGreaterThan(0);
+    expect(result.factors.buildingModifiers.areaMod).toBeDefined();
+    expect(result.factors.buildingModifiers.oriMod).toBeDefined();
   });
 });
 

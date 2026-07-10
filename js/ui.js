@@ -245,30 +245,37 @@ function renderMethods(result) {
     html += `<div class="method-card">
       <div class="method-name">市场比较法</div>
       <div class="method-value">${formatWan(result.methods.market)}</div>
-      <div class="method-weight">权重 50%</div>
+      <div class="method-weight">权重 ${Math.round(result.weights.market * 100)}% · 锚定: ${result.marketAnchor || '-'}</div>
     </div>`;
   }
   if (result.methods.income) {
     html += `<div class="method-card">
       <div class="method-name">收益还原法</div>
       <div class="method-value">${formatWan(result.methods.income)}</div>
-      <div class="method-weight">权重 25% · CapRate ${result.factors.incomeApproach ? result.factors.incomeApproach.capRatePercent : '-'}</div>
+      <div class="method-weight">权重 ${Math.round(result.weights.income * 100)}% · CapRate ${result.factors.incomeApproach ? result.factors.incomeApproach.capRatePercent : '-'}</div>
     </div>`;
   }
   if (result.methods.cost) {
     html += `<div class="method-card">
       <div class="method-name">成本法</div>
       <div class="method-value">${formatWan(result.methods.cost)}</div>
-      <div class="method-weight">权重 10%</div>
+      <div class="method-weight">权重 ${Math.round(result.weights.cost * 100)}%</div>
     </div>`;
   }
 
   html += '</div>';
 
   html += '<div style="margin-top:16px;font-size:13px;color:#64748b;line-height:1.6;">';
-  html += '<p><strong>市场比较法</strong>：以同小区/同板块成交价为基准，根据面积、朝向、楼层、装修、房龄等因素修正。</p>';
+  if (result.marketAnchor === '同小区均价') {
+    html += '<p><strong>市场比较法</strong>：以同小区均价为锚，仅做楼栋级修正（面积/朝向/楼层/装修/房龄/电梯/位置/硬伤），不重复叠加区位/配套/学区溢价。</p>';
+  } else if (result.marketAnchor === '板块基准价') {
+    html += '<p><strong>市场比较法</strong>：未提供小区均价，以板块基准价为锚，叠加区位/学区/市场情绪估算。</p>';
+  }
   html += '<p><strong>收益还原法</strong>：年租金 ÷ 资本化率。资本化率根据区域等级取值（核心区3.5%，普通区4.5%，郊区5.5%）。</p>';
   html += '<p><strong>成本法</strong>：土地成本 + 建筑成本折旧。适用于新房和次新房。</p>';
+  if (result.factors.liquidityDiscount > 0) {
+    html += `<p><strong>流动性折价</strong>：大户型/高总价流动性较差，折价 ${result.factors.liquidityDiscount.toFixed(1) * 100}%。</p>`;
+  }
   html += '</div>';
 
   return html;
@@ -309,12 +316,7 @@ function renderAmenities(result) {
       <span class="label">配套总分</span>
       <span class="value">${a.total}/80</span>
     </div>
-    <div class="factor-row">
-      <span class="label">配套系数</span>
-      <span class="value ${result.factors.amenitiesCoefficient > 1 ? 'positive' : 'negative'}">
-        ×${result.factors.amenitiesCoefficient.toFixed(4)}
-      </span>
-    </div>
+    <div style="font-size:12px;color:#94a3b8;margin-top:4px;">配套评分仅作参考展示，不再直接影响价格（已包含在小区均价中）</div>
   </div>`;
 
   return html;
@@ -353,37 +355,42 @@ function renderFactors(input, result) {
   const f = result.factors;
   let html = '<div style="font-size:13px;line-height:1.8;">';
 
-  html += `<div class="factor-row"><span class="label">区位等级</span><span class="value">${f.location.level}级</span></div>`;
-  html += `<div class="factor-row"><span class="label">区位系数</span><span class="value ${f.location.coefficient > 1 ? 'positive' : f.location.coefficient < 1 ? 'negative' : 'neutral'}">×${f.location.coefficient.toFixed(2)}</span></div>`;
-  html += `<div class="factor-row"><span class="label">区位说明</span><span class="value neutral" style="font-size:12px;font-weight:400;">${f.location.detail}</span></div>`;
+  // 锚定信息
+  html += `<div class="factor-row"><span class="label">价格锚定</span><span class="value">${result.marketAnchor || '未知'}</span></div>`;
+  if (f.marketComparison && f.marketComparison.anchorPrice) {
+    html += `<div class="factor-row"><span class="label">锚定均价</span><span class="value">${f.marketComparison.anchorPrice.toLocaleString()} 元/㎡</span></div>`;
+  }
 
   html += '<hr style="border:none;border-top:1px solid #e2e8f0;margin:8px 0;">';
 
-  html += `<div class="factor-row"><span class="label">配套总分</span><span class="value">${f.amenities.total}/80</span></div>`;
-  html += `<div class="factor-row"><span class="label">配套系数</span><span class="value ${f.amenitiesCoefficient > 1 ? 'positive' : 'negative'}">×${f.amenitiesCoefficient.toFixed(4)}</span></div>`;
+  // 楼栋级修正系数
+  if (f.buildingModifiers) {
+    const bm = f.buildingModifiers;
+    html += '<div style="font-weight:600;margin-bottom:4px;">楼栋级修正系数</div>';
+    html += `<div class="factor-row"><span class="label">面积修正</span><span class="value ${bm.areaMod > 1 ? 'positive' : bm.areaMod < 1 ? 'negative' : 'neutral'}">×${bm.areaMod.toFixed(2)}</span></div>`;
+    html += `<div class="factor-row"><span class="label">朝向修正</span><span class="value ${bm.oriMod > 1 ? 'positive' : bm.oriMod < 1 ? 'negative' : 'neutral'}">×${bm.oriMod.toFixed(2)}</span></div>`;
+    html += `<div class="factor-row"><span class="label">楼层修正</span><span class="value ${bm.floorMod > 1 ? 'positive' : bm.floorMod < 1 ? 'negative' : 'neutral'}">×${bm.floorMod.toFixed(2)}</span></div>`;
+    html += `<div class="factor-row"><span class="label">装修修正</span><span class="value ${bm.decMod > 1 ? 'positive' : bm.decMod < 1 ? 'negative' : 'neutral'}">×${bm.decMod.toFixed(2)}</span></div>`;
+    html += `<div class="factor-row"><span class="label">房龄修正</span><span class="value ${bm.ageMod < 1 ? 'negative' : 'neutral'}">×${bm.ageMod.toFixed(2)}</span></div>`;
+    html += `<div class="factor-row"><span class="label">电梯修正</span><span class="value ${bm.elevMod > 1 ? 'positive' : bm.elevMod < 1 ? 'negative' : 'neutral'}">×${bm.elevMod.toFixed(2)}</span></div>`;
+    html += `<div class="factor-row"><span class="label">楼栋位置</span><span class="value ${bm.buildingPosMod > 1 ? 'positive' : bm.buildingPosMod < 1 ? 'negative' : 'neutral'}">×${bm.buildingPosMod.toFixed(2)}</span></div>`;
+    html += `<div class="factor-row"><span class="label">硬伤系数</span><span class="value ${bm.defectsCoefficient < 1 ? 'negative' : 'neutral'}">×${bm.defectsCoefficient.toFixed(2)}</span></div>`;
+    html += `<div class="factor-row" style="font-size:14px;">
+      <span class="label" style="font-weight:600;">楼栋修正合计</span>
+      <span class="value" style="font-size:16px;font-weight:600;">×${bm.total.toFixed(4)}</span>
+    </div>`;
+  }
 
-  html += '<hr style="border:none;border-top:1px solid #e2e8f0;margin:8px 0;">';
-
-  html += `<div class="factor-row"><span class="label">硬伤数量</span><span class="value">${f.defects.defects.length}项</span></div>`;
-  html += `<div class="factor-row"><span class="label">硬伤系数</span><span class="value negative">×${f.defects.coefficient.toFixed(2)}</span></div>`;
-
-  html += '<hr style="border:none;border-top:1px solid #e2e8f0;margin:8px 0;">';
-
-  html += `<div class="factor-row"><span class="label">楼栋位置</span><span class="value">${input.buildingPosition || '一般位置'}</span></div>`;
-  html += `<div class="factor-row"><span class="label">楼栋系数</span><span class="value ${f.buildingPosition.coefficient > 1 ? 'positive' : f.buildingPosition.coefficient < 1 ? 'negative' : 'neutral'}">×${f.buildingPosition.coefficient.toFixed(2)}</span></div>`;
-
-  if (f.marketComparison) {
+  // 板块基准价模式下的额外系数
+  if (f.marketComparison && f.marketComparison.locationCoefficient) {
     const m = f.marketComparison;
     html += '<hr style="border:none;border-top:1px solid #e2e8f0;margin:8px 0;">';
-    html += '<div style="font-weight:600;margin-bottom:4px;">市场比较法修正系数</div>';
-    html += `<div class="factor-row"><span class="label">面积修正</span><span class="value ${m.areaMod > 1 ? 'positive' : 'negative'}">×${m.areaMod.toFixed(2)}</span></div>`;
-    html += `<div class="factor-row"><span class="label">朝向修正</span><span class="value ${m.oriMod > 1 ? 'positive' : 'negative'}">×${m.oriMod.toFixed(2)}</span></div>`;
-    html += `<div class="factor-row"><span class="label">楼层修正</span><span class="value ${m.floorMod > 1 ? 'positive' : 'negative'}">×${m.floorMod.toFixed(2)}</span></div>`;
-    html += `<div class="factor-row"><span class="label">装修修正</span><span class="value ${m.decMod > 1 ? 'positive' : 'negative'}">×${m.decMod.toFixed(2)}</span></div>`;
-    html += `<div class="factor-row"><span class="label">房龄修正</span><span class="value negative">×${m.ageMod.toFixed(2)}</span></div>`;
-    html += `<div class="factor-row"><span class="label">电梯修正</span><span class="value ${m.elevMod > 1 ? 'positive' : 'negative'}">×${m.elevMod.toFixed(2)}</span></div>`;
+    html += '<div style="font-weight:600;margin-bottom:4px;">板块估算系数（无小区均价时使用）</div>';
+    html += `<div class="factor-row"><span class="label">区位系数</span><span class="value ${m.locationCoefficient > 1 ? 'positive' : 'negative'}">×${m.locationCoefficient.toFixed(2)}</span></div>`;
     html += `<div class="factor-row"><span class="label">学区溢价</span><span class="value positive">+${(m.schoolPrem * 100).toFixed(0)}%</span></div>`;
-    html += `<div class="factor-row"><span class="label">市场情绪</span><span class="value ${m.marketSentiment > 1 ? 'positive' : m.marketSentiment < 1 ? 'negative' : 'neutral'}">×${m.marketSentiment.toFixed(2)}</span></div>`;
+    if (m.marketSentiment) {
+      html += `<div class="factor-row"><span class="label">市场情绪</span><span class="value ${m.marketSentiment > 1 ? 'positive' : m.marketSentiment < 1 ? 'negative' : 'neutral'}">×${m.marketSentiment.toFixed(2)}</span></div>`;
+    }
   }
 
   if (f.incomeApproach) {
@@ -395,10 +402,7 @@ function renderFactors(input, result) {
   }
 
   html += '<hr style="border:none;border-top:1px solid #e2e8f0;margin:8px 0;">';
-  html += `<div class="factor-row" style="font-size:14px;">
-    <span class="label" style="font-weight:600;">综合专家系数</span>
-    <span class="value" style="font-size:16px;">×${(f.location.coefficient * f.amenitiesCoefficient * f.defects.coefficient * f.buildingPosition.coefficient).toFixed(4)}</span>
-  </div>`;
+  html += `<div class="factor-row"><span class="label">流动性折价</span><span class="value ${f.liquidityDiscount > 0 ? 'negative' : 'neutral'}">-${(f.liquidityDiscount * 100).toFixed(1)}%</span></div>`;
 
   html += '</div>';
   return html;

@@ -134,6 +134,36 @@ export function calcLocationCoefficient(districtName, businessDistrict) {
   return { coefficient, level, detail };
 }
 
+// 获取板块基准均价（元/㎡），用于无小区均价时的锚定
+export function getDistrictBasePrice(districtName, businessDistrict) {
+  if (businessDistrict && BUSINESS_DISTRICTS[businessDistrict]) {
+    const bd = BUSINESS_DISTRICTS[businessDistrict];
+    return bd.basePrice || null;
+  }
+  const district = HANGZHOU_DISTRICTS[districtName];
+  if (district && district.basePrice) {
+    return district.basePrice;
+  }
+  return null;
+}
+
+// 流动性折价：大户型/高总价流动性较差
+export function calcLiquidityDiscount(area, finalValuation) {
+  let discount = 0;
+  // 面积越大流动性越差
+  if (area > 200) discount += 0.03;
+  else if (area > 144) discount += 0.02;
+  else if (area > 120) discount += 0.01;
+
+  // 总价越高流动性越差
+  const totalWan = finalValuation / 10000;
+  if (totalWan > 1000) discount += 0.03;
+  else if (totalWan > 600) discount += 0.02;
+  else if (totalWan > 400) discount += 0.01;
+
+  return Math.min(discount, 0.05);
+}
+
 export function calcAmenitiesScore(input) {
   const { metroDistance, metroLines, busRoutes,
     kindergarten, primarySchool, middleSchool, highSchool,
@@ -392,33 +422,66 @@ export function calculateValuation(input) {
     propertyFee, holdingYears, riskFreeRate,
   } = input;
 
-  const results = {};
   const factors = {};
 
+  // === 楼栋级修正系数（只修正这套房子 vs 小区均价的差异） ===
+  const areaMod = calcAreaModifier(area);
+  const oriMod = calcOrientationModifier(orientation);
+  const floorMod = calcFloorModifier(floor, totalFloors, hasElevator);
+  const decMod = calcDecorationModifier(decoration);
+  const ageMod = calcAgeModifier(buildingAge);
+  const elevMod = calcElevatorModifier(hasElevator, totalFloors);
+  const buildingPosMod = calcBuildingPositionModifier(buildingPosition);
+  const defects = calcDefects(selectedDefects || []);
+
+  // 楼栋级修正总系数
+  const buildingModifier = areaMod * oriMod * floorMod * decMod * ageMod * elevMod * buildingPosMod * defects.coefficient;
+
+  factors.buildingModifiers = {
+    areaMod, oriMod, floorMod, decMod, ageMod, elevMod, buildingPosMod,
+    defectsCoefficient: defects.coefficient,
+    total: buildingModifier,
+  };
+
+  // === 市场比较法 ===
   let marketTotal = null;
+  let marketAnchor = null; // 锚定价格来源
   if (marketPrice && area) {
-    let unitPrice = marketPrice;
-    const areaMod = calcAreaModifier(area);
-    const oriMod = calcOrientationModifier(orientation);
-    const floorMod = calcFloorModifier(floor, totalFloors, hasElevator);
-    const decMod = calcDecorationModifier(decoration);
-    const ageMod = calcAgeModifier(buildingAge);
-    const elevMod = calcElevatorModifier(hasElevator, totalFloors);
-    const schoolPremResult = calcSchoolPremium({ kindergarten, primarySchool, middleSchool, highSchool });
-    const schoolPrem = schoolPremResult.total;
-
-    const marketSentiment = calcMarketSentiment(district);
-
-    unitPrice = unitPrice * areaMod * oriMod * floorMod * decMod * ageMod * elevMod * (1 + schoolPrem) * marketSentiment.coefficient;
-
+    // 用户提供了同小区均价：只做楼栋级修正，不再叠加区位/配套/学区
+    marketAnchor = '同小区均价';
+    marketTotal = marketPrice * area * buildingModifier;
     factors.marketComparison = {
-      areaMod, oriMod, floorMod, decMod, ageMod, elevMod,
-      schoolPrem, schoolDetails: schoolPremResult.schools, marketSentiment: marketSentiment.coefficient,
+      anchor: marketAnchor,
+      anchorPrice: marketPrice,
+      buildingModifier,
+      modifiers: { areaMod, oriMod, floorMod, decMod, ageMod, elevMod, buildingPosMod },
     };
+  } else {
+    // 没有小区均价：用板块基准价 + 区位/配套/学区估算
+    const basePrice = getDistrictBasePrice(district, businessDistrict);
+    if (basePrice) {
+      marketAnchor = '板块基准价';
+      const location = calcLocationCoefficient(district, businessDistrict);
+      const schoolPremResult = calcSchoolPremium({ kindergarten, primarySchool, middleSchool, highSchool });
+      const schoolPrem = schoolPremResult.total;
+      const marketSentiment = calcMarketSentiment(district);
 
-    marketTotal = unitPrice * area;
+      const estimatedUnitPrice = basePrice * buildingModifier * (1 + schoolPrem) * marketSentiment.coefficient;
+      marketTotal = estimatedUnitPrice * area;
+
+      factors.marketComparison = {
+        anchor: marketAnchor,
+        anchorPrice: basePrice,
+        buildingModifier,
+        locationCoefficient: location.coefficient,
+        schoolPrem,
+        schoolDetails: schoolPremResult.schools,
+        marketSentiment: marketSentiment.coefficient,
+      };
+    }
   }
 
+  // === 收益法 ===
   let incomeTotal = null;
   if (monthlyRent && area) {
     const annualRent = monthlyRent * 12 * (1 - 0.03);
@@ -431,6 +494,7 @@ export function calculateValuation(input) {
     };
   }
 
+  // === 成本法 ===
   let costTotal = null;
   if (marketPrice && area) {
     const landCost = marketPrice * 0.60;
@@ -443,7 +507,22 @@ export function calculateValuation(input) {
     factors.costApproach = { landCost, buildCost, depreciation };
   }
 
-  let weights = { market: 0.50, income: 0.25, cost: 0.10, expert: 0.15 };
+  // === 动态权重：根据数据丰富度调整 ===
+  let weights;
+  if (marketPrice && monthlyRent) {
+    // 有均价+租金：市场法为主
+    weights = { market: 0.75, income: 0.15, cost: 0.10 };
+  } else if (marketPrice) {
+    // 只有均价：市场法绝对主导
+    weights = { market: 0.80, income: 0, cost: 0.20 };
+  } else if (monthlyRent) {
+    // 只有租金：收益法为主
+    weights = { market: 0.25, income: 0.60, cost: 0.15 };
+  } else {
+    // 都没有：依赖板块基准价
+    weights = { market: 0.50, income: 0.30, cost: 0.20 };
+  }
+
   let weightedSum = 0;
   let totalWeight = 0;
 
@@ -451,26 +530,18 @@ export function calculateValuation(input) {
   if (incomeTotal !== null) { weightedSum += incomeTotal * weights.income; totalWeight += weights.income; }
   if (costTotal !== null) { weightedSum += costTotal * weights.cost; totalWeight += weights.cost; }
 
-  let baseValuation = totalWeight > 0 ? weightedSum / totalWeight : 0;
+  let finalValuation = totalWeight > 0 ? weightedSum / totalWeight : 0;
 
-  const location = calcLocationCoefficient(district, businessDistrict);
-
-  const amenities = calcAmenitiesScore(input);
-  const amenitiesCoefficient = 1 + ((amenities.total - 60) / 100) * 0.3;
-
-  const defects = calcDefects(selectedDefects || []);
-
-  const buildingPosMod = calcBuildingPositionModifier(buildingPosition);
-
-  const expertFactor = location.coefficient * amenitiesCoefficient * defects.coefficient * buildingPosMod;
-
-  const finalValuation = baseValuation * expertFactor;
+  // === 流动性折价 ===
+  const liquidityDiscount = calcLiquidityDiscount(area, finalValuation);
+  finalValuation = finalValuation * (1 - liquidityDiscount);
 
   const lowerBound = finalValuation * 0.90;
   const upperBound = finalValuation * 1.10;
 
-  let confidence = 50;
-  if (marketPrice) confidence += 20;
+  // === 参考度 ===
+  let confidence = 40;
+  if (marketPrice) confidence += 25;
   if (monthlyRent) confidence += 15;
   if (metroDistance != null) confidence += 5;
   if (kindergarten || primarySchool || middleSchool || highSchool) confidence += 5;
@@ -488,6 +559,10 @@ export function calculateValuation(input) {
     riskFreeRate,
   });
 
+  // 配套评分（仅展示参考，不再影响价格）
+  const amenities = calcAmenitiesScore(input);
+  const location = calcLocationCoefficient(district, businessDistrict);
+
   return {
     finalValuation: Math.round(finalValuation),
     unitPrice: Math.round(finalValuation / area),
@@ -499,14 +574,18 @@ export function calculateValuation(input) {
       income: incomeTotal ? Math.round(incomeTotal) : null,
       cost: costTotal ? Math.round(costTotal) : null,
     },
+    weights,
+    marketAnchor,
     factors: {
       location,
       amenities,
-      amenitiesCoefficient,
       defects,
       buildingPosition: { coefficient: buildingPosMod, position: buildingPosition },
+      buildingModifiers: factors.buildingModifiers,
       marketComparison: factors.marketComparison || null,
       incomeApproach: factors.incomeApproach || null,
+      costApproach: factors.costApproach || null,
+      liquidityDiscount,
     },
     holdingCost,
   };
