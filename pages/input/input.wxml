@@ -80,7 +80,7 @@
     </view>
 
     <view class="form-item">
-      <text class="form-label">政府指导价 (元/m²，选填)</text>
+      <text class="form-label">公开指导价 (元/m²，选填)</text>
       <input class="form-input" type="digit" placeholder="如：58000" value="{{govPrice}}" data-field="govPrice" bindinput="onNumberInput" />
     </view>
   </view>

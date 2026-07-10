@@ -127,7 +127,7 @@ export function handleSubmit() {
 
   if (!input.district) { alert('请选择区域'); return; }
   if (!input.area || input.area <= 0) { alert('请输入房屋面积'); return; }
-  if (!input.marketPrice && !input.monthlyRent) { alert('请至少填写市场均价或月租金（用于估值计算）'); return; }
+  if (!input.marketPrice && !input.monthlyRent) { alert('请至少填写市场均价或月租金（用于测算）'); return; }
 
   document.getElementById('resultSection').classList.add('visible');
   document.getElementById('resultContent').innerHTML = '<div class="loading"><div class="spinner"></div>正在分析中...</div>';
@@ -143,12 +143,12 @@ export function handleSubmit() {
 export function renderResult(input, result) {
   const html = `
     <div class="valuation-card">
-      <div class="label">综合估值</div>
+      <div class="label">综合参考价</div>
       <div class="value">${formatWan(result.finalValuation)}</div>
       <div class="unit">${result.unitPrice.toLocaleString()} 元/㎡</div>
-      <div class="range">估值区间：${formatWan(result.lowerBound)} ~ ${formatWan(result.upperBound)}</div>
+      <div class="range">参考区间：${formatWan(result.lowerBound)} ~ ${formatWan(result.upperBound)}</div>
       <div style="margin-top:8px;">
-        <span class="confidence-badge ${getConfidenceClass(result.confidence)}">置信度 ${result.confidence}%</span>
+        <span class="confidence-badge ${getConfidenceClass(result.confidence)}">参考度 ${result.confidence}%</span>
       </div>
     </div>
 
@@ -204,7 +204,7 @@ export function renderResult(input, result) {
     </div>
 
     <div class="disclaimer" style="margin-top:16px;">
-      <strong>免责声明：</strong>以上分析基于用户输入的数据和内置规则引擎计算，仅供参考，不构成投资建议。实际房价受多种因素影响，请以实际市场情况为准。
+      <strong>免责声明：</strong>以上结果基于用户输入数据和内置规则引擎测算，仅为个人参考使用，不构成任何投资建议、房产评估报告或交易依据。实际房价受市场供需、政策调控、宏观经济等多种因素影响，请以实际交易价格和专业机构评估为准。
     </div>
   `;
 
@@ -407,19 +407,19 @@ function renderHoldingCost(result) {
     <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:12px;margin-bottom:16px;">
       <div style="font-size:14px;font-weight:600;color:#92400e;margin-bottom:4px;">💡 买房划算吗？</div>
       <div style="color:#78350f;">
-        持有这套房，每年相当于"花掉" <strong>${formatWan(hc.annualCost)}</strong>（月均 ${hc.monthlyEquivalent.toLocaleString()}元）。<br>
-        如果这笔钱存银行/买理财，每年能赚 ${(hc.parameters.riskFreeRate * 100).toFixed(1)}% 的利息。
+        持有这套房，每年需要承担的费用约 <strong>${formatWan(hc.annualCost)}</strong>（月均 ${hc.monthlyEquivalent.toLocaleString()}元）。<br>
+        仅供参考，未考虑房产增值收益。实际请以个人财务状况和市场行情为准。
       </div>
     </div>
   `;
 
-  html += '<div style="font-weight:600;font-size:14px;margin-bottom:8px;">年持有成本明细</div>';
+  html += '<div style="font-weight:600;font-size:14px;margin-bottom:8px;">年持有费用明细</div>';
 
   html += `<div class="factor-row">
-    <span class="label">资金机会成本</span>
+    <span class="label">资金占用参考成本</span>
     <span class="value">${b.opportunityCost.toLocaleString()}元/年</span>
   </div>`;
-  html += `<div style="font-size:12px;color:#64748b;margin-left:8px;">房产总价 × 无风险收益率（${(hc.parameters.riskFreeRate * 100).toFixed(1)}%）</div>`;
+  html += `<div style="font-size:12px;color:#64748b;margin-left:8px;">房产总价 × 无风险收益率参考（${(hc.parameters.riskFreeRate * 100).toFixed(1)}%）</div>`;
 
   html += `<div class="factor-row" style="margin-top:8px;">
     <span class="label">房屋折旧</span>
@@ -462,9 +462,9 @@ function renderHoldingCost(result) {
   </div>`;
 
   html += '<div style="margin-top:16px;font-size:12px;color:#64748b;line-height:1.6;">';
-  html += '<p><strong>什么是资金机会成本？</strong> 如果你把买房的钱存银行/买理财，每年能获得的固定收益。买房后这笔钱被"占用"了，所以这是隐性的持有成本。</p>';
-  html += '<p><strong>房屋折旧</strong> 房屋本身会老化，价值逐年下降。这里按每年2%估算（考虑建筑折旧和功能折旧）。</p>';
-  html += '<p><strong>注意</strong> 以上未考虑房产增值。如果房价上涨，增值收益可能覆盖持有成本。本计算器仅展示"纯持有成本"。</p>';
+  html += '<p><strong>资金占用参考成本</strong> 如果你把买房的钱存银行/买理财，每年可能获得的固定收益参考。买房后这笔钱被"占用"了，所以这里列出来作为费用参考。</p>';
+  html += '<p><strong>房屋折旧</strong> 房屋本身会老化，价值参考可能逐年下降。这里按每年2%估算（参考建筑折旧和功能折旧）。</p>';
+  html += '<p><strong>注意</strong> 以上未考虑房产增值。如果房价上涨，增值收益可能覆盖持有费用。本工具仅做费用测算参考，不构成投资建议。</p>';
   html += '</div>';
 
   html += '</div>';
@@ -498,7 +498,7 @@ export function renderHistory() {
   let html = `
     <div class="card" style="margin-top:16px;">
       <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
-        <span><span class="icon">📜</span>历史估值记录</span>
+        <span><span class="icon">📜</span>历史测算记录</span>
         <button onclick="clearAllHistory()" style="font-size:12px;color:#64748b;background:none;border:none;cursor:pointer;">清空</button>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;">

@@ -1,7 +1,7 @@
 <view class="container">
   <view class="hero">
-    <view class="hero-title">房产估值计算器</view>
-    <view class="hero-sub">基于租金回报率、市场比价与政府指导价的多维度估算工具</view>
+    <view class="hero-title">房产参考价计算器</view>
+    <view class="hero-sub">基于租金回报率、市场比价与指导价的多维度参考工具</view>
     <view class="hero-tip">数据由您自行输入，本地计算，不采集隐私</view>
   </view>
 
@@ -10,7 +10,7 @@
       <view class="feature-icon">📊</view>
       <view class="feature-text">
         <view class="feature-title">租金回报率法</view>
-        <view class="feature-desc">根据租金收益反推房产合理价值</view>
+        <view class="feature-desc">根据租金收益反推房产合理参考价</view>
       </view>
     </view>
     <view class="feature-item">
@@ -23,21 +23,21 @@
     <view class="feature-item">
       <view class="feature-icon">📋</view>
       <view class="feature-text">
-        <view class="feature-title">政府指导价法</view>
-        <view class="feature-desc">结合官方指导价进行估值参考</view>
+        <view class="feature-title">指导价参考法</view>
+        <view class="feature-desc">结合公开指导价进行参考测算</view>
       </view>
     </view>
   </view>
 
-  <view class="btn-primary" bindtap="goToInput">开始估算</view>
+  <view class="btn-primary" bindtap="goToInput">开始测算</view>
 
   <view wx:if="{{hasCache}}" class="cache-card" bindtap="goToResult">
-    <view class="cache-label">上次估算</view>
+    <view class="cache-label">上次测算</view>
     <view class="cache-value">{{cacheSummary}}</view>
     <view class="cache-action">查看结果 ></view>
   </view>
 
   <view class="disclaimer">
-    本工具仅供参考，不构成投资建议。实际交易请以专业评估和市场行情为准。
+    本工具仅供参考，不构成任何投资建议、房产评估报告或交易依据。实际交易请以专业评估和市场行情为准。
   </view>
 </view>

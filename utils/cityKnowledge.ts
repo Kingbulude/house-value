@@ -1,9 +1,9 @@
 /**
  * 杭州城市知识库
- * 数据来源：杭州市国土空间总体规划(2021-2035)、政府公开数据、统计公报
+ * 数据整理自公开信息：杭州市城市发展规划参考、公开统计数据、统计公报
  * 更新日期：2026-07-09
  *
- * 用途：为房产估值系统提供城市基本面判断依据
+ * 用途：为房产参考测算提供城市基本面信息参考
  */
 
 export interface DistrictInfo {
@@ -55,7 +55,7 @@ export const hangzhouCity: CityInfo = {
   talentNetInflow: 1.3,
   coreIndustry: '数字经济、先进制造业、现代服务业',
   digitalEconomyRatio: 29.5,
-  masterPlan: '杭州市国土空间总体规划(2021-2035年)',
+  masterPlan: '杭州市城市发展规划(2021-2035年参考)',
   spatialPattern: '一主六辅三城、三江两脉八带',
   // 资本化率：收益还原法中使用
   capitalizationRate: {

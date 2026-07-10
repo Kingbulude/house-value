@@ -3,6 +3,6 @@ App({
     userInfo: null,
   },
   onLaunch() {
-    console.log('房产估值计算器启动');
+    console.log('房产参考价计算器启动');
   },
 });

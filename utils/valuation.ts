@@ -1,5 +1,5 @@
 /**
- * 房产估值核心算法
+ * 房产参考价测算核心算法
  * 纯前端计算，不涉及外部数据抓取
  */
 
@@ -20,7 +20,7 @@ export interface HouseInfo {
 export interface ReferenceData {
   nearbyPrice: number; // 同小区近期成交均价（元/m2）
   monthlyRent: number; // 同户型月租金（元）
-  govPrice?: number; // 政府指导价（元/m2），可选
+  govPrice?: number; // 公开指导价（元/m2），可选
 }
 
 export interface ValuationResult {
@@ -107,13 +107,13 @@ export function calculateValuation(
   // 市场比价法
   const compareMethod = ref.nearbyPrice * info.area * coef.total;
 
-  // 政府指导价法
+  // 公开指导价参考法
   let govMethod: number | undefined;
   if (ref.govPrice && ref.govPrice > 0) {
     govMethod = ref.govPrice * info.area * coef.total;
   }
 
-  // 综合估值：有数据的加权平均
+  // 综合参考价：有数据的加权平均
   const values: number[] = [];
   const weights: number[] = [];
 
