@@ -84,12 +84,13 @@ export function calcSchoolPremium(schoolInput) {
 
   const processSchool = (name, type) => {
     if (!name) return;
-    const school = SCHOOLS[name];
-    if (school && school.type === type) {
+    const key = `${name}-${type}`;
+    const school = SCHOOLS[key];
+    if (school) {
       const weightedPremium = school.premium * typeWeights[type];
       totalPremium += weightedPremium;
-      schools.push({ name, type, level: school.level, premium: school.premium, weightedPremium });
-    } else if (name) {
+      schools.push({ name: school.name, type, level: school.level, premium: school.premium, weightedPremium });
+    } else {
       const defaultPremium = type === 'primary' || type === 'middle' ? 0.08 : 0.03;
       const weightedPremium = defaultPremium * typeWeights[type];
       totalPremium += weightedPremium;
@@ -184,11 +185,12 @@ export function calcAmenitiesScore(input) {
 
   schoolInputs.forEach(({ name, type, label }) => {
     if (!name) return;
-    const school = SCHOOLS[name];
+    const key = `${name}-${type}`;
+    const school = SCHOOLS[key];
     let score = 0;
-    if (school && school.type === type) {
+    if (school) {
       score = levelScoreMap[school.level][type] || typeMaxScores[type];
-      educationDetail.push(`${label}：${name}（${school.level}，+${score}）`);
+      educationDetail.push(`${label}：${school.name}（${school.level}，+${score}）`);
     } else {
       score = typeMaxScores[type] * 0.3;
       educationDetail.push(`${label}：${name}（普通，+${Math.round(score)}）`);
@@ -197,6 +199,7 @@ export function calcAmenitiesScore(input) {
   });
 
   educationScore = Math.min(educationScore, 25);
+  let commercialScore = 0;
   let commercialDetail = [];
   if (mallCount >= 2) { commercialScore += 12; commercialDetail.push(`${mallCount}个商场（+12）`); }
   else if (mallCount === 1) { commercialScore += 8; commercialDetail.push(`1个商场（+8）`); }
@@ -470,7 +473,7 @@ export function calculateValuation(input) {
   if (marketPrice) confidence += 20;
   if (monthlyRent) confidence += 15;
   if (metroDistance != null) confidence += 5;
-  if (schoolName) confidence += 5;
+  if (kindergarten || primarySchool || middleSchool || highSchool) confidence += 5;
   if (selectedDefects && selectedDefects.length > 0) confidence += 5;
   confidence = Math.min(confidence, 95);
 

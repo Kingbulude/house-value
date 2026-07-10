@@ -144,35 +144,69 @@ describe('calcElevatorModifier', () => {
 });
 
 describe('calcSchoolPremium', () => {
-  it('should return correct premium for top-tier schools', () => {
-    expect(calcSchoolPremium('学军小学')).toBe(0.45);
-    expect(calcSchoolPremium('胜利实验学校')).toBe(0.40);
-    expect(calcSchoolPremium('天长小学')).toBe(0.40);
+  it('should return correct premium for top-tier primary schools', () => {
+    expect(calcSchoolPremium({ primarySchool: '学军小学' })).toEqual({
+      total: 0.35,
+      schools: [{ name: '学军小学', type: 'primary', level: '顶尖', premium: 0.35, weightedPremium: 0.35 }]
+    });
+    expect(calcSchoolPremium({ primarySchool: '天长小学' })).toEqual({
+      total: 0.35,
+      schools: [{ name: '天长小学', type: 'primary', level: '顶尖', premium: 0.35, weightedPremium: 0.35 }]
+    });
+  });
+
+  it('should return correct premium for top-tier middle schools', () => {
+    expect(calcSchoolPremium({ middleSchool: '文澜中学' })).toEqual({
+      total: 0.35,
+      schools: [{ name: '文澜中学', type: 'middle', level: '顶尖', premium: 0.35, weightedPremium: 0.35 }]
+    });
   });
 
   it('should return correct premium for quality schools', () => {
-    expect(calcSchoolPremium('江南实验学校')).toBe(0.30);
-    expect(calcSchoolPremium('文澜中学')).toBe(0.30);
+    expect(calcSchoolPremium({ primarySchool: '江南实验学校' })).toEqual({
+      total: 0.25,
+      schools: [{ name: '江南实验学校', type: 'primary', level: '优质', premium: 0.25, weightedPremium: 0.25 }]
+    });
   });
 
   it('should return correct premium for normal schools', () => {
-    expect(calcSchoolPremium('萧山中学')).toBe(0.15);
-    expect(calcSchoolPremium('富阳中学')).toBe(0.10);
+    expect(calcSchoolPremium({ highSchool: '萧山中学' })).toEqual({
+      total: 0.06,
+      schools: [{ name: '萧山中学', type: 'high', level: '普通', premium: 0.10, weightedPremium: 0.06 }]
+    });
   });
 
-  it('should return 0.15 for schools with keywords', () => {
-    expect(calcSchoolPremium('实验学校')).toBe(0.15);
-    expect(calcSchoolPremium('师范学校')).toBe(0.15);
-    expect(calcSchoolPremium('附属学校')).toBe(0.15);
+  it('should return correct premium for kindergarten', () => {
+    const result = calcSchoolPremium({ kindergarten: '省府机关幼儿园' });
+    expect(result.total).toBeCloseTo(0.04, 4);
+    expect(result.schools[0].name).toBe('省府机关幼儿园');
+    expect(result.schools[0].level).toBe('优质');
   });
 
-  it('should return 0.05 for unknown schools', () => {
-    expect(calcSchoolPremium('普通小学')).toBe(0.05);
+  it('should calculate combined premium for multiple schools', () => {
+    const result = calcSchoolPremium({
+      kindergarten: '',
+      primarySchool: '学军小学',
+      middleSchool: ''
+    });
+    expect(result.total).toBe(0.35);
+    expect(result.schools.length).toBe(1);
   });
 
-  it('should return 0 for empty school name', () => {
-    expect(calcSchoolPremium('')).toBe(0);
-    expect(calcSchoolPremium(null)).toBe(0);
+  it('should cap total premium at 0.50', () => {
+    const result = calcSchoolPremium({
+      kindergarten: '省府机关幼儿园',
+      primarySchool: '学军小学',
+      middleSchool: '文澜中学',
+      highSchool: '杭州第二中学'
+    });
+    expect(result.total).toBe(0.50);
+  });
+
+  it('should return 0 for empty input', () => {
+    expect(calcSchoolPremium('')).toEqual({ total: 0, schools: [] });
+    expect(calcSchoolPremium(null)).toEqual({ total: 0, schools: [] });
+    expect(calcSchoolPremium({})).toEqual({ total: 0, schools: [] });
   });
 });
 
@@ -307,7 +341,10 @@ describe('calculateValuation', () => {
     metroDistance: 500,
     metroLines: 2,
     busRoutes: 10,
-    schoolName: '学军小学',
+    kindergarten: '',
+    primarySchool: '学军小学',
+    middleSchool: '',
+    highSchool: '',
     mallCount: 2,
     hasMarket: true,
     restaurantCount: 20,
@@ -366,7 +403,7 @@ describe('calculateValuation', () => {
   });
 
   it('should calculate confidence correctly', () => {
-    const input1 = { ...baseInput, metroDistance: null, schoolName: '', selectedDefects: [] };
+    const input1 = { ...baseInput, metroDistance: null, kindergarten: '', primarySchool: '', middleSchool: '', highSchool: '', selectedDefects: [] };
     const result1 = calculateValuation(input1);
     expect(result1.confidence).toBe(50 + 20 + 15);
 
