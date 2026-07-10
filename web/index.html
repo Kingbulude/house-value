@@ -17,8 +17,12 @@
 
   <!-- 输入表单 -->
   <form id="valuationForm">
-    <div class="card">
-      <div class="card-title"><span class="icon">📍</span>区域信息</div>
+    <div class="card" data-card="basic">
+      <div class="card-header" onclick="toggleCard('basic')">
+        <div class="card-title"><span class="icon">📍</span>区域信息</div>
+        <span class="card-toggle expanded">▼</span>
+      </div>
+      <div class="card-content">
       <div class="form-group">
         <label class="form-label">所在区域</label>
         <select class="form-select" name="district" id="district" required>
@@ -36,10 +40,15 @@
         <label class="form-label">小区名称</label>
         <input class="form-input" type="text" name="communityName" placeholder="如：万科西庐、绿城桂语江南">
       </div>
+      </div>
     </div>
 
-    <div class="card">
-      <div class="card-title"><span class="icon">🏠</span>房屋信息</div>
+    <div class="card" data-card="house">
+      <div class="card-header" onclick="toggleCard('house')">
+        <div class="card-title"><span class="icon">🏠</span>房屋信息</div>
+        <span class="card-toggle expanded">▼</span>
+      </div>
+      <div class="card-content">
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">面积（㎡）</label>
@@ -105,10 +114,15 @@
           </select>
         </div>
       </div>
+      </div>
     </div>
 
-    <div class="card">
-      <div class="card-title"><span class="icon">💰</span>价格数据（从链家/贝壳/安居客查询后填写）</div>
+    <div class="card" data-card="price">
+      <div class="card-header" onclick="toggleCard('price')">
+        <div class="card-title"><span class="icon">💰</span>价格数据（从链家/贝壳/安居客查询后填写）</div>
+        <span class="card-toggle expanded">▼</span>
+      </div>
+      <div class="card-content">
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">同小区均价（元/㎡）</label>
@@ -122,10 +136,15 @@
       <div style="font-size:12px;color:#94a3b8;margin-top:-8px;">
         提示：至少填写一个均价或租金用于测算。两个都填效果更准确。
       </div>
+      </div>
     </div>
 
-    <div class="card">
-      <div class="card-title"><span class="icon">🚗</span>停车位</div>
+    <div class="card collapsed" data-card="parking">
+      <div class="card-header" onclick="toggleCard('parking')">
+        <div class="card-title"><span class="icon">🚗</span>停车位</div>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-content">
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">停车位</label>
@@ -147,10 +166,15 @@
         <label class="form-label">车位价格/月租（元）</label>
         <input class="form-input" type="number" name="parkingPrice" id="parkingPrice" placeholder="产权填总价，租赁填月租" min="0">
       </div>
+      </div>
     </div>
 
-    <div class="card">
-      <div class="card-title"><span class="icon">📊</span>成本估算参数</div>
+    <div class="card collapsed" data-card="cost">
+      <div class="card-header" onclick="toggleCard('cost')">
+        <div class="card-title"><span class="icon">📊</span>成本估算参数</div>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-content">
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">物业费（元/㎡/月）</label>
@@ -168,10 +192,15 @@
           参考：国债约2.5%，大额存条约3%，理财约3.5%。用于估算资金占用成本参考。
         </div>
       </div>
+      </div>
     </div>
 
-    <div class="card">
-      <div class="card-title"><span class="icon">🚇</span>交通配套</div>
+    <div class="card collapsed" data-card="transport">
+      <div class="card-header" onclick="toggleCard('transport')">
+        <div class="card-title"><span class="icon">🚇</span>交通配套</div>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-content">
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">最近地铁距离（米）</label>
@@ -186,10 +215,15 @@
         <label class="form-label">周边公交线路数</label>
         <input class="form-input" type="number" name="busRoutes" placeholder="8" min="0" value="0">
       </div>
+      </div>
     </div>
 
-    <div class="card">
-      <div class="card-title"><span class="icon">🎓</span>教育配套</div>
+    <div class="card collapsed" data-card="education">
+      <div class="card-header" onclick="toggleCard('education')">
+        <div class="card-title"><span class="icon">🎓</span>教育配套</div>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-content">
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">幼儿园</label>
@@ -213,10 +247,15 @@
       <div style="font-size:12px;color:#94a3b8;margin-top:-8px;">
         提示：填写对口学校名称，系统会自动识别学校等级并计算学区溢价。不填则不加分。
       </div>
+      </div>
     </div>
 
-    <div class="card">
-      <div class="card-title"><span class="icon">🛒</span>商业配套</div>
+    <div class="card collapsed" data-card="commercial">
+      <div class="card-header" onclick="toggleCard('commercial')">
+        <div class="card-title"><span class="icon">🛒</span>商业配套</div>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-content">
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">周边大型商场数</label>
@@ -234,10 +273,15 @@
           <option value="">无</option>
         </select>
       </div>
+      </div>
     </div>
 
-    <div class="card">
-      <div class="card-title"><span class="icon">🏥</span>医疗配套</div>
+    <div class="card collapsed" data-card="medical">
+      <div class="card-header" onclick="toggleCard('medical')">
+        <div class="card-title"><span class="icon">🏥</span>医疗配套</div>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-content">
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">三甲医院</label>
@@ -258,10 +302,15 @@
           <option value="">无</option>
         </select>
       </div>
+      </div>
     </div>
 
-    <div class="card">
-      <div class="card-title"><span class="icon">🌳</span>自然环境</div>
+    <div class="card collapsed" data-card="nature">
+      <div class="card-header" onclick="toggleCard('nature')">
+        <div class="card-title"><span class="icon">🌳</span>自然环境</div>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-content">
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">公园/绿地</label>
@@ -282,10 +331,15 @@
           <option value="on">有</option>
         </select>
       </div>
+      </div>
     </div>
 
-    <div class="card">
-      <div class="card-title"><span class="icon">⚠️</span>硬伤因素（勾选存在的）</div>
+    <div class="card collapsed" data-card="defects">
+      <div class="card-header" onclick="toggleCard('defects')">
+        <div class="card-title"><span class="icon">⚠️</span>硬伤因素（勾选存在的）</div>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-content">
       <div class="form-checkbox-group">
         <label class="form-checkbox-item"><input type="checkbox" name="defects" value="highway_noise"> 高架/高速噪音</label>
         <label class="form-checkbox-item"><input type="checkbox" name="defects" value="main_road_noise"> 主干道噪音</label>
@@ -299,6 +353,7 @@
         <label class="form-checkbox-item"><input type="checkbox" name="defects" value="poor_lighting"> 采光严重不足</label>
         <label class="form-checkbox-item"><input type="checkbox" name="defects" value="factory_pollution"> 工厂污染</label>
         <label class="form-checkbox-item"><input type="checkbox" name="defects" value="red_light"> 治安差/红灯区</label>
+      </div>
       </div>
     </div>
 

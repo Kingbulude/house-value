@@ -51,16 +51,19 @@ export function updateBusinessDistricts(districtName) {
 }
 
 export function updateSchools(districtName) {
-  const dataList = document.getElementById('schoolList');
-  dataList.innerHTML = '';
-
   const district = HANGZHOU_DISTRICTS[districtName];
-  if (district && district.education) {
-    for (const school of district.education) {
-      const opt = document.createElement('option');
-      opt.value = school;
-      dataList.appendChild(opt);
-    }
+  if (!district || !district.education) return;
+
+  const schoolInputs = {
+    kindergarten: document.getElementById('kindergarten'),
+    primarySchool: document.getElementById('primarySchool'),
+    middleSchool: document.getElementById('middleSchool'),
+    highSchool: document.getElementById('highSchool'),
+  };
+
+  for (const [type, input] of Object.entries(schoolInputs)) {
+    if (!input) continue;
+    input.setAttribute('placeholder', `如：${district.education[0]}`);
   }
 }
 
@@ -105,7 +108,6 @@ export function handleSubmit() {
     metroDistance: formData.get('metroDistance') ? parseInt(formData.get('metroDistance')) : null,
     metroLines: parseInt(formData.get('metroLines')) || 0,
     busRoutes: parseInt(formData.get('busRoutes')) || 0,
-    schoolName: formData.get('schoolName') || '',
     kindergarten: formData.get('kindergarten') || '',
     primarySchool: formData.get('primarySchool') || '',
     middleSchool: formData.get('middleSchool') || '',
@@ -459,6 +461,16 @@ function renderHoldingCost(result) {
 
   html += '</div>';
   return html;
+}
+
+export function toggleCard(cardName) {
+  const card = document.querySelector(`[data-card="${cardName}"]`);
+  if (!card) return;
+  card.classList.toggle('collapsed');
+  const toggle = card.querySelector('.card-toggle');
+  if (toggle) {
+    toggle.classList.toggle('expanded');
+  }
 }
 
 export function switchTab(tabName) {
