@@ -330,6 +330,8 @@ export function calculateValuation(input) {
     hasTier3Hospital, hospitalDistance, hasCommunityHospital,
     hasPark, parkDistance, hasWater,
     buildingPosition, selectedDefects,
+    hasParkingSpace, parkingPrice, parkingType,
+    propertyFee, holdingYears, riskFreeRate,
   } = input;
 
   const results = {};
@@ -416,6 +418,17 @@ export function calculateValuation(input) {
   if (selectedDefects && selectedDefects.length > 0) confidence += 5;
   confidence = Math.min(confidence, 95);
 
+  const holdingCost = calculateHoldingCost({
+    finalValuation,
+    area,
+    hasParkingSpace,
+    parkingPrice,
+    parkingType,
+    propertyFee,
+    holdingYears,
+    riskFreeRate,
+  });
+
   return {
     finalValuation: Math.round(finalValuation),
     unitPrice: Math.round(finalValuation / area),
@@ -435,6 +448,71 @@ export function calculateValuation(input) {
       buildingPosition: { coefficient: buildingPosMod, position: buildingPosition },
       marketComparison: factors.marketComparison || null,
       incomeApproach: factors.incomeApproach || null,
+    },
+    holdingCost,
+  };
+}
+
+export function calculateHoldingCost(params) {
+  const {
+    finalValuation,
+    area,
+    hasParkingSpace,
+    parkingPrice,
+    parkingType,
+    propertyFee,
+    holdingYears,
+    riskFreeRate,
+  } = params;
+
+  const actualRiskFreeRate = riskFreeRate !== undefined ? riskFreeRate / 100 : 0.035;
+  const actualHoldingYears = holdingYears || 5;
+  const actualPropertyFee = propertyFee || 0;
+
+  const opportunityCost = finalValuation * actualRiskFreeRate;
+
+  const buildingDepreciation = finalValuation * 0.02;
+
+  const annualPropertyFee = actualPropertyFee * area * 12;
+
+  let parkingCost = 0;
+  let parkingDetail = '';
+  if (hasParkingSpace && parkingPrice) {
+    if (parkingType === '产权') {
+      parkingCost = parkingPrice * actualRiskFreeRate;
+      parkingDetail = `产权车位 ${formatWan(parkingPrice)}，机会成本`;
+    } else if (parkingType === '租赁') {
+      parkingCost = parkingPrice * 12;
+      parkingDetail = `租赁车位 ${parkingPrice}元/月`;
+    }
+  }
+
+  const annualCost = opportunityCost + buildingDepreciation + annualPropertyFee + parkingCost;
+
+  const totalCost = annualCost * actualHoldingYears;
+
+  const monthlyEquivalent = annualCost / 12;
+
+  return {
+    annualCost: Math.round(annualCost),
+    totalCost: Math.round(totalCost),
+    monthlyEquivalent: Math.round(monthlyEquivalent),
+    annualBreakdown: {
+      opportunityCost: Math.round(opportunityCost),
+      buildingDepreciation: Math.round(buildingDepreciation),
+      propertyFee: Math.round(annualPropertyFee),
+      parkingCost: Math.round(parkingCost),
+    },
+    parking: {
+      hasParkingSpace: !!hasParkingSpace,
+      parkingPrice,
+      parkingType,
+      parkingDetail,
+    },
+    parameters: {
+      riskFreeRate: actualRiskFreeRate,
+      holdingYears: actualHoldingYears,
+      propertyFee: actualPropertyFee,
     },
   };
 }

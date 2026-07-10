@@ -117,6 +117,12 @@ export function handleSubmit() {
     hasWater: formData.get('hasWater') === 'on',
     buildingPosition: formData.get('buildingPosition') || '一般位置',
     selectedDefects: formData.getAll('defects'),
+    hasParkingSpace: formData.get('hasParkingSpace') === 'on',
+    parkingPrice: parseFloat(formData.get('parkingPrice')) || 0,
+    parkingType: formData.get('parkingType') || '',
+    propertyFee: parseFloat(formData.get('propertyFee')) || 0,
+    holdingYears: parseInt(formData.get('holdingYears')) || 5,
+    riskFreeRate: parseFloat(formData.get('riskFreeRate')) || 3.5,
   };
 
   if (!input.district) { alert('请选择区域'); return; }
@@ -151,6 +157,7 @@ export function renderResult(input, result) {
       <div class="tab-item" onclick="switchTab('methods')">三把尺子</div>
       <div class="tab-item" onclick="switchTab('amenities')">配套评分</div>
       <div class="tab-item" onclick="switchTab('defects')">硬伤检测</div>
+      <div class="tab-item" onclick="switchTab('holdingcost')">持有成本</div>
       <div class="tab-item" onclick="switchTab('factors')">系数明细</div>
     </div>
 
@@ -186,6 +193,13 @@ export function renderResult(input, result) {
       <div class="card">
         <div class="card-title"><span class="icon">🔢</span>系数明细</div>
         ${renderFactors(input, result)}
+      </div>
+    </div>
+
+    <div id="tab-holdingcost" class="tab-content">
+      <div class="card">
+        <div class="card-title"><span class="icon">📊</span>持有成本分析</div>
+        ${renderHoldingCost(result)}
       </div>
     </div>
 
@@ -379,6 +393,79 @@ function renderFactors(input, result) {
     <span class="label" style="font-weight:600;">综合专家系数</span>
     <span class="value" style="font-size:16px;">×${(f.location.coefficient * f.amenitiesCoefficient * f.defects.coefficient * f.buildingPosition.coefficient).toFixed(4)}</span>
   </div>`;
+
+  html += '</div>';
+  return html;
+}
+
+function renderHoldingCost(result) {
+  const hc = result.holdingCost;
+  const b = hc.annualBreakdown;
+  let html = '<div style="font-size:13px;line-height:1.8;">';
+
+  html += `
+    <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:12px;margin-bottom:16px;">
+      <div style="font-size:14px;font-weight:600;color:#92400e;margin-bottom:4px;">💡 买房划算吗？</div>
+      <div style="color:#78350f;">
+        持有这套房，每年相当于"花掉" <strong>${formatWan(hc.annualCost)}</strong>（月均 ${hc.monthlyEquivalent.toLocaleString()}元）。<br>
+        如果这笔钱存银行/买理财，每年能赚 ${(hc.parameters.riskFreeRate * 100).toFixed(1)}% 的利息。
+      </div>
+    </div>
+  `;
+
+  html += '<div style="font-weight:600;font-size:14px;margin-bottom:8px;">年持有成本明细</div>';
+
+  html += `<div class="factor-row">
+    <span class="label">资金机会成本</span>
+    <span class="value">${b.opportunityCost.toLocaleString()}元/年</span>
+  </div>`;
+  html += `<div style="font-size:12px;color:#64748b;margin-left:8px;">房产总价 × 无风险收益率（${(hc.parameters.riskFreeRate * 100).toFixed(1)}%）</div>`;
+
+  html += `<div class="factor-row" style="margin-top:8px;">
+    <span class="label">房屋折旧</span>
+    <span class="value">${b.buildingDepreciation.toLocaleString()}元/年</span>
+  </div>`;
+  html += `<div style="font-size:12px;color:#64748b;margin-left:8px;">按每年2%折旧估算</div>`;
+
+  html += `<div class="factor-row" style="margin-top:8px;">
+    <span class="label">物业费</span>
+    <span class="value">${b.propertyFee.toLocaleString()}元/年</span>
+  </div>`;
+  html += `<div style="font-size:12px;color:#64748b;margin-left:8px;">${hc.parameters.propertyFee}元/㎡/月 × 12个月</div>`;
+
+  if (b.parkingCost > 0) {
+    html += `<div class="factor-row" style="margin-top:8px;">
+      <span class="label">车位费用</span>
+      <span class="value">${b.parkingCost.toLocaleString()}元/年</span>
+    </div>`;
+    if (hc.parking.parkingDetail) {
+      html += `<div style="font-size:12px;color:#64748b;margin-left:8px;">${hc.parking.parkingDetail}</div>`;
+    }
+  }
+
+  html += '<hr style="border:none;border-top:1px solid #e2e8f0;margin:12px 0;">';
+
+  html += `<div class="factor-row" style="font-size:14px;">
+    <span class="label" style="font-weight:600;">年持有总成本</span>
+    <span class="value" style="font-weight:600;color:#dc2626;">${formatWan(hc.annualCost)}</span>
+  </div>`;
+  html += `<div class="factor-row" style="font-size:14px;">
+    <span class="label" style="font-weight:600;">月均持有成本</span>
+    <span class="value" style="font-weight:600;color:#dc2626;">${hc.monthlyEquivalent.toLocaleString()}元/月</span>
+  </div>`;
+
+  html += '<hr style="border:none;border-top:1px solid #e2e8f0;margin:12px 0;">';
+
+  html += `<div class="factor-row" style="font-size:14px;">
+    <span class="label" style="font-weight:600;">${hc.parameters.holdingYears}年持有总成本</span>
+    <span class="value" style="font-weight:600;color:#dc2626;">${formatWan(hc.totalCost)}</span>
+  </div>`;
+
+  html += '<div style="margin-top:16px;font-size:12px;color:#64748b;line-height:1.6;">';
+  html += '<p><strong>什么是资金机会成本？</strong> 如果你把买房的钱存银行/买理财，每年能获得的固定收益。买房后这笔钱被"占用"了，所以这是隐性的持有成本。</p>';
+  html += '<p><strong>房屋折旧</strong> 房屋本身会老化，价值逐年下降。这里按每年2%估算（考虑建筑折旧和功能折旧）。</p>';
+  html += '<p><strong>注意</strong> 以上未考虑房产增值。如果房价上涨，增值收益可能覆盖持有成本。本计算器仅展示"纯持有成本"。</p>';
+  html += '</div>';
 
   html += '</div>';
   return html;

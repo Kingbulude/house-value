@@ -13,6 +13,7 @@ import {
   calcMarketSentiment,
   getCapRate,
   calculateValuation,
+  calculateHoldingCost,
   formatPrice,
   formatWan,
   getScoreColor,
@@ -414,5 +415,112 @@ describe('getConfidenceClass', () => {
     expect(getConfidenceClass(60)).toBe('confidence-medium');
     expect(getConfidenceClass(50)).toBe('confidence-low');
     expect(getConfidenceClass(40)).toBe('confidence-low');
+  });
+});
+
+describe('calculateHoldingCost', () => {
+  it('should calculate basic holding cost without parking', () => {
+    const result = calculateHoldingCost({
+      finalValuation: 5000000,
+      area: 89,
+      propertyFee: 2.5,
+      holdingYears: 5,
+      riskFreeRate: 3.5,
+    });
+
+    expect(result.annualCost).toBeGreaterThan(0);
+    expect(result.annualBreakdown.opportunityCost).toBe(175000);
+    expect(result.annualBreakdown.buildingDepreciation).toBe(100000);
+    expect(result.annualBreakdown.propertyFee).toBe(2670);
+    expect(result.annualBreakdown.parkingCost).toBe(0);
+    expect(result.totalCost).toBe(result.annualCost * 5);
+    expect(result.monthlyEquivalent).toBe(Math.round(result.annualCost / 12));
+    expect(result.parameters.riskFreeRate).toBe(0.035);
+    expect(result.parameters.holdingYears).toBe(5);
+  });
+
+  it('should calculate with owned parking space', () => {
+    const result = calculateHoldingCost({
+      finalValuation: 5000000,
+      area: 89,
+      hasParkingSpace: true,
+      parkingPrice: 300000,
+      parkingType: '产权',
+      propertyFee: 2.5,
+      holdingYears: 5,
+      riskFreeRate: 3.5,
+    });
+
+    expect(result.annualBreakdown.parkingCost).toBe(10500);
+    expect(result.parking.hasParkingSpace).toBe(true);
+    expect(result.parking.parkingType).toBe('产权');
+  });
+
+  it('should calculate with rented parking space', () => {
+    const result = calculateHoldingCost({
+      finalValuation: 5000000,
+      area: 89,
+      hasParkingSpace: true,
+      parkingPrice: 500,
+      parkingType: '租赁',
+      propertyFee: 2.5,
+      holdingYears: 5,
+      riskFreeRate: 3.5,
+    });
+
+    expect(result.annualBreakdown.parkingCost).toBe(6000);
+    expect(result.parking.parkingType).toBe('租赁');
+  });
+
+  it('should use default values when parameters are missing', () => {
+    const result = calculateHoldingCost({
+      finalValuation: 5000000,
+      area: 89,
+    });
+
+    expect(result.parameters.riskFreeRate).toBe(0.035);
+    expect(result.parameters.holdingYears).toBe(5);
+    expect(result.parameters.propertyFee).toBe(0);
+    expect(result.annualBreakdown.propertyFee).toBe(0);
+  });
+
+  it('should handle zero risk-free rate', () => {
+    const result = calculateHoldingCost({
+      finalValuation: 5000000,
+      area: 89,
+      riskFreeRate: 0,
+    });
+
+    expect(result.annualBreakdown.opportunityCost).toBe(0);
+  });
+});
+
+describe('calculateValuation with holding cost', () => {
+  it('should include holding cost in result', () => {
+    const input = {
+      district: '上城区',
+      area: 89,
+      marketPrice: 50000,
+      floor: 6,
+      totalFloors: 18,
+      orientation: '南北通透',
+      decoration: '简装修',
+      buildingAge: 5,
+      hasElevator: true,
+      buildingPosition: '一般位置',
+      selectedDefects: [],
+      hasParkingSpace: true,
+      parkingPrice: 300000,
+      parkingType: '产权',
+      propertyFee: 3.0,
+      holdingYears: 10,
+      riskFreeRate: 3.5,
+    };
+
+    const result = calculateValuation(input);
+    expect(result.holdingCost).toBeDefined();
+    expect(result.holdingCost.annualCost).toBeGreaterThan(0);
+    expect(result.holdingCost.totalCost).toBeGreaterThan(0);
+    expect(result.holdingCost.parking.hasParkingSpace).toBe(true);
   });
 });
