@@ -172,6 +172,22 @@ body {
   cursor: not-allowed;
 }
 
+.btn-secondary {
+  padding: 12px;
+  background: white;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-secondary:hover {
+  background: var(--primary-light);
+}
+
 /* 结果区域 */
 .result-section {
   display: none;

@@ -2701,12 +2701,18 @@ function handleSubmit() {
   // 显示loading
   document.getElementById('resultSection').classList.add('visible');
   document.getElementById('resultContent').innerHTML = '<div class="loading"><div class="spinner"></div>正在分析中...</div>';
+  
+  // 平滑滚动到结果区域
+  setTimeout(() => {
+    const resultSection = document.getElementById('resultSection');
+    resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
 
   // 模拟异步计算
   setTimeout(() => {
     const result = calculateValuation(input);
     renderResult(input, result);
-  }, 300);
+  }, 500);
 }
 
 function formatPrice(price) {
@@ -2745,6 +2751,12 @@ function renderResult(input, result) {
       <div style="margin-top:8px;">
         <span class="confidence-badge ${getConfidenceClass(result.confidence)}">置信度 ${result.confidence}%</span>
       </div>
+    </div>
+
+    <!-- 操作按钮 -->
+    <div style="display:flex;gap:12px;margin:16px 0;">
+      <button class="btn-secondary" onclick="scrollToForm()" style="flex:1;">📝 修改参数重新计算</button>
+      <button class="btn-secondary" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="flex:1;">⬆️ 回到顶部</button>
     </div>
 
     <!-- Tab栏 -->
@@ -2799,6 +2811,11 @@ function renderResult(input, result) {
   `;
 
   document.getElementById('resultContent').innerHTML = html;
+}
+
+function scrollToForm() {
+  const form = document.getElementById('valuationForm');
+  form.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function renderSummary(input, result) {
