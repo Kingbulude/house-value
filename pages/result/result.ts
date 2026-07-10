@@ -59,7 +59,7 @@ Page({
 
   onShareAppMessage() {
     return {
-      title: '房产参考价测算结果分享',
+      title: '房估测算结果分享',
       path: '/pages/index/index',
     };
   },

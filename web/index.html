@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>房产参考价计算器 | House Value</title>
+  <title>房估计算器 | House Value</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <div class="header">
-  <h1>房产参考价计算器</h1>
+  <h1>房估计算器</h1>
   <p>基于规则引擎 · 杭州城市知识库 · 三把尺子交叉参考</p>
 </div>
 
@@ -150,22 +150,22 @@
     </div>
 
     <div class="card">
-      <div class="card-title"><span class="icon">📊</span>持有成本参数（用于分析买房是否划算）</div>
+      <div class="card-title"><span class="icon">📊</span>成本估算参数</div>
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">物业费（元/㎡/月）</label>
           <input class="form-input" type="number" name="propertyFee" placeholder="2.5" min="0" step="0.1" value="2.5">
         </div>
         <div class="form-group">
-          <label class="form-label">持有年限（年）</label>
+          <label class="form-label">持有年限</label>
           <input class="form-input" type="number" name="holdingYears" placeholder="5" min="1" value="5">
         </div>
       </div>
       <div class="form-group">
-        <label class="form-label">无风险收益率（%）</label>
+        <label class="form-label">无风险收益参考（%）</label>
         <input class="form-input" type="number" name="riskFreeRate" placeholder="3.5" min="0" max="10" step="0.1" value="3.5">
         <div style="font-size:12px;color:#94a3b8;margin-top:4px;">
-          参考值：国债收益率约2.5%，大额存单约3%，理财约3.5%。这是"如果不买房，钱存银行能赚多少"的资金占用成本参考。
+          参考：国债约2.5%，大额存条约3%，理财约3.5%。用于估算资金占用成本参考。
         </div>
       </div>
     </div>

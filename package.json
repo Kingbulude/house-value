@@ -1,7 +1,7 @@
 {
   "name": "house-value",
   "version": "1.0.0",
-  "description": "房产参考价计算器 - 基于规则引擎的房产价格参考测算工具",
+  "description": "房估计算器 - 基于规则引擎的房产价格参考测算工具",
   "scripts": {
     "build": "echo 'Static HTML build complete'",
     "typecheck": "tsc --noEmit",

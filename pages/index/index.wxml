@@ -1,6 +1,6 @@
 <view class="container">
   <view class="hero">
-    <view class="hero-title">房产参考价计算器</view>
+    <view class="hero-title">房估计算器</view>
     <view class="hero-sub">基于租金回报率、市场比价与指导价的多维度参考工具</view>
     <view class="hero-tip">数据由您自行输入，本地计算，不采集隐私</view>
   </view>

@@ -39,7 +39,7 @@ Page({
 
   onShareAppMessage() {
     return {
-      title: '房产参考价计算器 - 快速测算合理房价参考',
+      title: '房估计算器 - 快速测算合理房价参考',
       path: '/pages/index/index',
     };
   },

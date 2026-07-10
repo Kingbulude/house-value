@@ -7,7 +7,7 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#2c9678",
-    "navigationBarTitleText": "房产参考价计算器",
+    "navigationBarTitleText": "房估计算器",
     "navigationBarTextStyle": "white"
   },
   "style": "v2",
