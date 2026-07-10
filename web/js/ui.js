@@ -1,4 +1,4 @@
-import { HANGZHOU_DISTRICTS, BUSINESS_DISTRICTS, DISTRICT_BD_MAP } from './cityKnowledge.js';
+import { HANGZHOU_DISTRICTS, BUSINESS_DISTRICTS, DISTRICT_BD_MAP, matchCommunity } from './cityKnowledge.js';
 import {
   calculateValuation,
   formatPrice,
@@ -33,6 +33,32 @@ export function initUI() {
     e.preventDefault();
     handleSubmit();
   });
+
+  const communityInput = document.querySelector('input[name="communityName"]');
+  if (communityInput) {
+    communityInput.addEventListener('blur', function() {
+      const match = matchCommunity(this.value);
+      if (match) {
+        const districtSelectEl = document.getElementById('district');
+        const bdSelectEl = document.getElementById('businessDistrict');
+        
+        if (districtSelectEl.value !== match.district) {
+          districtSelectEl.value = match.district;
+          updateBusinessDistricts(match.district);
+          updateSchools(match.district);
+          updateDistrictInfo(match.district);
+        }
+        
+        if (bdSelectEl.value !== match.businessDistrict) {
+          const bdOptions = Array.from(bdSelectEl.options);
+          const option = bdOptions.find(opt => opt.value === match.businessDistrict);
+          if (option) {
+            bdSelectEl.value = match.businessDistrict;
+          }
+        }
+      }
+    });
+  }
 }
 
 export function updateBusinessDistricts(districtName) {
