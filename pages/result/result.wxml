@@ -17,6 +17,17 @@
     <view class="highlight-unit">{{result.unitPrice}} 元/㎡</view>
     <view class="highlight-range">参考区间：{{result.lowerBoundText}} ~ {{result.upperBoundText}}</view>
     <view class="confidence-badge {{result.confidenceClass}}">参考度 {{result.confidence}}%</view>
+
+    <view class="highlight-actions">
+      <view class="hl-action-btn" bindtap="copyResult">
+        <text class="hl-action-icon">📋</text>
+        <text class="hl-action-text">复制结果</text>
+      </view>
+      <view class="hl-action-btn" bindtap="sharePoster">
+        <text class="hl-action-icon">📊</text>
+        <text class="hl-action-text">分享</text>
+      </view>
+    </view>
   </view>
 
   <!-- Tab Bar -->
@@ -63,13 +74,34 @@
     </view>
     <view class="info-row">
       <text class="info-label">硬伤扣分</text>
-      <text class="info-value {{result.factors.defects.defects.length > 0 ? 'negative' : ''}}">{{result.factors.defects.defects.length > 0 ? result.factors.defects.defects.length + '项' : '无'}}</text>
+      <text class="info-value {{result.factors.defects.defects.length > 0 ? 'negative' : ''}}">{{result.factors.defects.defects.length > 0 ? result.factors.defects.defects.length + '项 (累计-' + defectsTotalPenalty + '%)' : '无'}}</text>
+    </view>
+    <view class="summary-action" wx:if="{{result.factors.defects.defects.length > 0}}" bindtap="viewDefects">
+      <text>查看硬伤详情 →</text>
     </view>
   </view>
 
   <!-- Methods Tab -->
   <view class="card tab-panel" wx:if="{{activeTab === 'methods'}}">
     <view class="card-title">三把尺子交叉验证</view>
+
+    <view class="weight-bar">
+      <view class="weight-segment weight-market" style="flex:{{result.marketWeight || 0}}">
+        <text class="weight-seg-text" wx:if="{{result.marketWeight >= 15}}">{{result.marketWeight}}%</text>
+      </view>
+      <view class="weight-segment weight-income" style="flex:{{result.incomeWeight || 0}}">
+        <text class="weight-seg-text" wx:if="{{result.incomeWeight >= 15}}">{{result.incomeWeight}}%</text>
+      </view>
+      <view class="weight-segment weight-cost" style="flex:{{result.costWeight || 0}}">
+        <text class="weight-seg-text" wx:if="{{result.costWeight >= 15}}">{{result.costWeight}}%</text>
+      </view>
+    </view>
+    <view class="weight-legend">
+      <view class="legend-item"><view class="legend-dot dot-market"></view>市场比较</view>
+      <view class="legend-item"><view class="legend-dot dot-income"></view>收益还原</view>
+      <view class="legend-item"><view class="legend-dot dot-cost"></view>成本法</view>
+    </view>
+
     <view class="method-card" wx:if="{{result.methods.market}}">
       <view class="method-name">市场比较法</view>
       <view class="method-value">{{result.marketText}}</view>
@@ -125,6 +157,13 @@
   <!-- Defects Tab -->
   <view class="card tab-panel" wx:if="{{activeTab === 'defects'}}">
     <view class="card-title">硬伤检测</view>
+
+    <view class="defects-severity-bar" wx:if="{{result.factors.defects.defects.length > 0}}">
+      <view class="severity-badge severe-badge" wx:if="{{severeCount > 0}}">{{severeCount}}项严重</view>
+      <view class="severity-badge moderate-badge" wx:if="{{moderateCount > 0}}">{{moderateCount}}项中等</view>
+      <view class="severity-badge penalty-badge">累计折扣 {{defectsTotalPenalty}}%</view>
+    </view>
+
     <view wx:if="{{result.factors.defects.defects.length === 0}}" class="defects-clean">
       未检测到明显硬伤
     </view>
@@ -153,6 +192,27 @@
         <view class="hc-highlight-note">仅供参考，未考虑房产增值收益</view>
       </view>
     </view>
+
+    <view class="hc-breakdown">
+      <view class="hc-breakdown-title">年度费用构成</view>
+      <view class="hc-bar-track">
+        <view
+          wx:for="{{holdingCostBreakdown}}"
+          wx:key="name"
+          class="hc-bar-segment"
+          style="flex:{{item.percent}};background:{{item.color}};"
+        ></view>
+      </view>
+      <view class="hc-breakdown-legend">
+        <view wx:for="{{holdingCostBreakdown}}" wx:key="name" class="hc-legend-item">
+          <view class="hc-legend-dot" style="background:{{item.color}};"></view>
+          <text class="hc-legend-name">{{item.name}}</text>
+          <text class="hc-legend-val">{{item.value}}元 ({{item.percent}}%)</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="hc-divider"></view>
     <view class="info-row">
       <text class="info-label">年持有费用</text>
       <text class="info-value negative">{{result.holdingCost.annualCostText}}</text>
@@ -189,7 +249,6 @@
   <view class="card tab-panel" wx:if="{{activeTab === 'factors'}}">
     <view class="card-title">系数明细</view>
 
-    <!-- Anchor -->
     <view class="factor-section-title">价格锚定</view>
     <view class="info-row">
       <text class="info-label">价格锚定</text>
@@ -202,24 +261,28 @@
 
     <view class="factor-divider"></view>
 
-    <!-- Building Modifiers -->
     <view class="factor-section-title">楼栋级修正系数</view>
     <view class="info-row" wx:for="{{modifiersList}}" wx:key="label">
       <text class="info-label">{{item.label}}</text>
-      <text class="info-value {{item.modClass}}">×{{item.value}}</text>
+      <view class="mod-value-wrap">
+        <view class="mod-dot {{item.modClass}}"></view>
+        <text class="info-value {{item.modClass}}">×{{item.value}}</text>
+      </view>
     </view>
     <view class="info-row factor-total">
       <text class="info-label bold">楼栋修正合计</text>
       <text class="info-value bold">×{{result.factors.buildingModifiers.total}}</text>
     </view>
 
-    <!-- Market comparison extra coefficients -->
     <block wx:if="{{result.factors.marketComparison && result.factors.marketComparison.locationCoefficient}}">
       <view class="factor-divider"></view>
       <view class="factor-section-title">板块估算系数（无小区均价时使用）</view>
       <view class="info-row">
         <text class="info-label">区位系数</text>
-        <text class="info-value {{result.factors.marketComparison.locationCoefficient > 1 ? 'positive' : 'negative'}}">×{{result.factors.marketComparison.locationCoefficient}}</text>
+        <view class="mod-value-wrap">
+          <view class="mod-dot {{result.factors.marketComparison.locationCoefficient > 1 ? 'positive' : 'negative'}}"></view>
+          <text class="info-value {{result.factors.marketComparison.locationCoefficient > 1 ? 'positive' : 'negative'}}">×{{result.factors.marketComparison.locationCoefficient}}</text>
+        </view>
       </view>
       <view class="info-row">
         <text class="info-label">学区溢价</text>
@@ -227,11 +290,13 @@
       </view>
       <view class="info-row" wx:if="{{result.factors.marketComparison.marketSentiment}}">
         <text class="info-label">市场情绪</text>
-        <text class="info-value {{result.factors.marketComparison.marketSentiment > 1 ? 'positive' : result.factors.marketComparison.marketSentiment < 1 ? 'negative' : 'neutral'}}">×{{result.factors.marketComparison.marketSentiment}}</text>
+        <view class="mod-value-wrap">
+          <view class="mod-dot {{result.factors.marketComparison.marketSentiment > 1 ? 'positive' : result.factors.marketComparison.marketSentiment < 1 ? 'negative' : 'neutral'}}"></view>
+          <text class="info-value {{result.factors.marketComparison.marketSentiment > 1 ? 'positive' : result.factors.marketComparison.marketSentiment < 1 ? 'negative' : 'neutral'}}">×{{result.factors.marketComparison.marketSentiment}}</text>
+        </view>
       </view>
     </block>
 
-    <!-- Income approach -->
     <block wx:if="{{result.factors.incomeApproach}}">
       <view class="factor-divider"></view>
       <view class="factor-section-title">收益还原法参数</view>
@@ -266,4 +331,10 @@
   </view>
 
   <view class="safe-bottom"></view>
+
+  <!-- Back to Top -->
+  <view class="back-top {{showBackTop ? 'visible' : ''}}" bindtap="scrollToTop">
+    <text class="back-top-icon">↑</text>
+    <text class="back-top-text">顶部</text>
+  </view>
 </view>

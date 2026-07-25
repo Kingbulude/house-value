@@ -52,6 +52,20 @@ Page({
     amenitiesList: [] as AmenityItem[],
     defectsList: [] as DefectItem[],
     modifiersList: [] as ModifierItem[],
+    summaryText: '',
+    methodSummary: '',
+    defectsTotalPenalty: 0,
+    severeCount: 0,
+    moderateCount: 0,
+    showBackTop: false,
+    holdingCostBreakdown: [] as { name: string; value: number; percent: number; color: string }[],
+  },
+
+  onPageScroll(e: { scrollTop: number }) {
+    const showBackTop = e.scrollTop > 600;
+    if (showBackTop !== this.data.showBackTop) {
+      this.setData({ showBackTop });
+    }
   },
 
   onShow() {
@@ -74,11 +88,9 @@ Page({
 
     const result = calculateValuation(input);
 
-    // Compute derived display data
     const f = result.factors;
     const bm = f.buildingModifiers;
 
-    // Extend result with display fields
     const r = result as any;
     r.finalValuationText = formatWan(result.finalValuation);
     r.lowerBoundText = formatWan(result.lowerBound);
@@ -116,6 +128,10 @@ Page({
       isSevere: d.severity === '严重',
     }));
 
+    const severeCount = defectsList.filter(d => d.severity === '严重').length;
+    const moderateCount = defectsList.filter(d => d.severity !== '严重').length;
+    const defectsTotalPenalty = defectsList.reduce((sum, d) => sum + d.penaltyPercent, 0);
+
     const getModClass = (v: number): string => {
       if (v > 1) return 'positive';
       if (v < 1) return 'negative';
@@ -135,6 +151,41 @@ Page({
       { label: '硬伤系数', value: formatMod(bm.defectsCoefficient), modClass: bm.defectsCoefficient < 1 ? 'negative' : 'neutral' },
     ];
 
+    // Summary text
+    const district = input.district || '';
+    const biz = input.businessDistrict || '';
+    const locationStr = [district, biz].filter(Boolean).join('·');
+    const summaryText = [
+      locationStr,
+      `${input.communityName || '未知'} ${input.area}㎡`,
+      `参考价: ${r.finalValuationText} (${result.unitPrice}元/㎡)`,
+      `区间: ${r.lowerBoundText}~${r.upperBoundText}`,
+      `参考度: ${result.confidence}%`,
+    ].join('\n');
+
+    // Method summary
+    const methodParts: string[] = [];
+    if (result.methods.market) methodParts.push(`市场比较${r.marketText}(${r.marketWeight}%)`);
+    if (result.methods.income) methodParts.push(`收益还原${r.incomeText}(${r.incomeWeight}%)`);
+    if (result.methods.cost) methodParts.push(`成本法${r.costText}(${r.costWeight}%)`);
+    const methodSummary = methodParts.join(' + ');
+
+    // Holding cost breakdown
+    const bd = result.holdingCost.annualBreakdown;
+    const breakdownItems = [
+      { name: '资金占用成本', value: bd.opportunityCost, color: '#3b82f6' },
+      { name: '房屋折旧', value: bd.buildingDepreciation, color: '#f59e0b' },
+      { name: '物业费', value: bd.propertyFee, color: '#10b981' },
+    ];
+    if (bd.parkingCost > 0) {
+      breakdownItems.push({ name: '车位费用', value: bd.parkingCost, color: '#8b5cf6' });
+    }
+    const totalAnnual = result.holdingCost.annualCost || 1;
+    const holdingCostBreakdown = breakdownItems.map(item => ({
+      ...item,
+      percent: Math.round((item.value / totalAnnual) * 100),
+    }));
+
     this.setData({
       loaded: true,
       input,
@@ -142,6 +193,12 @@ Page({
       amenitiesList,
       defectsList,
       modifiersList,
+      summaryText,
+      methodSummary,
+      defectsTotalPenalty,
+      severeCount,
+      moderateCount,
+      holdingCostBreakdown,
     });
 
     this.saveHistory(input, result);
@@ -159,6 +216,29 @@ Page({
     if (tab) {
       this.setData({ activeTab: tab });
     }
+  },
+
+  viewDefects() {
+    this.setData({ activeTab: 'defects' });
+  },
+
+  copyResult() {
+    const { summaryText, methodSummary } = this.data;
+    const fullText = `房估测算结果\n${summaryText}\n\n三把尺子: ${methodSummary}`;
+    (wx as any).setClipboardData({
+      data: fullText,
+      success: () => {
+        wx.showToast({ title: '已复制到剪贴板', icon: 'success' });
+      },
+    });
+  },
+
+  sharePoster() {
+    wx.showToast({ title: '海报功能开发中', icon: 'none', duration: 1500 });
+  },
+
+  scrollToTop() {
+    (wx as any).pageScrollTo({ scrollTop: 0, duration: 300 });
   },
 
   goBack() {

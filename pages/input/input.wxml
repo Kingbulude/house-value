@@ -1,8 +1,14 @@
 <view class="container">
+  <view class="loading-mask" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+  </view>
 
-  <view class="card">
+  <view class="card {{district ? 'card-filled' : ''}}">
     <view class="section-header" data-section="section1" bindtap="toggleSection">
-      <text class="card-title" style="margin-bottom:0">&#x1F4CD; 区域信息</text>
+      <view class="section-title-row">
+        <view class="section-badge {{district ? 'badge-filled' : ''}}">{{district ? '✓' : '1'}}</view>
+        <text class="card-title" style="margin-bottom:0">区域信息</text>
+      </view>
       <text class="section-arrow">{{collapsedMap.section1 ? '&#x25B6;' : '&#x25BC;'}}</text>
     </view>
     <view class="section-body" hidden="{{collapsedMap.section1}}">
@@ -20,16 +26,22 @@
       </view>
       <view class="form-item">
         <text class="form-label">小区名称</text>
-        <input class="form-input" value="{{communityName}}"
-               data-field="communityName" bindinput="onInput" bindblur="onCommunityBlur"
-               placeholder="如：万科西庐、绿城桂语江南" />
+        <view class="input-with-loading">
+          <input class="form-input" value="{{communityName}}"
+                 data-field="communityName" bindinput="onInput" bindblur="onCommunityBlur"
+                 placeholder="输入小区名自动匹配区域" placeholder-class="placeholder-light" />
+          <view class="community-loading" wx:if="{{loading && communityName}}"></view>
+        </view>
       </view>
     </view>
   </view>
 
-  <view class="card">
+  <view class="card {{area ? 'card-filled' : ''}}">
     <view class="section-header" data-section="section2" bindtap="toggleSection">
-      <text class="card-title" style="margin-bottom:0">&#x1F3E0; 房屋信息</text>
+      <view class="section-title-row">
+        <view class="section-badge {{area ? 'badge-filled' : ''}}">{{area ? '✓' : '2'}}</view>
+        <text class="card-title" style="margin-bottom:0">房屋信息</text>
+      </view>
       <text class="section-arrow">{{collapsedMap.section2 ? '&#x25B6;' : '&#x25BC;'}}</text>
     </view>
     <view class="section-body" hidden="{{collapsedMap.section2}}">
@@ -88,22 +100,31 @@
     </view>
   </view>
 
-  <view class="card">
+  <view class="card {{marketPrice || monthlyRent ? 'card-filled' : ''}}">
     <view class="section-header" data-section="section3" bindtap="toggleSection">
-      <text class="card-title" style="margin-bottom:0">&#x1F4B0; 价格数据</text>
+      <view class="section-title-row">
+        <view class="section-badge {{marketPrice || monthlyRent ? 'badge-filled' : ''}}">{{marketPrice || monthlyRent ? '✓' : '3'}}</view>
+        <text class="card-title" style="margin-bottom:0">价格数据</text>
+      </view>
       <text class="section-arrow">{{collapsedMap.section3 ? '&#x25B6;' : '&#x25BC;'}}</text>
     </view>
     <view class="section-body" hidden="{{collapsedMap.section3}}">
       <view class="form-row">
         <view class="form-col">
           <text class="form-label">同小区均价（元/㎡）</text>
-          <input class="form-input" type="digit" value="{{marketPrice || ''}}"
-                 data-field="marketPrice" bindinput="onNumberInput" placeholder="45000" />
+          <view class="input-prefix-wrap">
+            <text class="input-prefix">¥</text>
+            <input class="form-input input-with-prefix" type="digit" value="{{marketPrice || ''}}"
+                   data-field="marketPrice" bindinput="onInputNumber" placeholder="45000" />
+          </view>
         </view>
         <view class="form-col">
           <text class="form-label">同户型月租金（元/月）</text>
-          <input class="form-input" type="digit" value="{{monthlyRent || ''}}"
-                 data-field="monthlyRent" bindinput="onNumberInput" placeholder="5000" />
+          <view class="input-prefix-wrap">
+            <text class="input-prefix">¥</text>
+            <input class="form-input input-with-prefix" type="digit" value="{{monthlyRent || ''}}"
+                   data-field="monthlyRent" bindinput="onInputNumber" placeholder="5000" />
+          </view>
         </view>
       </view>
       <text class="hint-text">提示：至少填写一个均价或租金用于测算。两个都填效果更准确。</text>
@@ -112,7 +133,10 @@
 
   <view class="card">
     <view class="section-header" data-section="section4" bindtap="toggleSection">
-      <text class="card-title" style="margin-bottom:0">&#x1F697; 停车位</text>
+      <view class="section-title-row">
+        <view class="section-badge {{hasParkingSpace ? 'badge-filled' : ''}}">{{hasParkingSpace ? '✓' : '4'}}</view>
+        <text class="card-title" style="margin-bottom:0">停车位</text>
+      </view>
       <text class="section-arrow">{{collapsedMap.section4 ? '&#x25B6;' : '&#x25BC;'}}</text>
     </view>
     <view class="section-body" hidden="{{collapsedMap.section4}}">
@@ -130,8 +154,11 @@
           </view>
           <view class="form-col">
             <text class="form-label">车位价格/月租（元）</text>
-            <input class="form-input" type="digit" value="{{parkingPrice || ''}}"
-                   data-field="parkingPrice" bindinput="onNumberInput" placeholder="产权填总价，租赁填月租" />
+            <view class="input-prefix-wrap">
+              <text class="input-prefix">¥</text>
+              <input class="form-input input-with-prefix" type="digit" value="{{parkingPrice || ''}}"
+                     data-field="parkingPrice" bindinput="onInputNumber" placeholder="产权填总价，租赁填月租" />
+            </view>
           </view>
         </view>
       </view>
@@ -140,15 +167,21 @@
 
   <view class="card">
     <view class="section-header" data-section="section5" bindtap="toggleSection">
-      <text class="card-title" style="margin-bottom:0">&#x1F4CA; 成本估算参数</text>
+      <view class="section-title-row">
+        <view class="section-badge">{{'5'}}</view>
+        <text class="card-title" style="margin-bottom:0">成本估算参数</text>
+      </view>
       <text class="section-arrow">{{collapsedMap.section5 ? '&#x25B6;' : '&#x25BC;'}}</text>
     </view>
     <view class="section-body" hidden="{{collapsedMap.section5}}">
       <view class="form-row">
         <view class="form-col">
           <text class="form-label">物业费（元/㎡/月）</text>
-          <input class="form-input" type="digit" value="{{propertyFee || ''}}"
-                 data-field="propertyFee" bindinput="onNumberInput" placeholder="2.5" />
+          <view class="input-prefix-wrap">
+            <text class="input-prefix">¥</text>
+            <input class="form-input input-with-prefix" type="digit" value="{{propertyFee || ''}}"
+                   data-field="propertyFee" bindinput="onInputNumber" placeholder="2.5" />
+          </view>
         </view>
         <view class="form-col">
           <text class="form-label">持有年限</text>
@@ -167,7 +200,10 @@
 
   <view class="card">
     <view class="section-header" data-section="section6" bindtap="toggleSection">
-      <text class="card-title" style="margin-bottom:0">&#x1F687; 交通配套</text>
+      <view class="section-title-row">
+        <view class="section-badge">{{'6'}}</view>
+        <text class="card-title" style="margin-bottom:0">交通配套</text>
+      </view>
       <text class="section-arrow">{{collapsedMap.section6 ? '&#x25B6;' : '&#x25BC;'}}</text>
     </view>
     <view class="section-body" hidden="{{collapsedMap.section6}}">
@@ -193,7 +229,10 @@
 
   <view class="card">
     <view class="section-header" data-section="section7" bindtap="toggleSection">
-      <text class="card-title" style="margin-bottom:0">&#x1F393; 教育配套</text>
+      <view class="section-title-row">
+        <view class="section-badge">{{'7'}}</view>
+        <text class="card-title" style="margin-bottom:0">教育配套</text>
+      </view>
       <text class="section-arrow">{{collapsedMap.section7 ? '&#x25B6;' : '&#x25BC;'}}</text>
     </view>
     <view class="section-body" hidden="{{collapsedMap.section7}}">
@@ -227,7 +266,10 @@
 
   <view class="card">
     <view class="section-header" data-section="section8" bindtap="toggleSection">
-      <text class="card-title" style="margin-bottom:0">&#x1F6D2; 商业配套</text>
+      <view class="section-title-row">
+        <view class="section-badge">{{'8'}}</view>
+        <text class="card-title" style="margin-bottom:0">商业配套</text>
+      </view>
       <text class="section-arrow">{{collapsedMap.section8 ? '&#x25B6;' : '&#x25BC;'}}</text>
     </view>
     <view class="section-body" hidden="{{collapsedMap.section8}}">
@@ -252,7 +294,10 @@
 
   <view class="card">
     <view class="section-header" data-section="section9" bindtap="toggleSection">
-      <text class="card-title" style="margin-bottom:0">&#x1F3E5; 医疗配套</text>
+      <view class="section-title-row">
+        <view class="section-badge">{{'9'}}</view>
+        <text class="card-title" style="margin-bottom:0">医疗配套</text>
+      </view>
       <text class="section-arrow">{{collapsedMap.section9 ? '&#x25B6;' : '&#x25BC;'}}</text>
     </view>
     <view class="section-body" hidden="{{collapsedMap.section9}}">
@@ -274,7 +319,10 @@
 
   <view class="card">
     <view class="section-header" data-section="section10" bindtap="toggleSection">
-      <text class="card-title" style="margin-bottom:0">&#x1F333; 自然环境</text>
+      <view class="section-title-row">
+        <view class="section-badge">{{'10'}}</view>
+        <text class="card-title" style="margin-bottom:0">自然环境</text>
+      </view>
       <text class="section-arrow">{{collapsedMap.section10 ? '&#x25B6;' : '&#x25BC;'}}</text>
     </view>
     <view class="section-body" hidden="{{collapsedMap.section10}}">
@@ -296,7 +344,10 @@
 
   <view class="card">
     <view class="section-header" data-section="section11" bindtap="toggleSection">
-      <text class="card-title" style="margin-bottom:0">&#x26A0;&#xFE0F; 硬伤因素</text>
+      <view class="section-title-row">
+        <view class="section-badge {{selectedDefects.length > 0 ? 'badge-warn' : ''}}">{{selectedDefects.length > 0 ? '!' : '11'}}</view>
+        <text class="card-title" style="margin-bottom:0">硬伤因素</text>
+      </view>
       <text class="section-arrow">{{collapsedMap.section11 ? '&#x25B6;' : '&#x25BC;'}}</text>
     </view>
     <view class="section-body" hidden="{{collapsedMap.section11}}">
@@ -311,6 +362,8 @@
     </view>
   </view>
 
-  <view class="btn-primary" bindtap="submit">开始测算分析</view>
+  <view class="btn-quick-fill" bindtap="quickFill">快速填充示例（杭州·西湖区·申花）</view>
+
+  <view class="btn-submit {{!district || !area || (!marketPrice && !monthlyRent) ? 'btn-disabled' : ''}}" bindtap="submit">开始测算 →</view>
   <view class="safe-bottom"></view>
 </view>

@@ -7,6 +7,9 @@ declare const console: {
   info(...args: unknown[]): void;
 };
 
+declare function setTimeout(callback: (...args: unknown[]) => void, ms: number, ...args: unknown[]): number;
+declare function clearTimeout(handle: number): void;
+
 declare namespace WechatMiniprogram {
   interface CustomEvent {
     currentTarget: { dataset: Record<string, string | number> };

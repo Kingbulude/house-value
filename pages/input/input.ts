@@ -48,6 +48,8 @@ function makeDefectFlags(): Record<string, boolean> {
 
 Page({
   data: {
+    loading: false,
+
     collapsedMap: {
       section1: false,
       section2: false,
@@ -215,6 +217,19 @@ Page({
     this.setData({ [field]: isNaN(num) ? 0 : num });
   },
 
+  onInputNumber(e: any) {
+    const field = e.currentTarget.dataset.field;
+    if (!field) return;
+    const raw = e.detail.value;
+    if (raw === '' || raw === null || raw === undefined) {
+      this.setData({ [field]: 0 });
+      return;
+    }
+    const cleaned = raw.replace(/[^\d.]/g, '');
+    const num = parseFloat(cleaned);
+    this.setData({ [field]: isNaN(num) ? 0 : num });
+  },
+
   onDistrictChange(e: any) {
     const index = Number(e.detail.value);
     const district = DISTRICT_LIST[index];
@@ -223,8 +238,8 @@ Page({
       districtIndex: index,
       district,
       bdList,
-      bdIndex: -1,
-      businessDistrict: '',
+      bdIndex: bdList.length > 0 ? 0 : -1,
+      businessDistrict: bdList.length > 0 ? bdList[0] : '',
     });
   },
 
@@ -280,32 +295,105 @@ Page({
     this.setData({ communityName: name });
     if (!name) return;
 
-    const match = matchCommunity(name);
-    if (match) {
-      const districtIndex = DISTRICT_LIST.indexOf(match.district);
-      const bdList = DISTRICT_BD_MAP[match.district] || [];
-      const bdIndex = bdList.indexOf(match.businessDistrict);
-      this.setData({
-        district: match.district,
-        districtIndex,
-        bdList,
-        businessDistrict: match.businessDistrict,
-        bdIndex,
-      });
-      wx.showToast({ title: '已匹配：' + match.district + '·' + match.businessDistrict, icon: 'none' });
-    }
+    this.setData({ loading: true });
+    setTimeout(() => {
+      const match = matchCommunity(name);
+      if (match) {
+        const districtIndex = DISTRICT_LIST.indexOf(match.district);
+        const bdList = DISTRICT_BD_MAP[match.district] || [];
+        const bdIndex = bdList.indexOf(match.businessDistrict);
+        this.setData({
+          district: match.district,
+          districtIndex,
+          bdList,
+          businessDistrict: match.businessDistrict,
+          bdIndex,
+          loading: false,
+        });
+        wx.showToast({ title: '已匹配：' + match.district + '·' + match.businessDistrict, icon: 'none' });
+      } else {
+        this.setData({ loading: false });
+      }
 
-    const defectMatch = matchCommunityDefects(name);
-    if (defectMatch && defectMatch.defects && defectMatch.defects.length > 0) {
-      const defectFlags = { ...this.data.defectFlags };
-      defectMatch.defects.forEach((defectName: string) => {
-        const key = DEFECT_NAME_TO_KEY[defectName];
-        if (key) defectFlags[key] = true;
-      });
-      const selectedDefects = Object.keys(defectFlags).filter(k => defectFlags[k]);
-      this.setData({ defectFlags, selectedDefects });
-      wx.showToast({ title: '已识别硬伤：' + defectMatch.defects.join('、'), icon: 'none', duration: 3000 });
-    }
+      const defectMatch = matchCommunityDefects(name);
+      if (defectMatch && defectMatch.defects && defectMatch.defects.length > 0) {
+        const defectFlags = { ...this.data.defectFlags };
+        defectMatch.defects.forEach((defectName: string) => {
+          const key = DEFECT_NAME_TO_KEY[defectName];
+          if (key) defectFlags[key] = true;
+        });
+        const selectedDefects = Object.keys(defectFlags).filter(k => defectFlags[k]);
+        this.setData({ defectFlags, selectedDefects });
+        wx.showToast({ title: '已识别硬伤：' + defectMatch.defects.join('、'), icon: 'none', duration: 3000 });
+      }
+    }, 300);
+  },
+
+  quickFill() {
+    const district = '西湖区';
+    const bdList = DISTRICT_BD_MAP[district] || [];
+    const businessDistrict = '申花';
+    const bdIndex = bdList.indexOf(businessDistrict);
+
+    this.setData({
+      district,
+      districtIndex: DISTRICT_LIST.indexOf(district),
+      bdList,
+      businessDistrict,
+      bdIndex: bdIndex >= 0 ? bdIndex : 0,
+      communityName: '绿城沁园',
+      area: 89,
+      orientation: '南北通透',
+      orientationIndex: 0,
+      floor: 15,
+      totalFloors: 18,
+      decoration: '精装修',
+      decorationIndex: 1,
+      buildingAge: 5,
+      hasElevator: true,
+      elevatorIndex: 0,
+      buildingPosition: '好位置',
+      buildingPositionIndex: 1,
+      marketPrice: 45000,
+      monthlyRent: 5500,
+      hasParkingSpace: true,
+      parkingType: '产权',
+      parkingTypeIndex: 0,
+      parkingPrice: 30,
+      propertyFee: 3.2,
+      holdingYears: 5,
+      riskFreeRate: 3.5,
+      metroDistance: 300,
+      metroLines: 2,
+      busRoutes: 12,
+      kindergarten: '申花实验幼儿园',
+      primarySchool: '申花小学',
+      middleSchool: '',
+      highSchool: '',
+      mallCount: 2,
+      restaurantCount: 20,
+      hasMarket: true,
+      hasTier3Hospital: false,
+      hospitalDistance: 0,
+      hasCommunityHospital: true,
+      hasPark: true,
+      parkDistance: 200,
+      hasWater: false,
+      collapsedMap: {
+        section1: false,
+        section2: false,
+        section3: false,
+        section4: true,
+        section5: true,
+        section6: true,
+        section7: true,
+        section8: true,
+        section9: true,
+        section10: true,
+        section11: true,
+      },
+    });
+    wx.showToast({ title: '已填充示例数据', icon: 'none' });
   },
 
   validate(): string | null {
@@ -323,47 +411,51 @@ Page({
       return;
     }
 
-    const d = this.data;
-    const input: ValuationInput = {
-      district: d.district,
-      businessDistrict: d.businessDistrict,
-      communityName: d.communityName,
-      area: d.area,
-      floor: d.floor,
-      totalFloors: d.totalFloors,
-      orientation: d.orientation,
-      decoration: d.decoration,
-      buildingAge: d.buildingAge,
-      hasElevator: d.hasElevator,
-      marketPrice: d.marketPrice,
-      monthlyRent: d.monthlyRent,
-      metroDistance: d.metroDistance || null,
-      metroLines: d.metroLines,
-      busRoutes: d.busRoutes,
-      kindergarten: d.kindergarten,
-      primarySchool: d.primarySchool,
-      middleSchool: d.middleSchool,
-      highSchool: d.highSchool,
-      mallCount: d.mallCount,
-      hasMarket: d.hasMarket,
-      restaurantCount: d.restaurantCount,
-      hasTier3Hospital: d.hasTier3Hospital,
-      hospitalDistance: d.hospitalDistance || null,
-      hasCommunityHospital: d.hasCommunityHospital,
-      hasPark: d.hasPark,
-      parkDistance: d.parkDistance || null,
-      hasWater: d.hasWater,
-      buildingPosition: d.buildingPosition,
-      selectedDefects: d.selectedDefects,
-      hasParkingSpace: d.hasParkingSpace,
-      parkingPrice: d.parkingPrice,
-      parkingType: d.parkingType,
-      propertyFee: d.propertyFee,
-      holdingYears: d.holdingYears,
-      riskFreeRate: d.riskFreeRate,
-    };
+    this.setData({ loading: true });
+    setTimeout(() => {
+      const d = this.data;
+      const input: ValuationInput = {
+        district: d.district,
+        businessDistrict: d.businessDistrict,
+        communityName: d.communityName,
+        area: d.area,
+        floor: d.floor,
+        totalFloors: d.totalFloors,
+        orientation: d.orientation,
+        decoration: d.decoration,
+        buildingAge: d.buildingAge,
+        hasElevator: d.hasElevator,
+        marketPrice: d.marketPrice,
+        monthlyRent: d.monthlyRent,
+        metroDistance: d.metroDistance || null,
+        metroLines: d.metroLines,
+        busRoutes: d.busRoutes,
+        kindergarten: d.kindergarten,
+        primarySchool: d.primarySchool,
+        middleSchool: d.middleSchool,
+        highSchool: d.highSchool,
+        mallCount: d.mallCount,
+        hasMarket: d.hasMarket,
+        restaurantCount: d.restaurantCount,
+        hasTier3Hospital: d.hasTier3Hospital,
+        hospitalDistance: d.hospitalDistance || null,
+        hasCommunityHospital: d.hasCommunityHospital,
+        hasPark: d.hasPark,
+        parkDistance: d.parkDistance || null,
+        hasWater: d.hasWater,
+        buildingPosition: d.buildingPosition,
+        selectedDefects: d.selectedDefects,
+        hasParkingSpace: d.hasParkingSpace,
+        parkingPrice: d.parkingPrice,
+        parkingType: d.parkingType,
+        propertyFee: d.propertyFee,
+        holdingYears: d.holdingYears,
+        riskFreeRate: d.riskFreeRate,
+      };
 
-    wx.setStorageSync('valuationInput', input);
-    wx.navigateTo({ url: '/pages/result/result' });
+      wx.setStorageSync('valuationInput', input);
+      wx.navigateTo({ url: '/pages/result/result' });
+      this.setData({ loading: false });
+    }, 400);
   },
 });
