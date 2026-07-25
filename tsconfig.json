@@ -6,7 +6,7 @@
     "noImplicitThis": false,
     "noEmit": true,
     "skipLibCheck": true,
-    "lib": ["ES2016", "DOM"],
+    "lib": ["ES2016"],
     "typeRoots": ["./types"]
   },
   "include": [

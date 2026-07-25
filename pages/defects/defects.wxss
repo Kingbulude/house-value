@@ -1,0 +1,166 @@
+.page-header {
+  text-align: center;
+  padding: 40rpx 0 20rpx;
+}
+
+.header-title {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10rpx;
+}
+
+.header-subtitle {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+}
+
+.filter-bar {
+  white-space: nowrap;
+  padding: 20rpx 0;
+}
+
+.filter-tab {
+  display: inline-block;
+  padding: 12rpx 28rpx;
+  margin-right: 16rpx;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  background: var(--card-bg);
+  box-shadow: 0 1rpx 6rpx rgba(0, 0, 0, 0.04);
+}
+
+.filter-tab.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+.defect-list {
+  padding-bottom: 20rpx;
+}
+
+.defect-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.defect-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20rpx;
+}
+
+.severity-icon {
+  font-size: 36rpx;
+  flex-shrink: 0;
+  margin-top: 4rpx;
+}
+
+.defect-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.defect-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6rpx;
+}
+
+.defect-desc {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.penalty-badge {
+  flex-shrink: 0;
+  padding: 6rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  font-weight: 700;
+}
+
+.penalty-badge.severe {
+  background: rgba(220, 38, 38, 0.1);
+  color: #dc2626;
+}
+
+.penalty-badge.medium {
+  background: rgba(245, 158, 11, 0.1);
+  color: #d97706;
+}
+
+.communities-section {
+  margin-top: 20rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid var(--border);
+}
+
+.communities-label {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+  margin-bottom: 12rpx;
+}
+
+.community-tags {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+
+.community-tag {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 12rpx 16rpx;
+  background: #f8f9fa;
+  border-radius: 8rpx;
+}
+
+.comm-name {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.comm-district {
+  font-size: 22rpx;
+  color: var(--text-secondary);
+}
+
+.comm-level {
+  margin-left: auto;
+  font-size: 20rpx;
+  font-weight: 500;
+  padding: 2rpx 10rpx;
+  border-radius: 4rpx;
+}
+
+.comm-level.level-high {
+  color: #dc2626;
+  background: rgba(220, 38, 38, 0.08);
+}
+
+.comm-level.level-medium {
+  color: #d97706;
+  background: rgba(245, 158, 11, 0.08);
+}
+
+.comm-level.level-low {
+  color: #059669;
+  background: rgba(5, 150, 105, 0.08);
+}
+
+.disclaimer {
+  text-align: center;
+  font-size: 22rpx;
+  color: #bbb;
+  padding: 30rpx 40rpx 20rpx;
+  line-height: 1.5;
+}

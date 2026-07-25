@@ -2,7 +2,10 @@
   "pages": [
     "pages/index/index",
     "pages/input/input",
-    "pages/result/result"
+    "pages/result/result",
+    "pages/history/history",
+    "pages/defects/defects",
+    "pages/about/about"
   ],
   "window": {
     "backgroundTextStyle": "light",

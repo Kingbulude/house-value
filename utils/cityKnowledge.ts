@@ -278,65 +278,65 @@ export const hangzhouDistricts: Record<string, DistrictInfo> = {
 };
 
 // 杭州重点商圈/板块等级
-export const hangzhouBusinessDistricts: Record<string, { level: string; coefficient: number }> = {
+export const hangzhouBusinessDistricts: Record<string, { level: string; coefficient: number; basePrice: number }> = {
   // S级：城市顶级核心
-  '钱江新城': { level: 'S', coefficient: 1.25 },
-  '钱江世纪城': { level: 'S', coefficient: 1.25 },
-  '湖滨': { level: 'S', coefficient: 1.25 },
-  '武林': { level: 'S', coefficient: 1.22 },
-  '未来科技城': { level: 'S', coefficient: 1.20 },
-  '奥体': { level: 'S', coefficient: 1.20 },
+  '钱江新城': { level: 'S', coefficient: 1.25, basePrice: 70000 },
+  '钱江世纪城': { level: 'S', coefficient: 1.25, basePrice: 65000 },
+  '湖滨': { level: 'S', coefficient: 1.25, basePrice: 68000 },
+  '武林': { level: 'S', coefficient: 1.22, basePrice: 65000 },
+  '未来科技城': { level: 'S', coefficient: 1.20, basePrice: 45000 },
+  '奥体': { level: 'S', coefficient: 1.20, basePrice: 60000 },
 
   // A级：城市核心
-  '申花': { level: 'A', coefficient: 1.18 },
-  '蒋村': { level: 'A', coefficient: 1.15 },
-  '望江': { level: 'A', coefficient: 1.15 },
-  '南星桥': { level: 'A', coefficient: 1.15 },
-  '城东新城': { level: 'A', coefficient: 1.12 },
-  '艮北新城': { level: 'A', coefficient: 1.12 },
-  '亚运村': { level: 'A', coefficient: 1.15 },
-  '云城': { level: 'A', coefficient: 1.15 },
-  '滨江区政府': { level: 'A', coefficient: 1.18 },
-  '物联网小镇': { level: 'A', coefficient: 1.15 },
+  '申花': { level: 'A', coefficient: 1.18, basePrice: 55000 },
+  '蒋村': { level: 'A', coefficient: 1.15, basePrice: 50000 },
+  '望江': { level: 'A', coefficient: 1.15, basePrice: 58000 },
+  '南星桥': { level: 'A', coefficient: 1.15, basePrice: 55000 },
+  '城东新城': { level: 'A', coefficient: 1.12, basePrice: 48000 },
+  '艮北新城': { level: 'A', coefficient: 1.12, basePrice: 42000 },
+  '亚运村': { level: 'A', coefficient: 1.15, basePrice: 50000 },
+  '云城': { level: 'A', coefficient: 1.15, basePrice: 35000 },
+  '滨江区政府': { level: 'A', coefficient: 1.18, basePrice: 52000 },
+  '物联网小镇': { level: 'A', coefficient: 1.15, basePrice: 48000 },
 
   // B级：成熟板块
-  '三墩': { level: 'B', coefficient: 1.08 },
-  '运河新城': { level: 'B', coefficient: 1.08 },
-  '祥符': { level: 'B', coefficient: 1.05 },
-  '桃源': { level: 'B', coefficient: 1.05 },
-  '丁桥': { level: 'B', coefficient: 1.05 },
-  '笕桥': { level: 'B', coefficient: 1.05 },
-  '乔司': { level: 'B', coefficient: 1.05 },
-  '崇贤': { level: 'B', coefficient: 1.05 },
-  '勾庄': { level: 'B', coefficient: 1.05 },
-  '市北': { level: 'B', coefficient: 1.08 },
-  '萧山科技城': { level: 'B', coefficient: 1.05 },
-  '良渚': { level: 'B', coefficient: 1.05 },
-  '闲林': { level: 'B', coefficient: 1.03 },
-  '老余杭': { level: 'B', coefficient: 1.03 },
-  '临平新城': { level: 'B', coefficient: 1.05 },
-  '东湖新城': { level: 'B', coefficient: 1.03 },
+  '三墩': { level: 'B', coefficient: 1.08, basePrice: 38000 },
+  '运河新城': { level: 'B', coefficient: 1.08, basePrice: 36000 },
+  '祥符': { level: 'B', coefficient: 1.05, basePrice: 35000 },
+  '桃源': { level: 'B', coefficient: 1.05, basePrice: 32000 },
+  '丁桥': { level: 'B', coefficient: 1.05, basePrice: 30000 },
+  '笕桥': { level: 'B', coefficient: 1.05, basePrice: 33000 },
+  '乔司': { level: 'B', coefficient: 1.05, basePrice: 28000 },
+  '崇贤': { level: 'B', coefficient: 1.05, basePrice: 25000 },
+  '勾庄': { level: 'B', coefficient: 1.05, basePrice: 26000 },
+  '市北': { level: 'B', coefficient: 1.08, basePrice: 38000 },
+  '萧山科技城': { level: 'B', coefficient: 1.05, basePrice: 32000 },
+  '良渚': { level: 'B', coefficient: 1.05, basePrice: 22000 },
+  '闲林': { level: 'B', coefficient: 1.03, basePrice: 20000 },
+  '老余杭': { level: 'B', coefficient: 1.03, basePrice: 19000 },
+  '临平新城': { level: 'B', coefficient: 1.05, basePrice: 28000 },
+  '东湖新城': { level: 'B', coefficient: 1.03, basePrice: 25000 },
 
   // C级：发展板块
-  '瓶窑': { level: 'C', coefficient: 1.00 },
-  '仁和': { level: 'C', coefficient: 1.00 },
-  '星桥': { level: 'C', coefficient: 1.00 },
-  '塘栖': { level: 'C', coefficient: 0.98 },
-  '义桥': { level: 'C', coefficient: 0.98 },
-  '临浦': { level: 'C', coefficient: 0.98 },
-  '瓜沥': { level: 'C', coefficient: 0.98 },
-  '新街': { level: 'C', coefficient: 1.00 },
-  '新塘': { level: 'C', coefficient: 1.00 },
-  '大江东': { level: 'C', coefficient: 1.00 },
-  '河庄': { level: 'C', coefficient: 1.00 },
-  '义蓬': { level: 'C', coefficient: 1.00 },
+  '瓶窑': { level: 'C', coefficient: 1.00, basePrice: 18000 },
+  '仁和': { level: 'C', coefficient: 1.00, basePrice: 17000 },
+  '星桥': { level: 'C', coefficient: 1.00, basePrice: 22000 },
+  '塘栖': { level: 'C', coefficient: 0.98, basePrice: 15000 },
+  '义桥': { level: 'C', coefficient: 0.98, basePrice: 20000 },
+  '临浦': { level: 'C', coefficient: 0.98, basePrice: 16000 },
+  '瓜沥': { level: 'C', coefficient: 0.98, basePrice: 14000 },
+  '新街': { level: 'C', coefficient: 1.00, basePrice: 22000 },
+  '新塘': { level: 'C', coefficient: 1.00, basePrice: 20000 },
+  '大江东': { level: 'C', coefficient: 1.00, basePrice: 16000 },
+  '河庄': { level: 'C', coefficient: 1.00, basePrice: 15000 },
+  '义蓬': { level: 'C', coefficient: 1.00, basePrice: 15000 },
 
   // D级：远郊
-  '富阳城区': { level: 'D', coefficient: 0.95 },
-  '银湖': { level: 'D', coefficient: 0.95 },
-  '东洲': { level: 'D', coefficient: 0.92 },
-  '临安城区': { level: 'D', coefficient: 0.90 },
-  '青山湖': { level: 'D', coefficient: 0.88 },
+  '富阳城区': { level: 'D', coefficient: 0.95, basePrice: 18000 },
+  '银湖': { level: 'D', coefficient: 0.95, basePrice: 16000 },
+  '东洲': { level: 'D', coefficient: 0.92, basePrice: 14000 },
+  '临安城区': { level: 'D', coefficient: 0.90, basePrice: 13000 },
+  '青山湖': { level: 'D', coefficient: 0.88, basePrice: 12000 },
 };
 
 // 杭州重点学校等级（用于学区溢价计算）
@@ -555,6 +555,331 @@ export function getCapRateByDistrict(districtName: string): number {
   }
 }
 
+// 杭州重点学校详细数据（用于学区匹配）
+export interface SchoolInfo {
+  name: string;
+  type: 'kindergarten' | 'primary' | 'middle' | 'high';
+  level: '顶尖' | '优质' | '普通';
+  premium: number;
+}
+
+export const SCHOOLS: Record<string, SchoolInfo> = {
+  // 小学
+  '学军小学-primary': { name: '学军小学', type: 'primary', level: '顶尖', premium: 0.35 },
+  '文三街小学-primary': { name: '文三街小学', type: 'primary', level: '顶尖', premium: 0.35 },
+  '天长小学-primary': { name: '天长小学', type: 'primary', level: '顶尖', premium: 0.35 },
+  '胜利小学-primary': { name: '胜利小学', type: 'primary', level: '顶尖', premium: 0.35 },
+  '保俶塔实验学校-primary': { name: '保俶塔实验学校', type: 'primary', level: '优质', premium: 0.25 },
+  '采荷一小-primary': { name: '采荷一小', type: 'primary', level: '优质', premium: 0.25 },
+  '江南实验学校-primary': { name: '江南实验学校', type: 'primary', level: '优质', premium: 0.25 },
+  '崇文小学-primary': { name: '崇文小学', type: 'primary', level: '优质', premium: 0.25 },
+  '育才外国语-primary': { name: '育才外国语', type: 'primary', level: '普通', premium: 0.15 },
+  '濮家小学-primary': { name: '濮家小学', type: 'primary', level: '普通', premium: 0.10 },
+  '丁兰小学-primary': { name: '丁兰小学', type: 'primary', level: '普通', premium: 0.10 },
+  // 初中
+  '文澜中学-middle': { name: '文澜中学', type: 'middle', level: '顶尖', premium: 0.35 },
+  '建兰中学-middle': { name: '建兰中学', type: 'middle', level: '顶尖', premium: 0.35 },
+  '公益中学-middle': { name: '公益中学', type: 'middle', level: '顶尖', premium: 0.35 },
+  '采荷实验-middle': { name: '采荷实验', type: 'middle', level: '优质', premium: 0.25 },
+  '江南实验学校-middle': { name: '江南实验学校', type: 'middle', level: '优质', premium: 0.25 },
+  '杭二中白马湖学校-middle': { name: '杭二中白马湖学校', type: 'middle', level: '优质', premium: 0.25 },
+  '崇文世纪城实验学校-middle': { name: '崇文世纪城实验学校', type: 'middle', level: '优质', premium: 0.25 },
+  '天元公学-middle': { name: '天元公学', type: 'middle', level: '优质', premium: 0.25 },
+  '杭师大附属学校-middle': { name: '杭师大附属学校', type: 'middle', level: '优质', premium: 0.20 },
+  // 高中
+  '杭州第二中学-high': { name: '杭州第二中学', type: 'high', level: '顶尖', premium: 0.20 },
+  '杭州学军中学-high': { name: '杭州学军中学', type: 'high', level: '顶尖', premium: 0.20 },
+  '杭州高级中学-high': { name: '杭州高级中学', type: 'high', level: '顶尖', premium: 0.20 },
+  '杭州第四中学-high': { name: '杭州第四中学', type: 'high', level: '普通', premium: 0.10 },
+  '萧山中学-high': { name: '萧山中学', type: 'high', level: '普通', premium: 0.10 },
+  '余杭第一中学-high': { name: '余杭第一中学', type: 'high', level: '普通', premium: 0.10 },
+  '临安中学-high': { name: '临安中学', type: 'high', level: '普通', premium: 0.05 },
+  '富阳中学-high': { name: '富阳中学', type: 'high', level: '普通', premium: 0.05 },
+  // 幼儿园
+  '省府机关幼儿园-kindergarten': { name: '省府机关幼儿园', type: 'kindergarten', level: '优质', premium: 0.10 },
+  '杭州市机关幼儿园-kindergarten': { name: '杭州市机关幼儿园', type: 'kindergarten', level: '优质', premium: 0.10 },
+  '西湖区文三路幼儿园-kindergarten': { name: '西湖区文三路幼儿园', type: 'kindergarten', level: '优质', premium: 0.08 },
+};
+
+// 区域-商圈映射
+export const DISTRICT_BD_MAP: Record<string, string[]> = {
+  '上城区': ['钱江新城', '湖滨', '望江', '南星桥', '城东新城', '艮北新城'],
+  '拱墅区': ['武林', '运河新城', '祥符', '桃源', '申花'],
+  '西湖区': ['蒋村', '三墩'],
+  '滨江区': ['滨江区政府', '物联网小镇'],
+  '萧山区': ['钱江世纪城', '奥体', '亚运村', '市北', '萧山科技城', '义桥', '临浦', '瓜沥', '新街', '新塘'],
+  '余杭区': ['未来科技城', '云城', '良渚', '闲林', '老余杭', '瓶窑', '仁和'],
+  '临平区': ['临平新城', '东湖新城', '乔司', '崇贤', '勾庄', '星桥', '塘栖'],
+  '钱塘区': ['大江东', '河庄', '义蓬'],
+  '富阳区': ['富阳城区', '银湖', '东洲'],
+  '临安区': ['临安城区', '青山湖'],
+};
+
+// 社区-商圈映射（区域-商圈-小区列表）
+export const COMMUNITY_MAPPING: Record<string, Record<string, string[]>> = {
+  '西湖区': {
+    '文教区': ['学军小学本部', '文三街小学', '文一街小学', '文澜中学', '保俶塔实验', '十三中', '耀江文鼎苑', '西城年华', '文苑小区', '翠苑四区'],
+    '蒋村': ['绿城西溪诚园', '万科西庐', '绿城西溪融庄', '融创河滨之城', '中海西溪华府', '金地自在城', '滨江紫金府', '西溪诚明苑', '西溪诚园正信苑'],
+    '申花': ['绿城沁园', '融创宜和园', '九龙仓碧玺', '滨江锦绣之城', '建发养云静舍', '华润幸福里', '绿城晓风印月', '滨江和品', '金茂府', '绿城慧园', '欣盛东方福邸', '保利香槟国际', '滨江万家花城', '融信蓝孔雀', '龙湖天钜', '九龙仓珑玺', '星瓒颂锦府', '馥香园', '杭樾润府', '揽云锦绣里', '杭著瑧邸', '霞映锦绣里', '嘉映锦绣里', '滨杭传麒府', '绿城锦绣兰庭', '融信公馆ARC'],
+    '三墩': ['万科融信西雅图', '龙湖水晶郦城', '越秀星汇城', '阳光城未来悦', '金地格林格林', '融创金成臻蓝府', '中海紫藤苑', '天阳美林湾', '都市水乡'],
+    '之江': ['恒大水晶国际广场', '中海云宸', '宋城', '之江九里', '之江家园', '九溪新村', '民航小区', '中天九溪诚品', '融科瑷骊山', '之江一号'],
+    '留下': ['和家园', '西溪里', '翡翠城', '绿城桃花源', '西溪山庄', '西溪谷', '龙门坎村'],
+    '转塘': ['之江银泰城', '中天九溪诚品', '融科瑷骊山', '龙坞茶镇', '象山国际'],
+  },
+  '上城区': {
+    '钱江新城': ['绿城蓝色钱江', '金色海岸', '阳光海岸', '万象城悦府', '绿城留香园', '融创涌清府', '信达滨江壹品', '绿城江河汇', '杭州壹号院', '绿城春江花月', '金基晓庐', '阳光国际', '信达外滩壹号', '望江府', '融创侯潮府', '滨江金茂府', '新希望滨江锦粼府', '望江新城'],
+    '钱江新城二期': ['芝澜月华', '潮映万象轩', '栖江揽月轩', '江月望云', '潮观揽月轩', '天澜海岸', '观翠揽月', '潮语映月轩', '玉澜月华'],
+    '湖滨': ['湖滨银泰', '龙翔桥', '涌金门', '东坡路小区'],
+    '望江': ['望江府', '融创侯潮府', '滨江金茂府', '望江新城', '新希望滨江锦粼府', '绿城望江府'],
+    '南星桥': ['绿城春江花月', '金基晓庐', '阳光国际', '绿城之江一号', '信达外滩壹号', '金色海岸', '阳光海岸', '蓝色钱江'],
+    '城东新城': ['万科大家世纪之光', '融创玖樟台', '滨江金色黎明', '龙湖天曜', '招商武林郡', '越秀亲爱里', '滨江御虹府', '新中宇维萨', '德信东望', '金色黎明'],
+    '艮北新城': ['绿城杨柳郡', '招商武林郡', '越秀亲爱里', '滨江御虹府', '翠揽云境', '万科潮起东方', '绿城潮听明月'],
+    '丁兰': ['龙湖名景台', '远洋香奈', '万科城', '融信澜天', '郡枫绿园'],
+  },
+  '拱墅区': {
+    '申花': ['绿城慧园', '欣盛东方福邸', '保利香槟国际', '滨江万家花城', '融信蓝孔雀', '龙湖天钜', '九龙仓珑玺', '绿城沁园', '融创宜和园', '九龙仓碧玺', '滨江锦绣之城', '建发养云静舍', '华润幸福里', '绿城晓风印月', '滨江和品', '星瓒颂锦府', '馥香园', '杭樾润府', '融信公馆ARC', '锦绣兰庭'],
+    '运河新城': ['融创金成臻蓝府', '绿都东澜府', '远洋心里', '德信大家运河云庄', '万科杭行道', '越秀星汇尚城', '融创瑷颐湾', '大家漾山府', '吉如家园'],
+    '祥符': ['万科杭行道', '越秀星汇尚城', '融创瑷颐湾', '大家漾山府', '滨江万家名城', '德信晓宸'],
+    '武林': ['武林壹号', '绿城兰园', '深蓝广场', '坤和中心', '杭州大厦', '杭州中心'],
+    '桃源': ['金辉贤林信步', '融创森与海', '绿都云和湖', '宋都香悦郡'],
+    '丁桥': ['龙湖名景台', '远洋香奈', '万科城', '融信澜天', '郡枫绿园'],
+    '东新': ['滨江万家星城', '世茂天宸', '东新园'],
+  },
+  '滨江区': {
+    '滨江区政府': ['东方郡', '江南实验学校', '绿城明月江南', '龙湖春江彼岸', '滨江金茂府', '中海寰宇天下', '信达中心|杭州壹号院', '寰宇天下', '钱塘春晓花园', '中兴花园'],
+    '奥体': ['杭州壹号院', '滨江金茂府', '寰宇天下', '时代奥城', '龙湖春江彼岸', '融创创世纪', '绿城桂语江南', '奥邸国际', '信达中心杭州壹号院'],
+    '物联网小镇': ['滨江江南之星', '融创江南壹号院', '保利东湾', '世茂之西湖', '龙湖春江天玺'],
+    '彩虹城': ['彩虹城', '水晶城', '绿城春江明月', '滨江宝龙城市广场', '银杏汇公寓', '银爵世纪', '江荣府'],
+    '长河': ['龙湖春江天玺', '绿城桂语江南', '融信保利创世纪', '春江彼岸'],
+    '浦沿': ['绿城晓风印月', '中海云宸', '绿城春来晴翠', '江荣府', '银爵世纪', '钱塘春晓花园', '中天官河锦庭'],
+    '西兴': ['江南实验学校', '钱塘春晓花园', '中兴花园', '官河锦庭'],
+  },
+  '余杭区': {
+    '未来科技城': [
+      '绿城西溪云庐', '融创金成未来海', '中南樾府', '阳光城未来悦MAX',
+      '新湖果岭', '绿城翡翠城', '万科溪望', '合景天峻',
+      '融创河滨之城', '富力西溪悦居', '绿城桃李春风',
+      '龙湖水晶郦城', '万科劝学里', '金成英特学府', '新城西溪逸境',
+      '西溪蓝海', '华夏四季', '融信澜天',
+      '中梁百悦城', '奥克斯缔逸城', '富力桃园', '和昌府',
+      '德信海德公园', '越秀景瑞悦见山', '龙湖天钜',
+      '阳光城翡丽海岸', '万科杭宸', '新城香悦公馆',
+      '融创云潮府', '建发云湖之城', '葛洲坝紫郡府', '宝龙旭辉城',
+      '中南未来里', '越秀维多利中心', '西溪永乐城', '西溪华东园',
+      '宏旺西溪阳光', '天都城', '广厦天都城', '香榭里', '天星苑',
+    ],
+    '云城': ['杭与城', '绿城云谷小镇', '万科天空之城', '融创城', '金成英特尔湾', '富力云庭雅居'],
+    '良渚': ['万科良渚文化村', '绿城桂语江南', '融信澜天', '和昌府', '德信海德公园', '越秀景瑞悦见山', '龙湖天钜', '杜甫新苑', '良渚新城', '越秀星汇城'],
+    '闲林': ['绿城桃源小镇', '雅居乐国际花园', '竹海水韵', '闲林山水', '东海闲湖城', '华元美林公馆', '融创金成未来海', '绿城翡翠城', '万科溪望', '西溪蓝海'],
+    '老余杭': ['中梁百悦城', '奥克斯缔逸城', '富力桃园', '佳源未来府', '瑞城花园', '通济小区'],
+    '五常': ['绿城西溪诚园', '万科西庐', '绿城西溪融庄', '融创河滨之城', '中海西溪华府', '万科溪望', '华元爱丁郡'],
+    '勾庄': ['绿城锦海棠', '万科杭宸', '新城香悦公馆', '德信海德公园', '越秀星汇城', '和萃揽悦园', '融信澜天', '万科未来城'],
+    '仓前': ['杭与城', '绿城云谷小镇', '万科天空之城', '融创城', '富力西溪悦居', '合景天峻'],
+  },
+  '临平区': {
+    '临平新城': ['绿城玉园', '万科未来城', '融创玖樟台', '龙湖天曜', '绿城春风十里', '华元欢乐城', '银泰城', '万宝城'],
+    '东湖新城': ['滨杭滨纷城', '众安理想湾', '绿城蓝庭', '赞成首府', '万宝城', '嘉丰万悦城'],
+    '星桥': ['龙湖春江天玺', '融信澜天', '绿城桂语江南', '广厦天都城', '香榭里', '天星苑'],
+    '乔司': ['万科未来城', '融创玖樟台', '绿城春风十里', '华元欢乐城'],
+    '崇贤': ['星合映', '光合映', '群贤府', '金航府', '祥生群贤府', '旭辉时代城'],
+    '仁和': ['仁和板块', '万科未来城'],
+  },
+  '萧山区': {
+    '奥体': ['融创创世纪', '绿城桂语江南', '滨江金茂府', '时代奥城', '龙湖春江彼岸', '寰宇天下', '杭州壹号院', '奥邸国际'],
+    '亚运村': ['华润亚奥城', '绿城桂冠东方', '融创融望之城', '滨江翡翠江南', '奥邸国际'],
+    '钱江世纪城': ['融创创世纪', '龙湖春江彼岸', '寰宇天下', '时代奥城', '世纪之光', '绿城桂语江南'],
+    '市北': ['龙湖春江天玺', '绿城桂语江南', '融信保利创世纪', '滨江御虹府', '滨江翡翠江南'],
+    '萧山科技城': ['融创江南壹号院', '保利东湾', '荣望轩'],
+    '湘湖': ['旭辉滨江东方悦府', '都会艺境', '融创江南壹号院'],
+    '新街': ['绿城桂语江南', '融信澜天', '融创玖樟台'],
+    '新塘': ['龙湖春江天玺', '融创玖樟台'],
+    '大江东': ['融创城', '绿城桂语江南'],
+    '南部卧城': ['奥印鸣翠府', '绿城桂语江南'],
+    '义桥': ['融创玖樟台'],
+    '闻堰': ['融创玖樟台'],
+    '瓜沥': ['融创城'],
+    '临浦': ['融创城'],
+  },
+};
+
+// 社区硬伤数据（社区级别的已知问题）
+export interface DefectCommunityInfo {
+  district: string;
+  businessDistrict: string;
+  defects: string[];
+  source: string;
+  level: 'high' | 'medium' | 'low';
+}
+
+export const DEFECT_COMMUNITIES: Record<string, DefectCommunityInfo> = {
+  '绿城春来晴翠': {
+    district: '滨江区',
+    businessDistrict: '浦沿',
+    defects: ['垃圾处理站', '公墓/殡仪馆'],
+    source: '东侧约1公里垃圾焚烧厂，400米浦沿陵园',
+    level: 'medium',
+  },
+  '中天官河锦庭': {
+    district: '滨江区',
+    businessDistrict: '滨江区政府',
+    defects: ['污水处理厂'],
+    source: '小区南面污水处理厂',
+    level: 'medium',
+  },
+  '旭辉滨江东方悦府': {
+    district: '萧山区',
+    businessDistrict: '湘湖',
+    defects: ['公墓/殡仪馆'],
+    source: '南侧500米西郊生态公墓，萧山最大公墓',
+    level: 'high',
+  },
+  '都会艺境': {
+    district: '萧山区',
+    businessDistrict: '湘湖',
+    defects: ['公墓/殡仪馆'],
+    source: '东侧临近公墓，东边套可见',
+    level: 'medium',
+  },
+  '世茂茂悦府': {
+    district: '上城区',
+    businessDistrict: '艮北新城',
+    defects: ['工厂污染'],
+    source: '外立面大面积脱落，200多户漏水，开发商停修',
+    level: 'high',
+  },
+  '宋都香悦郡': {
+    district: '拱墅区',
+    businessDistrict: '桃源',
+    defects: ['工厂污染'],
+    source: '真石漆外立面脱落严重，7号楼四面都有脱落，质检不合格',
+    level: 'high',
+  },
+  '吉如家园': {
+    district: '拱墅区',
+    businessDistrict: '运河新城',
+    defects: ['工厂污染'],
+    source: '回迁房，保温层老化脱落，墙面霉变渗水，维修资金缺口600万',
+    level: 'medium',
+  },
+  '九龙仓华发天荟': {
+    district: '拱墅区',
+    businessDistrict: '申花',
+    defects: ['工厂污染'],
+    source: '外立面问题投诉集中',
+    level: 'low',
+  },
+  '畅想江澜湾': {
+    district: '萧山区',
+    businessDistrict: '萧山科技城',
+    defects: ['垃圾处理站'],
+    source: '开发商填埋建筑垃圾，刺激性气味，绿化死亡',
+    level: 'high',
+  },
+  '荣望轩': {
+    district: '萧山区',
+    businessDistrict: '萧山科技城',
+    defects: ['高架/高速噪音', '主干道噪音'],
+    source: '临近地铁19号线知行路站，未做全封闭隔音，高层噪音严重',
+    level: 'medium',
+  },
+  '华元爱丁郡': {
+    district: '余杭区',
+    businessDistrict: '闲林',
+    defects: ['地势低洼易涝'],
+    source: '排水系统不完善，下雨天积水严重',
+    level: 'medium',
+  },
+  '九溪新村': {
+    district: '西湖区',
+    businessDistrict: '之江',
+    defects: ['地势低洼易涝'],
+    source: '九溪沿线，钱塘江水位7.0米以上易积水，2024年被淹',
+    level: 'high',
+  },
+  '民航小区': {
+    district: '西湖区',
+    businessDistrict: '之江',
+    defects: ['地势低洼易涝'],
+    source: '九溪社区低洼地带，老年人占比70-80%，易受内涝影响',
+    level: 'high',
+  },
+  '龙门坎村': {
+    district: '西湖区',
+    businessDistrict: '留下',
+    defects: ['地势低洼易涝'],
+    source: '三面环山Y形山坳，山洪和山体滑坡风险，1990年曾造成人员伤亡',
+    level: 'high',
+  },
+  '绿城锦海棠': {
+    district: '余杭区',
+    businessDistrict: '勾庄',
+    defects: ['主干道噪音'],
+    source: '南侧第一排临好运街主干道，噪音灰尘较大',
+    level: 'low',
+  },
+  '星合映': {
+    district: '临平区',
+    businessDistrict: '崇贤',
+    defects: ['工厂污染'],
+    source: '漏水和外立面脱落问题严峻，集体换物业后仍未解决',
+    level: 'medium',
+  },
+  '光合映': {
+    district: '临平区',
+    businessDistrict: '崇贤',
+    defects: ['工厂污染'],
+    source: '漏水和外立面脱落问题严峻，集体换物业后仍未解决',
+    level: 'medium',
+  },
+  '群贤府': {
+    district: '临平区',
+    businessDistrict: '崇贤',
+    defects: ['工厂污染'],
+    source: '漏水和外立面脱落问题严峻，集体换物业后仍未解决',
+    level: 'medium',
+  },
+  '金航府': {
+    district: '临平区',
+    businessDistrict: '崇贤',
+    defects: ['工厂污染'],
+    source: '漏水和外立面脱落问题严峻，集体换物业后仍未解决',
+    level: 'medium',
+  },
+  '郡枫绿园': {
+    district: '拱墅区',
+    businessDistrict: '丁桥',
+    defects: ['工厂污染'],
+    source: '外立面鼓包、漏水，室内发霉',
+    level: 'medium',
+  },
+};
+
+// 根据小区名匹配区域和商圈
+export function matchCommunity(communityName: string): { district: string; businessDistrict: string } | null {
+  if (!communityName) return null;
+  const name = communityName.trim();
+  for (const [district, districts] of Object.entries(COMMUNITY_MAPPING)) {
+    for (const [businessDistrict, communities] of Object.entries(districts)) {
+      if (communities.some(c => c.includes(name) || name.includes(c))) {
+        return { district, businessDistrict };
+      }
+    }
+  }
+  return null;
+}
+
+// 根据小区名匹配社区硬伤信息
+export function matchCommunityDefects(communityName: string): (DefectCommunityInfo & { name: string }) | null {
+  if (!communityName) return null;
+  const name = communityName.trim();
+  for (const [commName, info] of Object.entries(DEFECT_COMMUNITIES)) {
+    if (commName.includes(name) || name.includes(commName)) {
+      return { name: commName, ...info };
+    }
+  }
+  return null;
+}
+
 // 导出所有数据
 export default {
   city: hangzhouCity,
@@ -562,10 +887,16 @@ export default {
   businessDistricts: hangzhouBusinessDistricts,
   schools: hangzhouSchools,
   defectLocations: hangzhouDefectLocations,
+  SCHOOLS,
+  DISTRICT_BD_MAP,
+  COMMUNITY_MAPPING,
+  DEFECT_COMMUNITIES,
   getDistrictInfo,
   getBusinessDistrictFactor,
   getSchoolPremium,
   getCityTrend,
   getCapRateByDistrict,
   findNearbyDefects,
+  matchCommunity,
+  matchCommunityDefects,
 };

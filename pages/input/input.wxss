@@ -1,15 +1,92 @@
-.room-row {
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 48rpx;
+}
+
+.section-arrow {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+.section-body {
+  padding-top: 20rpx;
+}
+
+.form-row {
   display: flex;
   gap: 20rpx;
+  margin-bottom: 24rpx;
 }
 
-.room-picker {
-  width: 200rpx;
+.form-col {
+  flex: 1;
+  min-width: 0;
+}
+
+.switch-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.picker-disabled {
+  color: #bbb;
+}
+
+.defect-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.defect-item {
+  width: calc(50% - 8rpx);
+  display: flex;
+  align-items: center;
+  padding: 16rpx 20rpx;
+  background: #f8f9fa;
+  border-radius: 10rpx;
+  border: 2rpx solid var(--border);
+  box-sizing: border-box;
+}
+
+.defect-item.active {
+  background: rgba(44, 150, 120, 0.1);
+  border-color: var(--primary);
+}
+
+.defect-check {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 6rpx;
+  border: 2rpx solid #ccc;
+  margin-right: 12rpx;
   text-align: center;
+  line-height: 36rpx;
+  font-size: 24rpx;
+  color: var(--primary);
+  flex-shrink: 0;
 }
 
-.floor-input {
-  width: 48%;
+.defect-item.active .defect-check {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.defect-text {
+  font-size: 26rpx;
+  color: var(--text);
+}
+
+.hint-text {
+  font-size: 24rpx;
+  color: #94a3b8;
+  margin-top: -12rpx;
+  margin-bottom: 16rpx;
 }
 
 .safe-bottom {

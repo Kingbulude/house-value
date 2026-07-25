@@ -1,0 +1,40 @@
+<view class="container">
+  <!-- Empty State -->
+  <view class="empty-state" wx:if="{{isEmpty}}">
+    <view class="empty-icon">📋</view>
+    <view class="empty-text">暂无历史记录</view>
+    <view class="empty-hint">完成估值后记录会自动保存在这里</view>
+  </view>
+
+  <!-- History List -->
+  <view class="history-list" wx:else>
+    <view
+      class="history-card"
+      wx:for="{{list}}"
+      wx:key="timestamp"
+    >
+      <view class="card-main" bindtap="viewHistory" data-index="{{index}}">
+        <view class="card-row card-header-row">
+          <text class="card-community">{{item.input.communityName || '未填写小区'}}</text>
+          <text class="card-date">{{formatDate(item.timestamp)}}</text>
+        </view>
+        <view class="card-row card-meta">
+          <text class="meta-tag">{{item.input.district}}</text>
+          <text class="meta-tag" wx:if="{{item.input.businessDistrict}}">{{item.input.businessDistrict}}</text>
+          <text class="meta-tag">{{item.input.area}}m²</text>
+        </view>
+        <view class="card-row card-value">
+          <text class="value-price">{{formatWanWrapper(item.result.finalValuation)}}</text>
+          <text class="value-unit">{{item.result.unitPrice}} 元/㎡</text>
+        </view>
+      </view>
+      <view class="card-actions">
+        <view class="btn-view" bindtap="viewHistory" data-index="{{index}}">查看</view>
+        <view class="btn-delete" bindtap="deleteHistory" data-index="{{index}}">删除</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Clear Button -->
+  <view class="clear-btn" wx:if="{{!isEmpty}}" bindtap="clearHistory">清空历史记录</view>
+</view>

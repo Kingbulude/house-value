@@ -1,0 +1,55 @@
+<view class="container">
+  <!-- Header -->
+  <view class="page-header">
+    <view class="header-title">硬伤名录</view>
+    <view class="header-subtitle">了解影响房产价值的不利因素</view>
+  </view>
+
+  <!-- Filter Tabs -->
+  <scroll-view scroll-x class="filter-bar">
+    <view
+      class="filter-tab {{activeCategory === item.key ? 'active' : ''}}"
+      wx:for="{{tabs}}"
+      wx:key="key"
+      data-key="{{item.key}}"
+      bindtap="filterDefects"
+    >{{item.label}}</view>
+  </scroll-view>
+
+  <!-- Defect Cards -->
+  <view class="defect-list">
+    <view class="defect-card" wx:for="{{filteredDefects}}" wx:key="key">
+      <view class="defect-header">
+        <view class="severity-icon {{item.isSevere ? 'severe' : 'medium'}}">
+          {{item.isSevere ? '🔴' : '🟡'}}
+        </view>
+        <view class="defect-info">
+          <view class="defect-name">{{item.name}}</view>
+          <view class="defect-desc">{{item.desc}}</view>
+        </view>
+        <view class="penalty-badge {{item.isSevere ? 'severe' : 'medium'}}">
+          {{item.penaltyPercent}}
+        </view>
+      </view>
+
+      <!-- Affected Communities -->
+      <view class="communities-section" wx:if="{{item.communities.length > 0}}">
+        <view class="communities-label">已知受影响小区：</view>
+        <view class="community-tags">
+          <view class="community-tag" wx:for="{{item.communities}}" wx:for-item="comm" wx:key="name">
+            <text class="comm-name">{{comm.name}}</text>
+            <text class="comm-district">{{comm.district}}</text>
+            <text class="comm-level level-{{comm.level}}">
+              {{comm.level === 'high' ? '严重' : comm.level === 'medium' ? '中等' : '轻微'}}
+            </text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Footer Disclaimer -->
+  <view class="disclaimer">
+    以上信息仅供参考，实际影响程度需结合具体位置综合判断
+  </view>
+</view>

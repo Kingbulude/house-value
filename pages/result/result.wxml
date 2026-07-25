@@ -1,89 +1,265 @@
-<view class="container" wx:if="{{loaded && result && houseInfo}}">
+<view class="container" wx:if="{{loaded && result && input}}">
+
+  <!-- Header -->
   <view class="result-header">
-    <view class="result-community">{{houseInfo.community}}</view>
+    <view class="result-community">{{input.communityName || '未填写小区'}}</view>
     <view class="result-meta">
-      <text class="tag">{{houseInfo.city}}</text>
-      <text class="tag">{{houseInfo.area}}m²</text>
-      <text class="tag">{{houseInfo.roomCount}}室{{houseInfo.hallCount}}厅</text>
+      <text class="tag">{{input.district}}</text>
+      <text class="tag" wx:if="{{input.businessDistrict}}">{{input.businessDistrict}}</text>
+      <text class="tag">{{input.area}}m²</text>
     </view>
   </view>
 
+  <!-- Highlight Card -->
   <view class="card highlight">
     <view class="highlight-label">综合参考价</view>
-    <view class="highlight-price">{{formatPrice(result.composite.suggest)}}</view>
-    <view class="highlight-range">参考区间 {{formatPrice(result.composite.min)}} ~ {{formatPrice(result.composite.max)}}</view>
-    <view class="highlight-unit">{{formatPricePerSqm(result.composite.suggest, houseInfo.area)}}</view>
+    <view class="highlight-price">{{result.finalValuationText}}</view>
+    <view class="highlight-unit">{{result.unitPrice}} 元/㎡</view>
+    <view class="highlight-range">参考区间：{{result.lowerBoundText}} ~ {{result.upperBoundText}}</view>
+    <view class="confidence-badge {{result.confidenceClass}}">参考度 {{result.confidence}}%</view>
   </view>
 
-  <view class="card">
-    <view class="card-title">测算方法明细</view>
+  <!-- Tab Bar -->
+  <scroll-view scroll-x class="tab-bar">
+    <view
+      wx:for="{{tabs}}"
+      wx:key="key"
+      class="tab-item {{activeTab === item.key ? 'active' : ''}}"
+      data-tab="{{item.key}}"
+      bindtap="switchTab"
+    >{{item.label}}</view>
+  </scroll-view>
 
-    <view class="method-item">
-      <view class="method-header">
-        <text class="method-name">租金回报率法</text>
-        <text class="method-weight">权重 35%</text>
+  <!-- Summary Tab -->
+  <view class="card tab-panel" wx:if="{{activeTab === 'summary'}}">
+    <view class="card-title">分析概要</view>
+    <view class="info-row">
+      <text class="info-label">小区名称</text>
+      <text class="info-value">{{input.communityName || '未填写'}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">所在区域</text>
+      <text class="info-value">{{input.district}}{{input.businessDistrict ? ' · ' + input.businessDistrict : ''}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">区位等级</text>
+      <text class="info-value">{{result.factors.location.level}}级 — {{result.factors.location.detail}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">房屋信息</text>
+      <text class="info-value">{{input.area}}㎡ / {{input.floor || '?'}}/{{input.totalFloors || '?'}}层 / {{input.orientation}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">装修/房龄</text>
+      <text class="info-value">{{input.decoration}} / {{input.buildingAge || '?'}}年{{input.hasElevator ? ' / 有电梯' : ' / 无电梯'}}</text>
+    </view>
+    <view class="info-row" wx:if="{{result.marketAnchor}}">
+      <text class="info-label">价格锚定</text>
+      <text class="info-value">{{result.marketAnchor}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">配套总分</text>
+      <text class="info-value">{{result.factors.amenities.total}}/80</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">硬伤扣分</text>
+      <text class="info-value {{result.factors.defects.defects.length > 0 ? 'negative' : ''}}">{{result.factors.defects.defects.length > 0 ? result.factors.defects.defects.length + '项' : '无'}}</text>
+    </view>
+  </view>
+
+  <!-- Methods Tab -->
+  <view class="card tab-panel" wx:if="{{activeTab === 'methods'}}">
+    <view class="card-title">三把尺子交叉验证</view>
+    <view class="method-card" wx:if="{{result.methods.market}}">
+      <view class="method-name">市场比较法</view>
+      <view class="method-value">{{result.marketText}}</view>
+      <view class="method-weight">权重 {{result.marketWeight}}% · 锚定: {{result.marketAnchor || '-'}}</view>
+    </view>
+    <view class="method-card" wx:if="{{result.methods.income}}">
+      <view class="method-name">收益还原法</view>
+      <view class="method-value">{{result.incomeText}}</view>
+      <view class="method-weight">权重 {{result.incomeWeight}}% · CapRate {{result.capRateText}}</view>
+    </view>
+    <view class="method-card" wx:if="{{result.methods.cost}}">
+      <view class="method-name">成本法</view>
+      <view class="method-value">{{result.costText}}</view>
+      <view class="method-weight">权重 {{result.costWeight}}%</view>
+    </view>
+    <view class="method-notes">
+      <view wx:if="{{result.marketAnchor === '同小区均价'}}">
+        <view class="note-item"><text class="note-bold">市场比较法：</text>以同小区均价为锚，仅做楼栋级修正（面积/朝向/楼层/装修/房龄/电梯/位置/硬伤），不重复叠加区位/配套/学区溢价。</view>
       </view>
-      <view class="method-desc">基于月租金{{formatPrice(result.rentMethod.min)}} ~ {{formatPrice(result.rentMethod.max)}}</view>
-      <view class="method-formula">年租金 ÷ 合理回报率(3.5%~5.5%)</view>
-    </view>
-
-    <view class="method-item">
-      <view class="method-header">
-        <text class="method-name">市场比价法</text>
-        <text class="method-weight">权重 45%</text>
+      <view wx:if="{{result.marketAnchor === '板块基准价'}}">
+        <view class="note-item"><text class="note-bold">市场比较法：</text>未提供小区均价，以板块基准价为锚，叠加区位/学区/市场情绪估算。</view>
       </view>
-      <view class="method-desc">测算结果 {{formatPrice(result.compareMethod)}}</view>
-      <view class="method-formula">同小区均价 × 面积 × 综合修正系数({{result.coefficientDetail.total.toFixed(2)}})</view>
-    </view>
-
-    <view class="method-item" wx:if="{{result.govMethod}}">
-      <view class="method-header">
-        <text class="method-name">指导价参考法</text>
-        <text class="method-weight">权重 20%</text>
+      <view class="note-item"><text class="note-bold">收益还原法：</text>年租金 ÷ 资本化率。资本化率根据区域等级取值（核心区3.5%，普通区4.5%，郊区5.5%）。</view>
+      <view class="note-item"><text class="note-bold">成本法：</text>土地成本 + 建筑成本折旧。适用于新房和次新房。</view>
+      <view class="note-item" wx:if="{{result.factors.liquidityDiscount > 0}}">
+        <text class="note-bold">流动性折价：</text>大户型/高总价流动性较差，折价 {{result.liquidityDiscountText}}。
       </view>
-      <view class="method-desc">测算结果 {{formatPrice(result.govMethod)}}</view>
-      <view class="method-formula">公开指导价 × 面积 × 综合修正系数</view>
     </view>
   </view>
 
-  <view class="card">
-    <view class="card-title">修正系数详情</view>
-    <view class="coef-row">
-      <text class="coef-name">楼层修正</text>
-      <text class="coef-value">{{result.coefficientDetail.floor}}</text>
+  <!-- Amenities Tab -->
+  <view class="card tab-panel" wx:if="{{activeTab === 'amenities'}}">
+    <view class="card-title">配套评分</view>
+    <view wx:for="{{amenitiesList}}" wx:key="name" class="amenity-dim">
+      <view class="amenity-header">
+        <text class="amenity-name">{{item.name}}</text>
+        <text class="amenity-score" style="color:{{item.color}};">{{item.score}}/{{item.max}}</text>
+      </view>
+      <view class="score-bar">
+        <view class="score-bar-fill" style="width:{{item.percent}}%;background:{{item.color}};"></view>
+      </view>
+      <view class="amenity-detail" wx:if="{{item.detailText}}">{{item.detailText}}</view>
     </view>
-    <view class="coef-row">
-      <text class="coef-name">朝向修正</text>
-      <text class="coef-value">{{result.coefficientDetail.direction}}</text>
-    </view>
-    <view class="coef-row">
-      <text class="coef-name">装修修正</text>
-      <text class="coef-value">{{result.coefficientDetail.decoration}}</text>
-    </view>
-    <view class="coef-row">
-      <text class="coef-name">房龄修正</text>
-      <text class="coef-value">{{result.coefficientDetail.age}}</text>
-    </view>
-    <view class="coef-row">
-      <text class="coef-name">电梯修正</text>
-      <text class="coef-value">{{result.coefficientDetail.elevator}}</text>
-    </view>
-    <view class="coef-row total">
-      <text class="coef-name">综合系数</text>
-      <text class="coef-value">{{result.coefficientDetail.total.toFixed(3)}}</text>
+    <view class="amenity-total">
+      <view class="amenity-total-row">
+        <text class="amenity-total-label">配套总分</text>
+        <text class="amenity-total-value">{{result.factors.amenities.total}}/80</text>
+      </view>
+      <view class="amenity-note">配套评分仅作参考展示，不再直接影响价格（已包含在小区均价中）</view>
     </view>
   </view>
 
-  <view class="card">
-    <view class="card-title">数据来源与说明</view>
-    <view class="disclaimer-content">
-      <view>1. 同小区成交均价、租金数据由您自行查询填写（建议来源：安居客、链家、贝壳找房等公开渠道）。</view>
-      <view>2. 公开指导价为选填项，可从当地住建部门官网查询。</view>
-      <view>3. 本工具仅提供数学模型参考测算，不构成任何投资建议、房产评估报告或交易依据，实际交易请咨询专业机构。</view>
-      <view>4. 所有计算均在本地完成，不上传任何数据。</view>
+  <!-- Defects Tab -->
+  <view class="card tab-panel" wx:if="{{activeTab === 'defects'}}">
+    <view class="card-title">硬伤检测</view>
+    <view wx:if="{{result.factors.defects.defects.length === 0}}" class="defects-clean">
+      未检测到明显硬伤
+    </view>
+    <view wx:for="{{defectsList}}" wx:key="name" class="defect-item">
+      <view class="defect-icon {{item.isSevere ? 'severe' : 'warning'}}">{{item.isSevere ? '!' : '⚠'}}</view>
+      <view class="defect-content">
+        <view class="defect-title">{{item.name}} <text class="defect-penalty">-{{item.penaltyPercent}}%</text></view>
+        <view class="defect-desc">{{item.desc}}</view>
+      </view>
+    </view>
+    <view class="defects-summary" wx:if="{{result.factors.defects.defects.length > 0}}">
+      <view class="info-row">
+        <text class="info-label">综合硬伤系数</text>
+        <text class="info-value negative">×{{result.factors.defects.coefficient}}</text>
+      </view>
     </view>
   </view>
 
+  <!-- Holding Cost Tab -->
+  <view class="card tab-panel" wx:if="{{activeTab === 'holdingcost'}}">
+    <view class="card-title">成本估算</view>
+    <view class="hc-highlight">
+      <view class="hc-highlight-title">年持有费用估算</view>
+      <view class="hc-highlight-body">
+        约 <text class="hc-highlight-value">{{result.holdingCost.annualCostText}}</text> / 年（月均 {{result.holdingCost.monthlyEquivalent}} 元）
+        <view class="hc-highlight-note">仅供参考，未考虑房产增值收益</view>
+      </view>
+    </view>
+    <view class="info-row">
+      <text class="info-label">年持有费用</text>
+      <text class="info-value negative">{{result.holdingCost.annualCostText}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">资金占用参考成本</text>
+      <text class="info-value">{{result.holdingCost.annualBreakdown.opportunityCost}}元</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">房屋折旧</text>
+      <text class="info-value">{{result.holdingCost.annualBreakdown.buildingDepreciation}}元</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">物业费</text>
+      <text class="info-value">{{result.holdingCost.annualBreakdown.propertyFee}}元</text>
+    </view>
+    <view class="info-row" wx:if="{{result.holdingCost.annualBreakdown.parkingCost > 0}}">
+      <text class="info-label">车位费用</text>
+      <text class="info-value">{{result.holdingCost.annualBreakdown.parkingCost}}元</text>
+    </view>
+    <view class="hc-divider"></view>
+    <view class="info-row">
+      <text class="info-label bold">{{result.holdingCost.parameters.holdingYears}}年总费用</text>
+      <text class="info-value negative bold">{{result.holdingCost.totalCostText}}</text>
+    </view>
+    <view class="hc-notes">
+      <view>· 资金占用参考成本：房产总价 × 无风险收益参考</view>
+      <view>· 房屋折旧：按每年2%估算</view>
+      <view>· 本估算仅供参考，不构成投资建议</view>
+    </view>
+  </view>
+
+  <!-- Factors Tab -->
+  <view class="card tab-panel" wx:if="{{activeTab === 'factors'}}">
+    <view class="card-title">系数明细</view>
+
+    <!-- Anchor -->
+    <view class="factor-section-title">价格锚定</view>
+    <view class="info-row">
+      <text class="info-label">价格锚定</text>
+      <text class="info-value">{{result.marketAnchor || '未知'}}</text>
+    </view>
+    <view class="info-row" wx:if="{{result.factors.marketComparison && result.factors.marketComparison.anchorPrice}}">
+      <text class="info-label">锚定均价</text>
+      <text class="info-value">{{result.factors.marketComparison.anchorPrice}} 元/㎡</text>
+    </view>
+
+    <view class="factor-divider"></view>
+
+    <!-- Building Modifiers -->
+    <view class="factor-section-title">楼栋级修正系数</view>
+    <view class="info-row" wx:for="{{modifiersList}}" wx:key="label">
+      <text class="info-label">{{item.label}}</text>
+      <text class="info-value {{item.modClass}}">×{{item.value}}</text>
+    </view>
+    <view class="info-row factor-total">
+      <text class="info-label bold">楼栋修正合计</text>
+      <text class="info-value bold">×{{result.factors.buildingModifiers.total}}</text>
+    </view>
+
+    <!-- Market comparison extra coefficients -->
+    <block wx:if="{{result.factors.marketComparison && result.factors.marketComparison.locationCoefficient}}">
+      <view class="factor-divider"></view>
+      <view class="factor-section-title">板块估算系数（无小区均价时使用）</view>
+      <view class="info-row">
+        <text class="info-label">区位系数</text>
+        <text class="info-value {{result.factors.marketComparison.locationCoefficient > 1 ? 'positive' : 'negative'}}">×{{result.factors.marketComparison.locationCoefficient}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">学区溢价</text>
+        <text class="info-value positive">+{{result.factors.marketComparison.schoolPremPercent}}%</text>
+      </view>
+      <view class="info-row" wx:if="{{result.factors.marketComparison.marketSentiment}}">
+        <text class="info-label">市场情绪</text>
+        <text class="info-value {{result.factors.marketComparison.marketSentiment > 1 ? 'positive' : result.factors.marketComparison.marketSentiment < 1 ? 'negative' : 'neutral'}}">×{{result.factors.marketComparison.marketSentiment}}</text>
+      </view>
+    </block>
+
+    <!-- Income approach -->
+    <block wx:if="{{result.factors.incomeApproach}}">
+      <view class="factor-divider"></view>
+      <view class="factor-section-title">收益还原法参数</view>
+      <view class="info-row">
+        <text class="info-label">年租金（扣除3%空置）</text>
+        <text class="info-value">{{result.factors.incomeApproach.annualRent}}元</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">资本化率</text>
+        <text class="info-value">{{result.factors.incomeApproach.capRatePercent}}</text>
+      </view>
+    </block>
+
+    <view class="factor-divider"></view>
+
+    <view class="info-row">
+      <text class="info-label">流动性折价</text>
+      <text class="info-value {{result.factors.liquidityDiscount > 0 ? 'negative' : 'neutral'}}">-{{result.factors.liquidityDiscountText}}%</text>
+    </view>
+  </view>
+
+  <!-- Disclaimer -->
+  <view class="disclaimer">
+    <view class="disclaimer-title">免责声明</view>
+    以上结果基于用户输入数据和内置规则引擎测算，仅为个人参考使用，不构成任何投资建议、房产评估报告或交易依据。实际房价受市场供需、政策调控、宏观经济等多种因素影响，请以实际交易价格和专业机构评估为准。
+  </view>
+
+  <!-- Action Buttons -->
   <view class="action-row">
     <view class="btn-secondary" bindtap="goBack">返回首页</view>
     <view class="btn-secondary primary" bindtap="reInput">修改信息</view>

@@ -1,0 +1,112 @@
+<view class="container">
+  <!-- App Icon & Title -->
+  <view class="about-hero">
+    <view class="app-icon">🏠</view>
+    <view class="app-title">杭州房产估值计算器</view>
+  </view>
+
+  <!-- About Section -->
+  <view class="section-card">
+    <view class="section-title">关于本项目</view>
+    <view class="section-content">
+      基于多因素加权的杭州房产估值系统，通过"三把尺子"交叉验证的方法，为房产价值提供多维度的参考分析。帮助购房者更全面地了解房产价值构成，识别潜在风险。
+    </view>
+  </view>
+
+  <!-- Features -->
+  <view class="section-card">
+    <view class="section-title">功能特点</view>
+    <view class="feature-list">
+      <view class="feature-row">
+        <text class="feature-bullet">📏</text>
+        <text class="feature-text">三把尺子评估（市场比较法 / 收益还原法 / 成本法）</text>
+      </view>
+      <view class="feature-row">
+        <text class="feature-bullet">⚠️</text>
+        <text class="feature-text">12种不利因素检测与量化扣分</text>
+      </view>
+      <view class="feature-row">
+        <text class="feature-bullet">📊</text>
+        <text class="feature-text">交通 / 教育 / 商业 / 医疗 / 环境五维配套评分</text>
+      </view>
+      <view class="feature-row">
+        <text class="feature-bullet">💰</text>
+        <text class="feature-text">持有成本估算（机会成本 / 折旧 / 物业费 / 车位）</text>
+      </view>
+      <view class="feature-row">
+        <text class="feature-bullet">🏘️</text>
+        <text class="feature-text">杭州13区 / 40+商圈 / 重点学校小区数据库</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Valuation Model -->
+  <view class="section-card">
+    <view class="section-title">估值模型</view>
+    <view class="section-content">
+      <text class="bold">三把尺子原理：</text>综合估值 = 市场比较法 × 权重 + 收益还原法 × 权重 + 成本法 × 权重，再乘以流动性折价系数。
+    </view>
+    <view class="section-content" style="margin-top:12rpx;">
+      <text class="bold">权重动态调整：</text>根据用户输入的数据类型自动调整权重。有均价+租金时市场法占75%；仅有均价时市场法占80%；仅有租金时收益法占60%。
+    </view>
+  </view>
+
+  <!-- Design Philosophy -->
+  <view class="section-card">
+    <view class="section-title">设计理念</view>
+    <view class="feature-list">
+      <view class="feature-row">
+        <text class="feature-bullet">🛡️</text>
+        <text class="feature-text">保守原则 — 多维度交叉验证，宁可低估不高估</text>
+      </view>
+      <view class="feature-row">
+        <text class="feature-bullet">🔍</text>
+        <text class="feature-text">数据透明 — 所有修正系数和计算逻辑完全公开</text>
+      </view>
+      <view class="feature-row">
+        <text class="feature-bullet">🔒</text>
+        <text class="feature-text">本地计算 — 数据存储在本地，不采集用户隐私</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Tech Stack -->
+  <view class="section-card">
+    <view class="section-title">技术栈</view>
+    <view class="tag-list">
+      <text class="tech-tag">TypeScript</text>
+      <text class="tech-tag">WeChat Mini Program</text>
+      <text class="tech-tag">Vitest</text>
+    </view>
+  </view>
+
+  <!-- Usage Tips -->
+  <view class="section-card">
+    <view class="section-title">使用建议</view>
+    <view class="feature-list">
+      <view class="feature-row">
+        <text class="feature-bullet">1.</text>
+        <text class="feature-text">输入至少一个参考价（均价或租金），估值更可靠</text>
+      </view>
+      <view class="feature-row">
+        <text class="feature-bullet">2.</text>
+        <text class="feature-text">关注置信度指标，低于60%时建议补充更多信息</text>
+      </view>
+      <view class="feature-row">
+        <text class="feature-bullet">3.</text>
+        <text class="feature-text">参考同小区近期成交价进行横向比较</text>
+      </view>
+      <view class="feature-row">
+        <text class="feature-bullet">4.</text>
+        <text class="feature-text">结合实地考察，工具结果仅供参考</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Back Button -->
+  <view class="btn-back" bindtap="goBack">返回</view>
+
+  <view class="disclaimer">
+    本工具仅供参考，不构成任何投资建议或交易依据
+  </view>
+</view>

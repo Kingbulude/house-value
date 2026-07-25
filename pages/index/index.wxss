@@ -82,6 +82,33 @@
   color: var(--primary);
 }
 
+.nav-grid {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30rpx;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 30rpx 10rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.nav-icon {
+  font-size: 48rpx;
+  margin-bottom: 12rpx;
+}
+
+.nav-label {
+  font-size: 24rpx;
+  color: var(--text);
+}
+
 .disclaimer {
   text-align: center;
   font-size: 22rpx;

@@ -1,0 +1,147 @@
+.empty-state {
+  text-align: center;
+  padding: 120rpx 40rpx 80rpx;
+}
+
+.empty-icon {
+  font-size: 96rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 12rpx;
+}
+
+.empty-hint {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+}
+
+.history-list {
+  padding-bottom: 30rpx;
+}
+
+.history-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.card-main {
+  padding: 30rpx;
+}
+
+.card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.card-community {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 16rpx;
+}
+
+.card-date {
+  font-size: 22rpx;
+  color: #999;
+  flex-shrink: 0;
+}
+
+.card-row {
+  margin-bottom: 10rpx;
+}
+
+.card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+}
+
+.meta-tag {
+  display: inline-block;
+  padding: 4rpx 14rpx;
+  background: rgba(44, 150, 120, 0.08);
+  color: var(--primary);
+  border-radius: 6rpx;
+  font-size: 22rpx;
+}
+
+.card-value {
+  display: flex;
+  align-items: baseline;
+  gap: 12rpx;
+  margin-top: 16rpx;
+  margin-bottom: 0;
+}
+
+.value-price {
+  font-size: 38rpx;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.value-unit {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+.card-actions {
+  display: flex;
+  border-top: 1rpx solid var(--border);
+}
+
+.btn-view {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  font-size: 28rpx;
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.btn-view:active {
+  background: rgba(44, 150, 120, 0.05);
+}
+
+.btn-delete {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  font-size: 28rpx;
+  color: #dc2626;
+  font-weight: 500;
+  border-left: 1rpx solid var(--border);
+}
+
+.btn-delete:active {
+  background: rgba(220, 38, 38, 0.05);
+}
+
+.clear-btn {
+  margin-top: 40rpx;
+  text-align: center;
+  height: 88rpx;
+  line-height: 88rpx;
+  font-size: 30rpx;
+  color: #dc2626;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.clear-btn:active {
+  background: rgba(220, 38, 38, 0.06);
+}
