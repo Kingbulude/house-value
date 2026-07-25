@@ -17,7 +17,8 @@ Page({
   },
 
   refreshList() {
-    const list = (wx.getStorageSync('valuationHistory') || []) as HistoryItem[];
+    const raw = wx.getStorageSync('valuationHistory');
+    const list: HistoryItem[] = Array.isArray(raw) ? raw : [];
     this.setData({
       list: list.reverse(),
       isEmpty: list.length === 0,
@@ -34,7 +35,7 @@ Page({
     return formatWan(v);
   },
 
-  viewHistory(e: WechatMiniprogram.TouchEvent) {
+  viewHistory(e: WechatMiniprogram.CustomEvent) {
     const index = e.currentTarget.dataset.index as number;
     const item = this.data.list[index];
     if (!item) return;
@@ -42,14 +43,15 @@ Page({
     wx.navigateTo({ url: '/pages/result/result' });
   },
 
-  deleteHistory(e: WechatMiniprogram.TouchEvent) {
+  deleteHistory(e: WechatMiniprogram.CustomEvent) {
     const index = e.currentTarget.dataset.index as number;
     wx.showModal({
       title: '确认删除',
       content: '确定删除该条历史记录？',
       success: (res) => {
         if (!res.confirm) return;
-        const fullList = wx.getStorageSync('valuationHistory') || [];
+        const raw = wx.getStorageSync('valuationHistory');
+        const fullList: HistoryItem[] = Array.isArray(raw) ? raw : [];
         const realIndex = fullList.length - 1 - index;
         fullList.splice(realIndex, 1);
         wx.setStorageSync('valuationHistory', fullList);
@@ -62,7 +64,6 @@ Page({
     wx.showModal({
       title: '清空历史记录',
       content: '确定清空所有历史记录？此操作不可恢复。',
-      confirmColor: '#dc2626',
       success: (res) => {
         if (!res.confirm) return;
         wx.setStorageSync('valuationHistory', []);

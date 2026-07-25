@@ -154,7 +154,7 @@ Page({
     wx.setStorageSync('valuationHistory', history);
   },
 
-  switchTab(e: WechatMiniprogram.TouchEvent) {
+  switchTab(e: WechatMiniprogram.CustomEvent) {
     const tab = e.currentTarget.dataset.tab;
     if (tab) {
       this.setData({ activeTab: tab });

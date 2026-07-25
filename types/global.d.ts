@@ -1,6 +1,17 @@
 /// <reference path="./wx.d.ts" />
 
+declare const console: {
+  log(...args: unknown[]): void;
+  warn(...args: unknown[]): void;
+  error(...args: unknown[]): void;
+  info(...args: unknown[]): void;
+};
+
 declare namespace WechatMiniprogram {
+  interface CustomEvent {
+    currentTarget: { dataset: Record<string, string | number> };
+    detail: Record<string, unknown>;
+  }
   interface AppOption {
     globalData?: Record<string, unknown>;
     onLaunch?: (options: Record<string, unknown>) => void;

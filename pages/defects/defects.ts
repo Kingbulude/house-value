@@ -96,11 +96,11 @@ Page({
     });
   },
 
-  filterDefects(e: WechatMiniprogram.TouchEvent) {
+  filterDefects(e: WechatMiniprogram.CustomEvent) {
     const key = e.currentTarget.dataset.key as string;
     const filtered = key === 'all'
       ? this.data.defects
-      : this.data.defects.filter(d => d.category === key);
+      : this.data.defects.filter((d: DefectDisplayItem) => d.category === key);
     this.setData({
       activeCategory: key,
       filteredDefects: filtered,

@@ -880,6 +880,29 @@ export function matchCommunityDefects(communityName: string): (DefectCommunityIn
   return null;
 }
 
+export interface DefectTypeInfo {
+  key: string;
+  name: string;
+  severity: string;
+  coefficient: number;
+  desc: string;
+}
+
+export const DEFECT_TYPES: DefectTypeInfo[] = [
+  { key: 'highway_noise', name: '高架/高速噪音', severity: '严重', coefficient: 0.80, desc: '距离高架/高速公路<50m，噪音污染严重' },
+  { key: 'main_road_noise', name: '主干道噪音', severity: '中等', coefficient: 0.90, desc: '临城市主干道，距离<30m，有一定噪音' },
+  { key: 'cemetery', name: '公墓/殡仪馆', severity: '严重', coefficient: 0.70, desc: '距离公墓/殡仪馆<1km，心理忌讳影响大' },
+  { key: 'substation', name: '变电站/高压线', severity: '严重', coefficient: 0.85, desc: '距离大型变电站/高压线<300m' },
+  { key: 'garbage_station', name: '垃圾处理站', severity: '严重', coefficient: 0.80, desc: '距离垃圾处理站<500m，异味污染' },
+  { key: 'sewage_plant', name: '污水处理厂', severity: '严重', coefficient: 0.75, desc: '距离污水处理厂<1km，异味污染' },
+  { key: 'airport_noise', name: '机场航线噪音', severity: '中等', coefficient: 0.88, desc: '飞机起降航线正下方' },
+  { key: 'low_ground', name: '地势低洼易涝', severity: '严重', coefficient: 0.85, desc: '地势低于周边区域，大雨容易积水' },
+  { key: 'gas_station', name: '加油站/加气站', severity: '中等', coefficient: 0.92, desc: '距离加油站/加气站较近' },
+  { key: 'poor_lighting', name: '采光严重不足', severity: '严重', coefficient: 0.88, desc: '楼层低+楼间距小，日照<2小时' },
+  { key: 'factory_pollution', name: '工厂污染', severity: '严重', coefficient: 0.82, desc: '附近有化工厂/制药厂等污染企业' },
+  { key: 'red_light', name: '红灯区/治安差', severity: '中等', coefficient: 0.90, desc: '周边治安环境较差' },
+];
+
 // 导出所有数据
 export default {
   city: hangzhouCity,
