@@ -8,6 +8,9 @@ import {
 } from './valuationEngine.js';
 import { saveHistory, getHistory, clearHistory, removeHistoryItem, getHistorySummary } from './history.js';
 
+let lastResult = null;
+let lastInput = null;
+
 export function initUI() {
   const districtSelect = document.getElementById('district');
   for (const name of Object.keys(HANGZHOU_DISTRICTS)) {
@@ -21,6 +24,7 @@ export function initUI() {
     updateBusinessDistricts(this.value);
     updateSchools(this.value);
     updateDistrictInfo(this.value);
+    clearFieldError('district');
   });
 
   document.querySelectorAll('input[name="defects"]').forEach(cb => {
@@ -59,6 +63,42 @@ export function initUI() {
       }
     });
   }
+
+  // Real-time validation
+  document.getElementById('district').addEventListener('change', function() {
+    if (this.value) clearFieldError('district');
+  });
+  document.querySelector('input[name="area"]').addEventListener('input', function() {
+    if (this.value && parseFloat(this.value) > 0) clearFieldError('area');
+  });
+
+  // Load dark mode preference
+  if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark');
+  }
+}
+
+function showFieldError(fieldId, message) {
+  const el = document.getElementById(fieldId + 'Error');
+  if (el) {
+    el.textContent = message;
+    el.style.display = 'block';
+  }
+}
+
+function clearFieldError(fieldId) {
+  const el = document.getElementById(fieldId + 'Error');
+  if (el) {
+    el.textContent = '';
+    el.style.display = 'none';
+  }
+}
+
+function clearAllErrors() {
+  document.querySelectorAll('.field-error').forEach(el => {
+    el.textContent = '';
+    el.style.display = 'none';
+  });
 }
 
 export function updateBusinessDistricts(districtName) {
@@ -115,6 +155,8 @@ export function updateDistrictInfo(districtName) {
 }
 
 export function handleSubmit() {
+  clearAllErrors();
+
   const form = document.getElementById('valuationForm');
   const formData = new FormData(form);
 
@@ -157,18 +199,22 @@ export function handleSubmit() {
     riskFreeRate: parseFloat(formData.get('riskFreeRate')) || 3.5,
   };
 
-  if (!input.district) { alert('请选择区域'); return; }
-  if (!input.area || input.area <= 0) { alert('请输入房屋面积'); return; }
-  if (!input.marketPrice && !input.monthlyRent) { alert('请至少填写市场均价或月租金（用于测算）'); return; }
+  let hasError = false;
+  if (!input.district) { showFieldError('district', '请选择区域'); hasError = true; }
+  if (!input.area || input.area <= 0) { showFieldError('area', '请输入房屋面积'); hasError = true; }
+  if (!input.marketPrice && !input.monthlyRent) { showFieldError('price', '请至少填写市场均价或月租金（用于测算）'); hasError = true; }
+  if (hasError) return;
 
-  document.getElementById('resultSection').classList.add('visible');
-  document.getElementById('resultContent').innerHTML = '<div class="loading"><div class="spinner"></div>正在分析中...</div>';
+  showLoading();
 
   setTimeout(() => {
     const result = calculateValuation(input);
     saveHistory(input, result);
+    lastInput = input;
+    lastResult = result;
     renderResult(input, result);
-    renderHistory();
+    hideLoading();
+    document.getElementById('resultActions').style.display = 'flex';
   }, 300);
 }
 
@@ -562,6 +608,7 @@ export function clearAllHistory() {
   if (confirm('确定清空所有历史记录？')) {
     clearHistory();
     renderHistory();
+    loadHistory();
   }
 }
 
@@ -570,6 +617,179 @@ export function loadHistoryItem(id) {
   const item = history.find(h => h.id === id);
   if (item) {
     renderResult(item.input, item.result);
+    lastInput = item.input;
+    lastResult = item.result;
+    document.getElementById('resultActions').style.display = 'flex';
     document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+    closeHistory();
   }
+}
+
+// ===== New functions =====
+
+export function showHistory() {
+  const modal = document.getElementById('historyModal');
+  modal.style.display = 'flex';
+  loadHistory();
+}
+
+export function closeHistory(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById('historyModal').style.display = 'none';
+}
+
+export function loadHistory() {
+  const history = getHistory();
+  const list = document.getElementById('historyList');
+  if (!list) return;
+
+  if (history.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:40px 16px;color:#94a3b8;font-size:14px;">暂无历史记录</div>';
+    return;
+  }
+
+  let html = '';
+  for (const item of history) {
+    const summary = getHistorySummary(item);
+    html += `
+      <div class="history-list-item">
+        <div class="history-list-item-main" onclick="loadHistoryItem('${item.id}')">
+          <div style="font-weight:500;">${summary.district} · ${summary.community}</div>
+          <div style="font-size:12px;color:#94a3b8;margin-top:2px;">${summary.area}㎡ · ${summary.date} ${summary.time}</div>
+          <div style="font-weight:600;color:#2563eb;margin-top:4px;">${formatWan(summary.price)}（${summary.unitPrice.toLocaleString()}元/㎡）</div>
+        </div>
+        <button class="btn-delete-item" onclick="deleteHistoryItem('${item.id}')" title="删除">✕</button>
+      </div>
+    `;
+  }
+  list.innerHTML = html;
+}
+
+export function deleteHistoryItem(id) {
+  removeHistoryItem(id);
+  loadHistory();
+}
+
+export function quickFill() {
+  const form = document.getElementById('valuationForm');
+  const districtSelect = document.getElementById('district');
+  districtSelect.value = '西湖区';
+  districtSelect.dispatchEvent(new Event('change'));
+
+  setTimeout(() => {
+    const bdSelect = document.getElementById('businessDistrict');
+    bdSelect.value = '蒋村';
+  }, 50);
+
+  const fields = {
+    communityName: '万科西庐',
+    area: 89,
+    floor: 6,
+    totalFloors: 18,
+    orientation: '南北通透',
+    decoration: '精装修',
+    buildingAge: 5,
+    marketPrice: 48000,
+    monthlyRent: 5500,
+    metroDistance: 800,
+    metroLines: 2,
+    busRoutes: 10,
+    kindergarten: '省府机关幼儿园',
+    primarySchool: '学军小学',
+    middleSchool: '文澜中学',
+    highSchool: '杭州第二中学',
+    mallCount: 1,
+    restaurantCount: 15,
+    propertyFee: 3.0,
+    holdingYears: 5,
+    riskFreeRate: 3.5,
+  };
+
+  for (const [name, value] of Object.entries(fields)) {
+    const el = form.querySelector(`[name="${name}"]`);
+    if (el) {
+      el.value = value;
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+  }
+
+  // Check elevator
+  const elevatorSelect = form.querySelector('[name="hasElevator"]');
+  if (elevatorSelect) elevatorSelect.value = 'on';
+
+  // Uncheck all defects
+  form.querySelectorAll('[name="defects"]').forEach(cb => {
+    cb.checked = false;
+    cb.closest('.form-checkbox-item')?.classList.remove('checked');
+  });
+
+  clearAllErrors();
+}
+
+export function copyResult() {
+  if (!lastInput || !lastResult) return;
+
+  const r = lastResult;
+  let text = `房估计算器 - 测算结果\n`;
+  text += `${'='.repeat(30)}\n`;
+  text += `综合参考价：${formatWan(r.finalValuation)}（${r.unitPrice.toLocaleString()} 元/㎡）\n`;
+  text += `参考区间：${formatWan(r.lowerBound)} ~ ${formatWan(r.upperBound)}\n`;
+  text += `参考度：${r.confidence}%\n\n`;
+
+  text += `小区：${lastInput.communityName || '未填写'}\n`;
+  text += `区域：${lastInput.district}${lastInput.businessDistrict ? ' · ' + lastInput.businessDistrict : ''}\n`;
+  text += `房屋：${lastInput.area}㎡ / ${lastInput.floor || '?'}/${lastInput.totalFloors || '?'}层 / ${lastInput.orientation}\n`;
+  text += `装修/房龄：${lastInput.decoration} / ${lastInput.buildingAge || '?'}年\n\n`;
+
+  if (r.methods.market) text += `市场比较法：${formatWan(r.methods.market)}（权重${Math.round(r.weights.market * 100)}%）\n`;
+  if (r.methods.income) text += `收益还原法：${formatWan(r.methods.income)}（权重${Math.round(r.weights.income * 100)}%）\n`;
+  if (r.methods.cost) text += `成本法：${formatWan(r.methods.cost)}（权重${Math.round(r.weights.cost * 100)}%）\n`;
+
+  if (r.factors.defects.defects.length > 0) {
+    text += `\n硬伤检测：${r.factors.defects.defects.map(d => d.name).join('、')}\n`;
+  }
+
+  text += `\n免责声明：仅供参考，不构成投资建议。\n`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.btn-action');
+    if (btn) {
+      const orig = btn.textContent;
+      btn.textContent = '✅ 已复制';
+      setTimeout(() => { btn.textContent = orig; }, 1500);
+    }
+  }).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    alert('已复制到剪贴板');
+  });
+}
+
+export function toggleDarkMode() {
+  document.body.classList.toggle('dark');
+  const isDark = document.body.classList.contains('dark');
+  localStorage.setItem('darkMode', isDark);
+  const btn = document.querySelector('.dark-toggle');
+  if (btn) btn.textContent = isDark ? '☀️' : '🌙';
+}
+
+export function showLoading() {
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner" style="width:20px;height:20px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:8px;"></span>分析中...';
+}
+
+export function hideLoading() {
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = false;
+  btn.innerHTML = '开始测算分析';
+}
+
+export function exportPDF() {
+  alert('功能开发中，敬请期待！');
 }
