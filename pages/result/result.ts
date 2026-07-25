@@ -143,6 +143,15 @@ Page({
       defectsList,
       modifiersList,
     });
+
+    this.saveHistory(input, result);
+  },
+
+  saveHistory(input: ValuationInput, result: ValuationResult) {
+    const history = (wx.getStorageSync('valuationHistory') as Array<{ timestamp: number; input: ValuationInput; result: ValuationResult }>) || [];
+    history.unshift({ timestamp: Date.now(), input, result });
+    if (history.length > 50) history.length = 50;
+    wx.setStorageSync('valuationHistory', history);
   },
 
   switchTab(e: WechatMiniprogram.TouchEvent) {
