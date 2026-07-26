@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>关于房估计算器 | House Value</title>
+  <link rel="stylesheet" href="styles.css?v=2.1">
+</head>
+<body>
+
+<div class="header">
+  <h1>关于房估计算器 <span style="font-size:14px;opacity:0.7;font-weight:400;">v2.0</span></h1>
+  <p>一个基于规则引擎的杭州房产估值分析工具</p>
+</div>
+
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="icon">🏠</span>项目简介</div>
+    </div>
+    <div class="card-content">
+      <p style="font-size:14px;color:#334155;line-height:1.8;margin:0;">
+        <strong>房估计算器</strong>是一个面向杭州购房者和投资者的房产估值分析工具。它基于专家规则引擎，结合杭州城市知识库，通过"三把尺子"交叉验证的方法，为房产价值提供多维度的参考分析。
+      </p>
+      <p style="font-size:13px;color:#64748b;line-height:1.8;margin:12px 0 0;">
+        本工具旨在帮助购房者更全面地了解房产价值构成，识别潜在风险，做出更理性的购房决策。工具生成的结果仅供参考，不构成任何投资建议。
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="icon">✨</span>核心功能</div>
+    </div>
+    <div class="card-content">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;">
+        
+        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:16px;">
+          <h3 style="margin:0 0 8px;font-size:15px;color:#166534;">📏 三把尺子估值法</h3>
+          <ul style="margin:0;padding-left:20px;font-size:13px;color:#334155;line-height:1.8;">
+            <li><strong>市场比较法</strong>：以同小区/同板块成交价为基准，根据面积、朝向、楼层等因素修正</li>
+            <li><strong>收益还原法</strong>：年租金 ÷ 资本化率，适用于出租型房产</li>
+            <li><strong>成本法</strong>：土地成本 + 建筑成本折旧，适用于新房和次新房</li>
+          </ul>
+        </div>
+
+        <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:16px;">
+          <h3 style="margin:0 0 8px;font-size:15px;color:#0c4a6e;">🧠 专家规则引擎</h3>
+          <ul style="margin:0;padding-left:20px;font-size:13px;color:#334155;line-height:1.8;">
+            <li><strong>区位分析</strong>：自动匹配区域等级、商圈等级，应用价格系数</li>
+            <li><strong>配套评分</strong>：交通、教育、商业、医疗、自然环境五维度评分</li>
+            <li><strong>硬伤检测</strong>：12项硬伤因素检测（高架噪音、公墓、变电站等）</li>
+            <li><strong>楼栋修正</strong>：楼层、朝向、位置、装修、房龄、电梯、学区</li>
+          </ul>
+        </div>
+
+        <div style="background:#fefce8;border:1px solid #fde68a;border-radius:8px;padding:16px;">
+          <h3 style="margin:0 0 8px;font-size:15px;color:#854d0e;">🏙️ 杭州城市知识库</h3>
+          <ul style="margin:0;padding-left:20px;font-size:13px;color:#334155;line-height:1.8;">
+            <li>13个区县的完整基本面数据（人口、增速、产业、地铁、学校）</li>
+            <li>40+商圈/板块等级（S/A/B/C/D五级）</li>
+            <li>15+重点学校等级与学区溢价</li>
+            <li>20+已知硬伤小区名录</li>
+          </ul>
+        </div>
+
+        <div style="background:#fdf2f8;border:1px solid #fbcfe8;border-radius:8px;padding:16px;">
+          <h3 style="margin:0 0 8px;font-size:15px;color:#9d174d;">📊 多维度分析报告</h3>
+          <ul style="margin:0;padding-left:20px;font-size:13px;color:#334155;line-height:1.8;">
+            <li><strong>估值区间</strong>：提供参考价格区间和置信度</li>
+            <li><strong>三把尺子</strong>：展示三种估值方法的计算结果</li>
+            <li><strong>配套评分</strong>：五维度配套完善度评估</li>
+            <li><strong>硬伤检测</strong>：自动识别并量化硬伤影响</li>
+            <li><strong>成本估算</strong>：持有期间的资金占用成本分析</li>
+            <li><strong>系数明细</strong>：所有修正系数透明化展示</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="icon">📐</span>估值模型详解</div>
+    </div>
+    <div class="card-content">
+      <div style="font-size:13px;color:#334155;line-height:1.8;">
+        <p style="margin:0 0 12px;">
+          <strong>综合估值公式：</strong><br>
+          <code style="background:#f1f5f9;padding:4px 8px;border-radius:4px;font-size:14px;">
+            综合估值 = (市场比较法 × 权重 + 收益还原法 × 权重 + 成本法 × 权重) × 流动性折价
+          </code>
+        </p>
+        
+        <p style="margin:0 0 8px;"><strong>动态权重机制：</strong></p>
+        <ul style="margin:0;padding-left:20px;">
+          <li>有均价+租金：市场法75% + 收益法15% + 成本法10%</li>
+          <li>只有均价：市场法80% + 成本法20%</li>
+          <li>只有租金：市场法25% + 收益法60% + 成本法15%</li>
+          <li>都无：市场法50% + 收益法30% + 成本法20%</li>
+        </ul>
+
+        <p style="margin:12px 0 8px;"><strong>区位系数：</strong></p>
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <tr style="background:#f8fafc;">
+            <td style="padding:8px;border:1px solid #e2e8f0;font-weight:500;">S级（顶级商圈）</td>
+            <td style="padding:8px;border:1px solid #e2e8f0;">1.20 ~ 1.25</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e2e8f0;font-weight:500;">A级（核心区）</td>
+            <td style="padding:8px;border:1px solid #e2e8f0;">1.12 ~ 1.18</td>
+          </tr>
+          <tr style="background:#f8fafc;">
+            <td style="padding:8px;border:1px solid #e2e8f0;font-weight:500;">B级（成熟板块）</td>
+            <td style="padding:8px;border:1px solid #e2e8f0;">1.03 ~ 1.08</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e2e8f0;font-weight:500;">C级（发展板块）</td>
+            <td style="padding:8px;border:1px solid #e2e8f0;">0.98 ~ 1.00</td>
+          </tr>
+          <tr style="background:#f8fafc;">
+            <td style="padding:8px;border:1px solid #e2e8f0;font-weight:500;">D级（远郊）</td>
+            <td style="padding:8px;border:1px solid #e2e8f0;">0.88 ~ 0.95</td>
+          </tr>
+        </table>
+
+        <p style="margin:12px 0 8px;"><strong>硬伤扣分示例：</strong></p>
+        <ul style="margin:0;padding-left:20px;">
+          <li>高架/高速噪音：-15% ~ -25%</li>
+          <li>公墓/殡仪馆：-25% ~ -40%</li>
+          <li>变电站/高压线：-10% ~ -20%</li>
+          <li>垃圾处理站：-15% ~ -25%</li>
+          <li>污水处理厂：-15% ~ -30%</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="icon">💡</span>设计理念</div>
+    </div>
+    <div class="card-content">
+      <div style="font-size:13px;color:#334155;line-height:1.8;">
+        <p style="margin:0 0 12px;">
+          <strong>1. 多维度交叉验证</strong><br>
+          不依赖单一估值方法，而是通过市场比较法、收益还原法、成本法三种方法交叉验证，提高估值的可靠性。
+        </p>
+        <p style="margin:0 0 12px;">
+          <strong>2. 专家经验规则化</strong><br>
+          将房产评估专家的经验知识（区位等级、配套评分、硬伤检测等）转化为可计算的规则，让普通购房者也能获得专业级的分析。
+        </p>
+        <p style="margin:0 0 12px;">
+          <strong>3. 透明化计算</strong><br>
+          所有修正系数和计算逻辑完全透明，用户可以清楚了解每个因素如何影响最终估值，而不是一个"黑箱"结果。
+        </p>
+        <p style="margin:0 0 12px;">
+          <strong>4. 风险识别优先</strong><br>
+          特别强调硬伤检测功能，帮助购房者识别潜在风险（如公墓、变电站、易涝区等），避免"踩坑"。
+        </p>
+        <p style="margin:0;">
+          <strong>5. 本地化深度</strong><br>
+          深度聚焦杭州市场，建立完善的城市知识库，包括13个区县、40+商圈、20+硬伤小区的详细数据。
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="icon">🛠️</span>技术架构</div>
+    </div>
+    <div class="card-content">
+      <div style="font-size:13px;color:#334155;line-height:1.8;">
+        <p style="margin:0 0 12px;">
+          <strong>前端技术栈：</strong><br>
+          HTML5 + CSS3 + JavaScript（ES6 Modules）<br>
+          纯前端实现，无需服务器，可直接在浏览器中运行。
+        </p>
+        <p style="margin:0 0 12px;">
+          <strong>核心模块：</strong>
+        </p>
+        <ul style="margin:0;padding-left:20px;">
+          <li><code>cityKnowledge.js</code> - 杭州城市知识库（区县、商圈、学校、硬伤小区）</li>
+          <li><code>valuationEngine.js</code> - 核心估值算法（三把尺子、修正系数、硬伤检测）</li>
+          <li><code>ui.js</code> - 用户界面交互逻辑</li>
+          <li><code>history.js</code> - 本地存储历史记录</li>
+        </ul>
+        <p style="margin:12px 0 0;">
+          <strong>部署方式：</strong><br>
+          Cloudflare Pages（网页版）、微信小程序平台（规划中）
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="icon">📋</span>使用须知</div>
+    </div>
+    <div class="card-content">
+      <div style="font-size:13px;color:#334155;line-height:1.8;">
+        <p style="margin:0 0 12px;">
+          <strong>数据来源：</strong><br>
+          本工具使用的杭州城市数据、商圈等级、学校信息、硬伤小区名录等，均基于公开信息整理，可能存在滞后或偏差。
+        </p>
+        <p style="margin:0 0 12px;">
+          <strong>适用场景：</strong><br>
+          ✓ 购房前的初步价值参考<br>
+          ✓ 了解房产价值构成因素<br>
+          ✓ 识别潜在风险和硬伤<br>
+          ✓ 多套房产的横向比较<br>
+          ✗ 不作为交易定价依据<br>
+          ✗ 不替代专业机构评估报告
+        </p>
+        <p style="margin:0;">
+          <strong>免责声明：</strong><br>
+          本工具仅供参考，不构成任何投资建议、房产评估报告或交易依据。实际房价受市场供需、政策调控、宏观经济等多种因素影响，请以实际交易价格和专业机构评估为准。
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:20px;padding:20px;">
+    <a href="index.html" class="btn-about-link">🏠 返回首页</a>
+    <a href="defects.html" class="btn-about-link">⚠️ 查看硬伤名录</a>
+  </div>
+
+</div>
+
+</body>
+</html>
