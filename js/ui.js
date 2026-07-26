@@ -208,13 +208,19 @@ export function handleSubmit() {
   showLoading();
 
   setTimeout(() => {
-    const result = calculateValuation(input);
-    saveHistory(input, result);
-    lastInput = input;
-    lastResult = result;
-    renderResult(input, result);
-    hideLoading();
-    document.getElementById('resultActions').style.display = 'flex';
+    try {
+      const result = calculateValuation(input);
+      saveHistory(input, result);
+      lastInput = input;
+      lastResult = result;
+      renderResult(input, result);
+      hideLoading();
+      document.getElementById('resultActions').style.display = 'flex';
+    } catch (err) {
+      console.error('估值计算出错:', err);
+      hideLoading();
+      alert('计算出错: ' + err.message);
+    }
   }, 300);
 }
 
