@@ -1,11 +1,10 @@
 <view class="container">
-  <!-- App Icon & Title -->
   <view class="about-hero">
     <view class="app-icon">🏠</view>
     <view class="app-title">杭州房产估值计算器</view>
+    <view class="app-version">v1.0.0</view>
   </view>
 
-  <!-- About Section -->
   <view class="section-card">
     <view class="section-title">关于本项目</view>
     <view class="section-content">
@@ -13,7 +12,6 @@
     </view>
   </view>
 
-  <!-- Features -->
   <view class="section-card">
     <view class="section-title">功能特点</view>
     <view class="feature-list">
@@ -40,18 +38,16 @@
     </view>
   </view>
 
-  <!-- Valuation Model -->
   <view class="section-card">
     <view class="section-title">估值模型</view>
     <view class="section-content">
       <text class="bold">三把尺子原理：</text>综合估值 = 市场比较法 × 权重 + 收益还原法 × 权重 + 成本法 × 权重，再乘以流动性折价系数。
     </view>
-    <view class="section-content" style="margin-top:12rpx;">
+    <view class="section-content" style="margin-top:16rpx;">
       <text class="bold">权重动态调整：</text>根据用户输入的数据类型自动调整权重。有均价+租金时市场法占75%；仅有均价时市场法占80%；仅有租金时收益法占60%。
     </view>
   </view>
 
-  <!-- Design Philosophy -->
   <view class="section-card">
     <view class="section-title">设计理念</view>
     <view class="feature-list">
@@ -70,7 +66,6 @@
     </view>
   </view>
 
-  <!-- Tech Stack -->
   <view class="section-card">
     <view class="section-title">技术栈</view>
     <view class="tag-list">
@@ -80,7 +75,6 @@
     </view>
   </view>
 
-  <!-- Usage Tips -->
   <view class="section-card">
     <view class="section-title">使用建议</view>
     <view class="feature-list">
@@ -103,7 +97,6 @@
     </view>
   </view>
 
-  <!-- Back Button -->
   <view class="btn-back" bindtap="goBack">返回</view>
 
   <view class="disclaimer">

@@ -1,27 +1,29 @@
 <view class="container">
   <view class="hero">
-    <view class="hero-title">杭州房产估值计算器</view>
+    <view class="hero-city">杭州</view>
+    <view class="hero-icon">🏠</view>
+    <view class="hero-title">房产估值计算器</view>
     <view class="hero-sub">基于三把尺子的多维度参考工具</view>
-    <view class="hero-tip">数据由您自行输入，本地计算，不采集隐私</view>
+    <view class="hero-tip">数据由您自行输入 · 本地计算 · 不采集隐私</view>
   </view>
 
   <view class="feature-list">
     <view class="feature-item">
-      <view class="feature-icon">📊</view>
+      <view class="feature-icon green">📊</view>
       <view class="feature-text">
         <view class="feature-title">三把尺子评估</view>
         <view class="feature-desc">市场比较法 / 租金回报法 / 建安成本法</view>
       </view>
     </view>
     <view class="feature-item">
-      <view class="feature-icon">🏫</view>
+      <view class="feature-icon blue">🏫</view>
       <view class="feature-text">
         <view class="feature-title">配套评分系统</view>
         <view class="feature-desc">交通 / 教育 / 商业 / 医疗 / 自然五维评分</view>
       </view>
     </view>
     <view class="feature-item">
-      <view class="feature-icon">⚠️</view>
+      <view class="feature-icon orange">⚠️</view>
       <view class="feature-text">
         <view class="feature-title">不利因素检测</view>
         <view class="feature-desc">12种硬伤因素自动识别与价值修正</view>
@@ -32,22 +34,24 @@
   <view class="btn-primary" bindtap="goToInput">开始测算</view>
 
   <view wx:if="{{hasCache}}" class="cache-card" bindtap="goToResult">
-    <view class="cache-label">上次测算</view>
-    <view class="cache-value">{{cacheSummary}}</view>
-    <view class="cache-action">查看结果 ></view>
+    <view class="cache-left">
+      <view class="cache-label">上次测算</view>
+      <view class="cache-value">{{cacheSummary}}</view>
+    </view>
+    <view class="cache-action">查看 ›</view>
   </view>
 
   <view class="nav-grid">
     <view class="nav-item" bindtap="goToHistory">
-      <view class="nav-icon">📋</view>
+      <view class="nav-icon-wrap bg-1">📋</view>
       <view class="nav-label">历史记录</view>
     </view>
     <view class="nav-item" bindtap="goToDefects">
-      <view class="nav-icon">🔍</view>
+      <view class="nav-icon-wrap bg-2">🔍</view>
       <view class="nav-label">硬伤名录</view>
     </view>
     <view class="nav-item" bindtap="goToAbout">
-      <view class="nav-icon">ℹ️</view>
+      <view class="nav-icon-wrap bg-3">ℹ️</view>
       <view class="nav-label">关于</view>
     </view>
   </view>
